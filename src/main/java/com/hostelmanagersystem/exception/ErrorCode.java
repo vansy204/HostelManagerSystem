@@ -20,8 +20,11 @@ public enum ErrorCode {
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "you do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
-    PASSWORD_EXISTED(1010, "Password existed", HttpStatus.BAD_REQUEST);
+    PASSWORD_EXISTED(1010, "Password existed", HttpStatus.BAD_REQUEST),
+    ROOM_EXISTED(1011,"Room existed",HttpStatus.BAD_REQUEST),
+    ROOM_NOT_EXISTED(1012,"Room not existed",HttpStatus.BAD_REQUEST)
 
+    ;
     int code;
     String message;
     HttpStatusCode httpStatusCode;
