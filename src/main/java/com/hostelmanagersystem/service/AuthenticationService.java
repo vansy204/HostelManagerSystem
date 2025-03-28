@@ -72,11 +72,13 @@ public class AuthenticationService {
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getId()) // set subject bang id cua user
                 .issuer("Quan ly phong tro 22DTHD5")
-                .issueTime(new Date(
+                .issueTime(new Date())
+                .expirationTime(new Date(
                         Instant.now()
                                 .plus(VALID_DURATION, ChronoUnit.SECONDS)
                                 .toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
+
                 .build();
 
         Payload payload = new Payload(claimsSet.toJSONObject());

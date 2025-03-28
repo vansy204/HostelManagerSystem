@@ -1,22 +1,16 @@
-package com.hostelmanagersystem.entity.manager;
+package com.hostelmanagersystem.dto.request;
 
 import com.hostelmanagersystem.enums.RoomStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.List;
-
-@Document(value = "rooms")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Room {
-    @MongoId
-    String id;
+public class RoomCreationRequest {
     String roomNumber;
     String roomSize;
     Double price;
