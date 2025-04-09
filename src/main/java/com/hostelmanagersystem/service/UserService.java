@@ -3,10 +3,12 @@ package com.hostelmanagersystem.service;
 import com.hostelmanagersystem.dto.request.CreateUserRequest;
 import com.hostelmanagersystem.dto.response.UserResponse;
 import com.hostelmanagersystem.entity.identity.User;
+import com.hostelmanagersystem.enums.RoleEnum;
 import com.hostelmanagersystem.exception.AppException;
 import com.hostelmanagersystem.exception.ErrorCode;
 
 import com.hostelmanagersystem.mapper.UserMapper;
+import com.hostelmanagersystem.repository.RoleRepository;
 import com.hostelmanagersystem.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +28,14 @@ public class UserService {
     UserRepository userRepository;
     PasswordEncoder passwordEncoder;
     UserMapper userMapper;
-
+    RoleRepository roleRepository;
     public UserResponse createUser(CreateUserRequest createUserRequest) {
         User user = userMapper.toUser(createUserRequest);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
+        var role = roleRepository.findById("USER")
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+        user.setRole(role);
+
         user.setCreateAt(Instant.now());
         try{
             userRepository.save(user);

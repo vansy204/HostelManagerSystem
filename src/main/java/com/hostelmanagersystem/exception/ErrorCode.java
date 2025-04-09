@@ -22,8 +22,8 @@ public enum ErrorCode {
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     PASSWORD_EXISTED(1010, "Password existed", HttpStatus.BAD_REQUEST),
     ROOM_EXISTED(1011,"Room existed",HttpStatus.BAD_REQUEST),
-    ROOM_NOT_EXISTED(1012,"Room not existed",HttpStatus.BAD_REQUEST)
-
+    ROOM_NOT_EXISTED(1012,"Room not existed",HttpStatus.BAD_REQUEST),
+    ROLE_NOT_EXISTED(1013,"role not existed",HttpStatus.BAD_REQUEST)
     ;
     int code;
     String message;

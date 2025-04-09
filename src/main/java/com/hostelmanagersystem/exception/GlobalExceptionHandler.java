@@ -19,7 +19,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = RuntimeException.class)
     ResponseEntity<ApiResponse> handleRuntimeException(final Exception e) {
         ErrorCode errorCode = ErrorCode.UNCATEGORIZED_EXCEPTION;
-
         return ResponseEntity.badRequest()
                 .body(ApiResponse.builder()
                         .code(errorCode.getCode())
