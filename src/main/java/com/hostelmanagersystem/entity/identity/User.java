@@ -43,11 +43,12 @@ public class User {
             columnDefinition =
                     "VARCHAR(11)")
     String phone;
-    @Column(name = "role")
-    @Enumerated(EnumType.STRING)
-    RoleEnum role;
 
     @Column(name = "create_at")
     Instant createAt;
 
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 }

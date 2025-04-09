@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -26,6 +27,7 @@ public class RoomService {
     RoomRepository roomRepository;
     RoomMapper roomMapper;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public Room createRoom(RoomCreationRequest room) {
         var roomCreate = roomMapper.toRoom(room);
         var existingRoom = roomRepository.findByRoomNumber(room.getRoomNumber());

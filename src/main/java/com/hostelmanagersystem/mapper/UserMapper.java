@@ -7,7 +7,6 @@ import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
-@Component
 public interface UserMapper {
     UserResponse toUserResponse(User user);
     User toUser(CreateUserRequest createUserRequest);

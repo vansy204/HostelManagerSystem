@@ -12,11 +12,11 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
   data:
     mongodb:
-      uri: mongodb://root:root@localhost:27017/HostelManagerSystem?authSource=admin
+      uri: mongodb://root:root@localhost:27017/HostelManagerSystem?AuthSource=admin
 jwt:
   signerKey: "7b690d90e890f3f77df4150849c9b715740347968babaee859263c2b083f7620"
   valid-duration: 3600 # in second
