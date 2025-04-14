@@ -11,19 +11,19 @@ import org.springframework.http.HttpStatusCode;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public enum ErrorCode {
-    USER_EXISTED(1001, "User already exists", HttpStatus.BAD_REQUEST),
+    USER_EXISTED(1001, "Người dùng đã tồn tại", HttpStatus.BAD_REQUEST),
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),
-    USERNAME_INVALID(1003, "User name must be at least {min} characters", HttpStatus.BAD_REQUEST),
-    INVALID_PASSWORD(1004, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
+    USERNAME_INVALID(1003, "Tên đăng nhập phải lớn hơn {min} ký tự", HttpStatus.BAD_REQUEST),
+    INVALID_PASSWORD(1004, "Mật khẩu phải lớn hơn {min} ký tự", HttpStatus.BAD_REQUEST),
     INVALID_KEY(1001, "Invalid message key", HttpStatus.BAD_REQUEST),
-    USER_NOT_EXISTED(1005, "User not exists", HttpStatus.NOT_FOUND),
-    UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
-    UNAUTHORIZED(1007, "you do not have permission", HttpStatus.FORBIDDEN),
-    INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
-    PASSWORD_EXISTED(1010, "Password existed", HttpStatus.BAD_REQUEST),
-    ROOM_EXISTED(1011,"Room existed",HttpStatus.BAD_REQUEST),
-    ROOM_NOT_EXISTED(1012,"Room not existed",HttpStatus.BAD_REQUEST),
-    ROLE_NOT_EXISTED(1013,"role not existed",HttpStatus.BAD_REQUEST)
+    USER_NOT_EXISTED(1005, "Người dùng không tồn tại", HttpStatus.NOT_FOUND),
+    UNAUTHENTICATED(1006, "Tên đăng nhập hoặc mật khẩu không đúng", HttpStatus.UNAUTHORIZED),
+    UNAUTHORIZED(1007, "Bạn không có quyền truy cập", HttpStatus.FORBIDDEN),
+    INVALID_TOKEN(1008, "Token không hợp lệ", HttpStatus.UNAUTHORIZED),
+    TOKEN_EXPIRED(1009, "Token đã hết hạn", HttpStatus.UNAUTHORIZED),
+    ROOM_EXISTED(1011,"Phòng đã tồn tại",HttpStatus.BAD_REQUEST),
+    ROOM_NOT_EXISTED(1012,"Phòng không tồn tại",HttpStatus.BAD_REQUEST),
+    ROLE_NOT_EXISTED(1013,"Không tồn tại vai trò này",HttpStatus.BAD_REQUEST)
     ;
     int code;
     String message;
