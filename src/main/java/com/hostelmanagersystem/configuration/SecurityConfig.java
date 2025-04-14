@@ -28,6 +28,8 @@ public class SecurityConfig {
             "/auth/introspect",
             "/auth/logout",
             "/auth/refresh",
+            "/auth/forgot-password",
+            "/auth/reset-password/**",
     };
 
     private final CustomJwtDecoder customJwtDecoder;

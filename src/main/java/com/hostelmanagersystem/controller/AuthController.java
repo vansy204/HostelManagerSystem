@@ -1,9 +1,6 @@
 package com.hostelmanagersystem.controller;
 
-import com.hostelmanagersystem.dto.request.AuthRequest;
-import com.hostelmanagersystem.dto.request.IntrospectRequest;
-import com.hostelmanagersystem.dto.request.LogoutRequest;
-import com.hostelmanagersystem.dto.request.RefreshRequest;
+import com.hostelmanagersystem.dto.request.*;
 import com.hostelmanagersystem.dto.response.ApiResponse;
 import com.hostelmanagersystem.dto.response.AuthResponse;
 import com.hostelmanagersystem.dto.response.IntrospectResponse;
@@ -13,10 +10,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
@@ -52,6 +46,20 @@ public class AuthController {
     ApiResponse<AuthResponse> refresh(@RequestBody RefreshRequest refreshRequest) throws ParseException, JOSEException {
         var result = authenticationService.refreshToken(refreshRequest);
         return ApiResponse.<AuthResponse>builder().result(result).build();
+    }
+    @PostMapping("/forgot-password")
+    ApiResponse<String> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        var result = authenticationService.processForgotPassword(request);
+        return ApiResponse.<String>builder()
+                .result(result)
+                .build();
+    }
+    @PostMapping("/reset-password/{token}")
+    ApiResponse<String> resetPassword(@PathVariable("token") String token, @RequestBody String newPassword) {
+        var result = authenticationService.createNewPassword(token, newPassword);
+        return ApiResponse.<String>builder()
+                .result(result)
+                .build();
     }
 
 }
