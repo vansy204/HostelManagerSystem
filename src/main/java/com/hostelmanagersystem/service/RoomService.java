@@ -56,6 +56,7 @@ public class RoomService {
         roomMapper.updateRoom(oldRoom,roomUpdateRequest);
         return roomRepository.save(oldRoom);
     }
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteRoom(String roomId) {
         Room oldRoom = findRoomById(roomId);
         roomRepository.delete(oldRoom);
