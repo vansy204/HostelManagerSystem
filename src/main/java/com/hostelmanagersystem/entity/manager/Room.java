@@ -18,9 +18,13 @@ public class Room {
     @MongoId
     String id;
     String roomNumber;
-    String roomSize;
-    Double price;
-    RoomStatus status;
+    String roomSize;   // Diện tích
+    Double price;      // Giá
+    RoomStatus status; // Trạng thái phòng
+    String roomType;   // Loại phòng
+    List<String> facilities; // Tiện ích
+    Integer leaseTerm; // Thời gian thuê
+    String condition;  // Tình trạng phòng
     String description;
     List<String> mediaUrls;
 }

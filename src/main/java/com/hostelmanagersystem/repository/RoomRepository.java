@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
-public interface RoomRepository extends MongoRepository<Room, String> {
+public interface RoomRepository extends MongoRepository<Room, String>, RoomCustomRepository {
 
     Optional<Room> findByRoomNumber(String roomNumber);
 }
