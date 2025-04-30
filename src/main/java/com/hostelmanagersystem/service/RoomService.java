@@ -3,6 +3,7 @@ package com.hostelmanagersystem.service;
 import com.hostelmanagersystem.dto.request.RoomCreationRequest;
 import com.hostelmanagersystem.dto.request.RoomUpdateRequest;
 import com.hostelmanagersystem.entity.manager.Room;
+import com.hostelmanagersystem.enums.RoomStatus;
 import com.hostelmanagersystem.exception.AppException;
 import com.hostelmanagersystem.exception.ErrorCode;
 import com.hostelmanagersystem.mapper.RoomMapper;
@@ -28,18 +29,23 @@ public class RoomService {
     RoomMapper roomMapper;
 
     @PreAuthorize("hasRole('ADMIN')")
+
     public Room createRoom(RoomCreationRequest room) {
+        log.info("request: {}", room);
         var roomCreate = roomMapper.toRoom(room);
         var existingRoom = roomRepository.findByRoomNumber(room.getRoomNumber());
         if (existingRoom.isPresent()) {
             throw new AppException(ErrorCode.ROOM_EXISTED);
         }
        try{
+           log.info("request: {}", roomCreate );
            return roomRepository.save(roomCreate);
        }catch (DataIntegrityViolationException ex){
            throw new AppException(ErrorCode.ROOM_EXISTED);
        }
     }
+
+
     public Room findRoomById(String id) {
         return roomRepository.findById(id)
                 .orElseThrow(() ->new AppException(ErrorCode.ROOM_NOT_EXISTED));
@@ -49,13 +55,30 @@ public class RoomService {
                 .orElseThrow(() ->new AppException(ErrorCode.ROOM_NOT_EXISTED));
     }
     public List<Room> findAll() {
+
         return roomRepository.findAll();
     }
+
+    public List<Room> filterRooms(Double minPrice,
+                                  Double maxPrice,
+                                  Double minSize,
+                                  Double maxSize,
+                                  String status,
+                                  String roomType,
+                                  List<String> facilities,
+                                  Integer leaseTerm,
+                                  String condition) {
+        return roomRepository.findByFilters(minPrice, maxPrice, minSize, maxSize, status, roomType, facilities, leaseTerm, condition);
+    }
+
+
     public Room updateRoom(String roomId, RoomUpdateRequest roomUpdateRequest) {
         Room oldRoom = findRoomById(roomId);
         roomMapper.updateRoom(oldRoom,roomUpdateRequest);
         return roomRepository.save(oldRoom);
     }
+
+
     @PreAuthorize("hasRole('ADMIN')")
     public String deleteRoom(String roomId) {
         Room oldRoom = findRoomById(roomId);

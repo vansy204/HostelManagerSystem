@@ -144,7 +144,8 @@
 							<version>1.5.5.Final</version>
 						</path>
 					</annotationProcessorPaths>
-				</configuration>
+
+                </configuration>
 			</plugin>
 
 			<!-- Spring Boot Plugin -->
