@@ -1,5 +1,6 @@
 package com.hostelmanagersystem.dto.response;
 
+import com.hostelmanagersystem.enums.RoleEnum;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 public class UserResponse {
     String userName;
     String email;
-
     String firstName;
     String lastName;
+    String roleName;
 }

@@ -1,5 +1,6 @@
 package com.hostelmanagersystem.dto.request;
 
+import com.hostelmanagersystem.enums.RoleEnum;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,4 +17,6 @@ public class CreateUserRequest {
     String password;
     String firstName;
     String lastName;
+    String roleName;
+
 }

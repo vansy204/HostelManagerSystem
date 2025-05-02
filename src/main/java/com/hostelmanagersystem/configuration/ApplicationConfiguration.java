@@ -2,6 +2,7 @@ package com.hostelmanagersystem.configuration;
 
 import com.hostelmanagersystem.entity.identity.Role;
 import com.hostelmanagersystem.entity.identity.User;
+import com.hostelmanagersystem.enums.RoleEnum;
 import com.hostelmanagersystem.repository.RoleRepository;
 import com.hostelmanagersystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,25 +24,34 @@ public class ApplicationConfiguration {
     @Bean
     ApplicationRunner runner(UserRepository userRepository) {
         return args -> {
-           Role userRole = roleRepository.save(
+           Role ownerRole = roleRepository.save(
                     Role.builder()
-                            .name("USER")
-                            .description("User Role")
+                            .name(String.valueOf(RoleEnum.OWNER))
+                            .description("owner Role")
                             .build());
-            Role adminRole = roleRepository.save(
+            Role renterRole = roleRepository.save(
                     Role.builder()
-                            .name("ADMIN")
-                            .description("Admin Role")
+                            .name(String.valueOf(RoleEnum.RENTER))
+                            .description("Renter Role")
                             .build());
-            if(userRepository.findByUserName("admin").isEmpty()){
-                User admin = User.builder()
-                        .userName("admin")
-                        .password(passwordEncoder.encode("admin"))
-                        .email("phamvansy204@gmail.com")
-                        .role(adminRole)
+            if(userRepository.findByUserName("owner1").isEmpty()){
+                User owner = User.builder()
+                        .userName("owner1")
+                        .password(passwordEncoder.encode("owner1"))
+                        .role(ownerRole)
                         .build();
-                userRepository.save(admin);
-                log.info("admin user created with default password admin");
+                userRepository.save(owner);
+                log.info("renter user created with default username password renter1");
+            }
+            if(userRepository.findByUserName("renter1").isEmpty()){
+                User renter = User.builder()
+                        .userName("renter1")
+                        .password(passwordEncoder.encode("renter1"))
+                        .role(renterRole)
+                        .build();
+                userRepository.save(renter);
+                log.info("tenant user created with default username password tenant1");
+
             }
         };
     }
