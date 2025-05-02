@@ -70,7 +70,7 @@ public class RoomService {
         return roomRepository.findByFilters(minPrice, maxPrice, minSize, maxSize, status, roomType, facilities, leaseTerm, condition);
     }
 
-
+    @PreAuthorize("hasRole('OWNER')")
     public Room updateRoom(String roomId, RoomUpdateRequest roomUpdateRequest) {
         Room oldRoom = findRoomById(roomId);
         roomMapper.updateRoom(oldRoom,roomUpdateRequest);
