@@ -36,17 +36,16 @@ public class RoomService {
     RoomMapper roomMapper;
     private MongoTemplate mongoTemplate;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('OWNER')")
 
     public Room createRoom(RoomCreationRequest room) {
-        log.info("request: {}", room);
+
         var roomCreate = roomMapper.toRoom(room);
         var existingRoom = roomRepository.findByRoomNumber(room.getRoomNumber());
         if (existingRoom.isPresent()) {
             throw new AppException(ErrorCode.ROOM_EXISTED);
         }
        try{
-           log.info("request: {}", roomCreate );
            return roomRepository.save(roomCreate);
        }catch (DataIntegrityViolationException ex){
            throw new AppException(ErrorCode.ROOM_EXISTED);
@@ -132,7 +131,7 @@ public class RoomService {
 
     }
 
-
+    @PreAuthorize("hasRole('OWNER')")
     public Room updateRoom(String roomId, RoomUpdateRequest roomUpdateRequest) {
         Room oldRoom = findRoomById(roomId);
         roomMapper.updateRoom(oldRoom,roomUpdateRequest);
@@ -140,7 +139,7 @@ public class RoomService {
     }
 
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('OWNER')")
     public String deleteRoom(String roomId) {
         Room oldRoom = findRoomById(roomId);
         roomRepository.delete(oldRoom);

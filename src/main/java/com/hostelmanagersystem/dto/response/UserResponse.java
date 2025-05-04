@@ -1,5 +1,6 @@
 package com.hostelmanagersystem.dto.response;
 
+import com.hostelmanagersystem.enums.RoleEnum;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,4 +16,5 @@ public class UserResponse {
     String phone;
     String firstName;
     String lastName;
+    String roleName;
 }

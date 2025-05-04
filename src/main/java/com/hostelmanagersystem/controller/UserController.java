@@ -25,7 +25,6 @@ public class UserController {
     @PostMapping("/registration")
     public ApiResponse<UserResponse> createUser(@RequestBody CreateUserRequest createUserRequest) {
         var result = userService.createUser(createUserRequest);
-        log.info("user password {}", createUserRequest.getPassword());
         return ApiResponse.<UserResponse>builder()
                 .result(result)
                 .build();
