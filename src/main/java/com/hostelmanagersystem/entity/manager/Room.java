@@ -27,4 +27,9 @@ public class Room {
     String condition;  // Tình trạng phòng
     String description;
     List<String> mediaUrls;
+
+    String province;   // Tỉnh/Thành phố
+    String district;   // Quận/Huyện
+    String ward;       // Phường/Xã
+    String addressText;
 }
