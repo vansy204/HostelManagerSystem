@@ -22,4 +22,9 @@ public class RoomCreationRequest {
     String condition;  // Tình trạng phòng
     String description;
     List<String> mediaUrls;
+
+    String province;
+    String district;
+    String ward;
+    String addressText;
 }

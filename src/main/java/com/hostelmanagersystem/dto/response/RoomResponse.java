@@ -21,4 +21,9 @@ public class RoomResponse {
     String rentalTime;
     String condition;
     List<String> mediaUrls;
+
+    String province;
+    String district;
+    String ward;
+    String addressText;
 }

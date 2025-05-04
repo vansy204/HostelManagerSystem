@@ -13,6 +13,7 @@ import java.time.LocalDate;
 public class CreateUserRequest {
     String userName;
     String email;
+    String phone;
     String password;
     String firstName;
     String lastName;

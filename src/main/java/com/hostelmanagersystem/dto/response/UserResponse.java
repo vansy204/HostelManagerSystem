@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class UserResponse {
     String userName;
     String email;
-
+    String phone;
     String firstName;
     String lastName;
 }
