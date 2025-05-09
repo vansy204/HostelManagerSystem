@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoomCreationRequest {
-    String id;
     String roomNumber;
     String roomSize;   // Diện tích
     Double price;      // Giá
@@ -22,7 +21,6 @@ public class RoomCreationRequest {
     String condition;  // Tình trạng phòng
     String description;
     List<String> mediaUrls;
-
     String province;
     String district;
     String ward;

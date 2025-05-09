@@ -36,11 +36,13 @@ public class UserService {
 
     public UserResponse createUser(CreateUserRequest createUserRequest) {
         User user = userMapper.toUser(createUserRequest);
+
         user.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
         var role = roleRepository.findById(createUserRequest.getRoleName())
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
         user.setRole(role);
         user.setCreateAt(Instant.now());
+        user.setIsActive(true);
         try {
             userRepository.save(user);
         } catch (DataIntegrityViolationException ex) {

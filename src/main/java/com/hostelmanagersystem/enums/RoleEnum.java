@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 public enum RoleEnum {
 
     RENTER("RENTER"),
-    OWNER("OWNER"),;
-
+    OWNER("OWNER"),
+    ADMIN("ADMIN");
     String roleName;
 
 }

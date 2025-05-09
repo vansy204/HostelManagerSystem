@@ -23,7 +23,9 @@ public enum ErrorCode {
     TOKEN_EXPIRED(1009, "Token đã hết hạn", HttpStatus.UNAUTHORIZED),
     ROOM_EXISTED(1011,"Phòng đã tồn tại",HttpStatus.BAD_REQUEST),
     ROOM_NOT_EXISTED(1012,"Phòng không tồn tại",HttpStatus.BAD_REQUEST),
-    ROLE_NOT_EXISTED(1013,"Không tồn tại vai trò này",HttpStatus.BAD_REQUEST)
+    ROLE_NOT_EXISTED(1013,"Không tồn tại vai trò này",HttpStatus.BAD_REQUEST),
+    USER_HAD_BANNED(1014,"Tài khoản của bạn đã bị khoá", HttpStatus.BAD_REQUEST),
+    ROOM_HAD_BEEN_ACCEPT(1015,"Phòng này đã được chấp nhận đăng", HttpStatus.BAD_REQUEST)
     ;
     int code;
     String message;
