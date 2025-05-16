@@ -50,9 +50,14 @@ public class User {
     @Column(name = "create_at")
     Instant createAt;
 
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
 
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    Role role;
 
 }

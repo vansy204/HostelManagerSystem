@@ -24,10 +24,10 @@ public class RoomController {
     RoomService roomService;
 
     @PostMapping("/")
-    public ApiResponse<Room> createRoom(@RequestBody RoomCreationRequest room) {
-
-        return ApiResponse.<Room>builder()
-                .result(roomService.createRoom(room))
+    public ApiResponse<String> createRoom(@RequestBody RoomCreationRequest room) {
+        var result = roomService.createRoom(room);
+        return ApiResponse.<String>builder()
+                .result(result)
                 .build();
     }
 
