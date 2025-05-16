@@ -9,10 +9,13 @@ import java.time.Instant;
 
 @Entity(name = "users")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Data
-@Builder
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString(exclude = {"role"})
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -47,8 +50,9 @@ public class User {
     @Column(name = "create_at")
     Instant createAt;
 
-
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+
+
 }

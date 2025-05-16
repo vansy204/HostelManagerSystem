@@ -19,12 +19,12 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
-import java.nio.file.Files;
+
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.LinkedTransferQueue;
+
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -75,6 +75,7 @@ public class RoomService {
         if (request.getMinPrice() != null) {
             criteriaList.add(Criteria.where("price").gte(request.getMinPrice()));
         }
+
         if (request.getMaxPrice() != null) {
             criteriaList.add(Criteria.where("price").lte(request.getMaxPrice()));
         }
