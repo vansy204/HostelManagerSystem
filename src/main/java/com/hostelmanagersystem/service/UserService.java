@@ -56,25 +56,49 @@ public class UserService {
 
 
     public UserResponse getCurrentUser() {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName(); // hoặc lấy từ token
-        log.info("Get current user by id: {}", userId);
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        return userMapper.toUserResponse(user);
-    }
-
-
-    public UserResponse updateUser(UpdateUserRequest request) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
+        return userMapper.toUserResponse(user);
+    }
+
+
+
+    public UserResponse updateUser(UpdateUserRequest request) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        if (request.getEmail() != null && !request.getEmail().equals(user.getEmail())) {
+            userRepository.findByEmail(request.getEmail())
+                    .filter(existing -> !existing.getId().equals(userId))
+                    .ifPresent(existing -> {
+                        throw new AppException(ErrorCode.EMAIL_EXISTED);
+                    });
+            user.setEmail(request.getEmail());
+        }
+
+
+        if (request.getPhone() != null && !request.getPhone().equals(user.getPhone())) {
+            userRepository.findByPhone(request.getPhone())
+                    .filter(existing -> !existing.getId().equals(userId))
+                    .ifPresent(existing -> {
+                        throw new AppException(ErrorCode.PHONE_EXISTED);
+                    });
+            user.setPhone(request.getPhone());
+        }
+
         if (request.getFirstName() != null) user.setFirstName(request.getFirstName());
         if (request.getLastName() != null) user.setLastName(request.getLastName());
-        if (request.getEmail() != null) user.setEmail(request.getEmail());
-        if (request.getPhone() != null) user.setPhone(request.getPhone());
-        if (request.getUserName() != null) user.setUserName(request.getUserName());
+        if (request.getUserName() != null && !request.getUserName().equals(user.getUserName()))  {
+            userRepository.findByUserName(request.getUserName())
+                    .filter(existing -> !existing.getId().equals(userId))
+                    .ifPresent(existing -> {
+                        throw new AppException(ErrorCode.USERNAME_EXISTED);
+                    });
+            user.setUserName(request.getUserName());
+        }
 
         userRepository.save(user);
         return userMapper.toUserResponse(user);

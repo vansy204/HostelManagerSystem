@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface RoomRepository extends MongoRepository<Room, String>{
     List<Room> findAllByStatusNotContainsIgnoreCase(String status);
     Optional<Room> findByRoomNumber(String roomNumber);
+
+    Optional<Room> findById(String id);
 }
