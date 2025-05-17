@@ -4,6 +4,7 @@ import com.hostelmanagersystem.enums.RoleEnum;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.Instant;
 import java.time.LocalDate;
 @Data
 @Builder
@@ -17,5 +18,7 @@ public class UserResponse {
     String phone;
     String firstName;
     String lastName;
+    boolean isActive;
+    Instant createdAt;
     String roleName;
 }
