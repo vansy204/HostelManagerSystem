@@ -48,6 +48,8 @@ public class User {
     Instant createAt;
 
 
+
+
     Boolean isActive;
 
     @ManyToOne
