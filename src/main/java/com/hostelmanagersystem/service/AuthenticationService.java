@@ -65,9 +65,9 @@ public class AuthenticationService {
         if(!authenticated){
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
-        if(user.getIsActive() == false){
-            throw new AppException(ErrorCode.USER_HAD_BANNED);
-        }
+//        if(user.getIsActive() == false){
+//            throw new AppException(ErrorCode.USER_HAD_BANNED);
+//        }
         var token = generateToken(user);
         return AuthResponse.builder()
                 .token(token)

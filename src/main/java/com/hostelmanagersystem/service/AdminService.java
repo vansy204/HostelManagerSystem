@@ -69,7 +69,7 @@ public class AdminService {
     public String banUserById(String id){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        user.setIsActive(false);
+//        user.setIsActive(false);
         sendAccountLockedEmail(user.getEmail());
         userRepository.save(user);
         return "Đã khoá tài khoản người dùng";
@@ -78,7 +78,7 @@ public class AdminService {
     public String unbanUserById(String id){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        user.setIsActive(true);
+//        user.setIsActive(true);
         sendAccountUnlockedEmail(user.getEmail());
         userRepository.save(user);
         return "Đã mở khoá tài khoản người dùng";

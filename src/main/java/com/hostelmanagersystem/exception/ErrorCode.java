@@ -34,9 +34,12 @@ public enum ErrorCode {
     REQUEST_NOT_FOUND(1020,"Không tìm thấy yêu cầu của bạn.",HttpStatus.BAD_REQUEST),
 
     USER_HAD_BANNED(1014,"Tài khoản của bạn đã bị khoá", HttpStatus.BAD_REQUEST),
-    ROOM_HAD_BEEN_ACCEPT(1015,"Phòng này đã được chấp nhận đăng", HttpStatus.BAD_REQUEST)
-
+    ROOM_HAD_BEEN_ACCEPT(1015,"Phòng này đã được chấp nhận đăng", HttpStatus.BAD_REQUEST),
+      
+    TENANT_NOT_FOUND(1022,"Không tìm thấy khách thuê phòng",HttpStatus.BAD_REQUEST),
     ;
+
+
 
 
     int code;
