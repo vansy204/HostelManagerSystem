@@ -27,7 +27,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PACKAGE, makeFinal = true)
 public class FinanceController {
     FinanceService financeService;
-    ContractService contractService;
+
 
     @PostMapping("/income")
     public ResponseEntity<IncomeResponse> addIncome(@RequestParam String userId, @RequestBody IncomeRequest request) {
@@ -54,8 +54,5 @@ public class FinanceController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
         return ResponseEntity.ok(financeService.getExpenses(userId, from, to));
     }
-    @PostMapping("/contracts")
-    public ResponseEntity<ContractResponse> createContract(@RequestBody ContractRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(contractService.createContract(request));
-    }
+
 }
