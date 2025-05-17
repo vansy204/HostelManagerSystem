@@ -44,6 +44,9 @@ public class ApplicationConfiguration {
                 User admin = User.builder()
                         .userName("admin")
                         .password(passwordEncoder.encode("admin"))
+                        .firstName("admin")
+                        .lastName("")
+
                         .role(adminRole)
                         .isActive(true)
                         .build();
@@ -55,6 +58,8 @@ public class ApplicationConfiguration {
                         .userName("owner1")
                         .password(passwordEncoder.encode("owner1"))
                         .role(ownerRole)
+                        .firstName("owner")
+                        .lastName("1")
                         .isActive(true)
                         .build();
                 userRepository.save(owner);
@@ -65,6 +70,8 @@ public class ApplicationConfiguration {
                         .userName("renter1")
                         .password(passwordEncoder.encode("renter1"))
                         .role(renterRole)
+                        .firstName("renter")
+                        .lastName("1")
                         .isActive(true)
                         .build();
                 userRepository.save(renter);

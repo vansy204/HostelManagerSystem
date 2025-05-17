@@ -51,6 +51,7 @@ public class User {
     Instant createAt;
 
 
+    Boolean isActive;
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
