@@ -64,7 +64,6 @@ public class AdminService {
         userRepository.delete(user);
         return "Đã xoá người dùng";
     }
-
     @PreAuthorize("hasRole('ADMIN')")
     public String banUserById(String id){
         User user = userRepository.findById(id)
@@ -74,6 +73,7 @@ public class AdminService {
         userRepository.save(user);
         return "Đã khoá tài khoản người dùng";
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     public String unbanUserById(String id){
         User user = userRepository.findById(id)
