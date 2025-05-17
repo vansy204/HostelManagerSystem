@@ -1,5 +1,13 @@
 package com.hostelmanagersystem.controller;
 
+
+import com.hostelmanagersystem.dto.request.TenantRequest;
+import com.hostelmanagersystem.dto.response.TenantResponse;
+import com.hostelmanagersystem.service.TenantService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import com.hostelmanagersystem.dto.request.TenantCreationRequest;
 import com.hostelmanagersystem.dto.request.TenantUpdateRequest;
 import com.hostelmanagersystem.dto.response.ApiResponse;
@@ -13,18 +21,36 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
-@Slf4j
+
 @RestController
-@RequestMapping("/owner/tenants")
+@RequestMapping("/tenants")
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TenantController {
-    TenantService tenantService;
+    private final TenantService tenantService;
 
+    @PostMapping
+    public ResponseEntity<TenantResponse> createTenant(@RequestBody TenantRequest request) {
+        return ResponseEntity.ok(tenantService.createTenant(request));
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<TenantResponse>> getRequestsByUser(@PathVariable String userId) {
+        return ResponseEntity.ok(tenantService.getRequestsByUser(userId));
+    }
+
+    @DeleteMapping("/{tenantId}")
+    public ResponseEntity<String> cancelTenant(@PathVariable String tenantId) {
+        String message = tenantService.cancelTenant(tenantId);
+
+        if (message.equals("Bạn đã hủy yêu cầu thuê phòng thành công")) {
+            return ResponseEntity.ok(message);
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
+        }
+    
+}
     @PreAuthorize("hasRole('OWNER')")
     @PostMapping
     public ApiResponse<TenantResponse> createTenant(@RequestBody @Valid TenantCreationRequest request,
@@ -67,3 +93,5 @@ public class TenantController {
                 .build();
     }
 }
+
+

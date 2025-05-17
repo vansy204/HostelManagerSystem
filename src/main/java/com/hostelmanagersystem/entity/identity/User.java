@@ -52,5 +52,8 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "role_id")
-    Role role;
+    private Role role;
+
+
+
 }
