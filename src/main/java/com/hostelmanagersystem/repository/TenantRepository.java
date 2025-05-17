@@ -11,3 +11,7 @@ public interface TenantRepository extends MongoRepository<Tenant, String> {
     List<Tenant> findByUserId(String userId);
 
 }
+
+
+
+
