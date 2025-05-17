@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.Instant;
+
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
@@ -43,9 +45,13 @@ public class ApplicationConfiguration {
             if(userRepository.findByUserName("admin").isEmpty()){
                 User admin = User.builder()
                         .userName("admin")
+                        .firstName("admin")
+                        .lastName("")
+                        .email("phamvansy204@gmail.com")
                         .password(passwordEncoder.encode("admin"))
                         .role(adminRole)
-//                        .isActive(true)
+                        .createAt(Instant.now())
+                        .isActive(true)
                         .build();
                 userRepository.save(admin);
                 log.info("admin user created with default username password admin");
@@ -55,7 +61,11 @@ public class ApplicationConfiguration {
                         .userName("owner1")
                         .password(passwordEncoder.encode("owner1"))
                         .role(ownerRole)
-//                        .isActive(true)
+                        .firstName("owner1")
+                        .lastName("")
+                        .email("owner1@gmail.com")
+                        .createAt(Instant.now())
+                        .isActive(true)
                         .build();
                 userRepository.save(owner);
                 log.info("renter user created with default username password renter1");
@@ -65,7 +75,11 @@ public class ApplicationConfiguration {
                         .userName("renter1")
                         .password(passwordEncoder.encode("renter1"))
                         .role(renterRole)
-//                        .isActive(true)
+                        .firstName("renter1")
+                        .lastName("")
+                        .email("renter1@gmail.com")
+                        .createAt(Instant.now())
+                        .isActive(true)
                         .build();
                 userRepository.save(renter);
                 log.info("tenant user created with default username password tenant1");

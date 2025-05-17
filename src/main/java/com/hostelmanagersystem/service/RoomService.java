@@ -92,7 +92,7 @@ public class RoomService {
     }
     public List<Room> findAll() {
 
-        return roomRepository.findAllByStatusNotContainsIgnoreCase(String.valueOf(RoomStatus.PENDING));
+        return roomRepository.findAll();
     }
 
     public List<Room> filterRooms(RoomFilterRequest request) {

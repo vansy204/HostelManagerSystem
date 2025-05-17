@@ -56,9 +56,10 @@ public class UserService {
 
 
     public UserResponse getCurrentUser() {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName(); // hoặc lấy từ token
+       var user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
 
         return userMapper.toUserResponse(user);
     }
