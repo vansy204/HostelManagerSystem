@@ -20,4 +20,5 @@ public class Notification {
     String message;
     Boolean isRead;
     LocalDate createAt;
+
 }
