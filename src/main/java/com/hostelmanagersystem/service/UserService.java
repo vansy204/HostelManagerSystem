@@ -57,7 +57,7 @@ public class UserService {
 
     public UserResponse getCurrentUser() {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName(); // hoặc lấy từ token
-        log.info("Get current user by id: {}", userId);
+
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));

@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.Instant;
+
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
@@ -43,8 +45,12 @@ public class ApplicationConfiguration {
             if(userRepository.findByUserName("admin").isEmpty()){
                 User admin = User.builder()
                         .userName("admin")
+                        .firstName("admin")
+                        .lastName("")
+                        .email("phamvansy204@gmail.com")
                         .password(passwordEncoder.encode("admin"))
                         .role(adminRole)
+                        .createAt(Instant.now())
                         .isActive(true)
                         .build();
                 userRepository.save(admin);
@@ -55,6 +61,10 @@ public class ApplicationConfiguration {
                         .userName("owner1")
                         .password(passwordEncoder.encode("owner1"))
                         .role(ownerRole)
+                        .firstName("owner1")
+                        .lastName("")
+                        .email("owner1@gmail.com")
+                        .createAt(Instant.now())
                         .isActive(true)
                         .build();
                 userRepository.save(owner);
@@ -65,6 +75,10 @@ public class ApplicationConfiguration {
                         .userName("renter1")
                         .password(passwordEncoder.encode("renter1"))
                         .role(renterRole)
+                        .firstName("renter1")
+                        .lastName("")
+                        .email("renter1@gmail.com")
+                        .createAt(Instant.now())
                         .isActive(true)
                         .build();
                 userRepository.save(renter);
