@@ -33,8 +33,8 @@ public enum ErrorCode {
     REQUEST_BEING_PROCESSED(1019,"Yêu cầu đã được xử lý, không thể hủy.",HttpStatus.BAD_REQUEST),
     REQUEST_NOT_FOUND(1020,"Không tìm thấy yêu cầu của bạn.",HttpStatus.BAD_REQUEST),
 
-    USER_HAD_BANNED(1014,"Tài khoản của bạn đã bị khoá", HttpStatus.BAD_REQUEST),
-    ROOM_HAD_BEEN_ACCEPT(1015,"Phòng này đã được chấp nhận đăng", HttpStatus.BAD_REQUEST)
+//    USER_HAD_BANNED(1014,"Tài khoản của bạn đã bị khoá", HttpStatus.BAD_REQUEST),
+//    ROOM_HAD_BEEN_ACCEPT(1015,"Phòng này đã được chấp nhận đăng", HttpStatus.BAD_REQUEST)
 
     ;
 
