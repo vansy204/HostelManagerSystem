@@ -56,9 +56,12 @@ public class UserService {
 
 
     public UserResponse getCurrentUser() {
+feature/add-admin-service
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName(); // hoặc lấy từ token
+
+
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
 
         return userMapper.toUserResponse(user);
     }

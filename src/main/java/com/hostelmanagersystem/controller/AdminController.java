@@ -1,6 +1,7 @@
 package com.hostelmanagersystem.controller;
 
 import com.hostelmanagersystem.dto.response.ApiResponse;
+import com.hostelmanagersystem.dto.response.RoomResponse;
 import com.hostelmanagersystem.dto.response.UserResponse;
 import com.hostelmanagersystem.service.AdminService;
 import lombok.AccessLevel;
@@ -69,9 +70,13 @@ public class AdminController {
                 .result(result)
                 .build();
     }
-
-
-
+    @GetMapping("/room/pending")
+    public ApiResponse<List<RoomResponse>> getAllPendingRoom(){
+        var result = adminService.getAllPendingRoomRequests();
+        return ApiResponse.<List<RoomResponse>>builder()
+                .result(result)
+                .build();
+    }
 
 
 }

@@ -1,11 +1,13 @@
 package com.hostelmanagersystem.service;
 
+import com.hostelmanagersystem.dto.response.RoomResponse;
 import com.hostelmanagersystem.dto.response.UserResponse;
 import com.hostelmanagersystem.entity.identity.User;
 import com.hostelmanagersystem.entity.manager.Room;
 import com.hostelmanagersystem.enums.RoomStatus;
 import com.hostelmanagersystem.exception.AppException;
 import com.hostelmanagersystem.exception.ErrorCode;
+import com.hostelmanagersystem.mapper.RoomMapper;
 import com.hostelmanagersystem.mapper.UserMapper;
 import com.hostelmanagersystem.repository.RoomRepository;
 import com.hostelmanagersystem.repository.UserRepository;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -40,7 +43,7 @@ public class AdminService {
     UserMapper userMapper;
     JavaMailSender mailSender;
     RoomRepository roomRepository;
-
+    RoomMapper roomMapper;
 
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -192,5 +195,12 @@ public class AdminService {
         } catch (MessagingException e) {
             log.error("Error sending account unlocked email: {}", e.getMessage());
         }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<RoomResponse> getAllPendingRoomRequests(){
+        return roomRepository.findAllByStatus(RoomStatus.PENDING)
+                .stream().map(roomMapper::toRoomResponse)
+                .collect(Collectors.toList());
     }
 }
