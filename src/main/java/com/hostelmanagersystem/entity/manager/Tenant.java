@@ -20,6 +20,11 @@ import java.time.LocalDate;
 public class Tenant {
     @MongoId
     String id;
+    String userId;
+    LocalDate checkInDate;
+    LocalDate checkOutDate;
+    TenantStatus status;
+    LocalDate createAt;
     String fullName;
     String email;
     String phoneNumber;

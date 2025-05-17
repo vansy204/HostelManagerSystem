@@ -1,4 +1,5 @@
 package com.hostelmanagersystem.dto.response;
+import com.hostelmanagersystem.enums.TenantStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -10,6 +11,11 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TenantResponse {
     String id;
+ String userId;
+ LocalDate checkInDate;
+ LocalDate checkOutDate;
+ TenantStatus status;
+ LocalDate createAt;
      String fullName;
      String email;
      String phoneNumber;

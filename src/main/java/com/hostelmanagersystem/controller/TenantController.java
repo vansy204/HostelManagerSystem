@@ -11,17 +11,15 @@ import org.springframework.http.ResponseEntity;
 import com.hostelmanagersystem.dto.request.TenantCreationRequest;
 import com.hostelmanagersystem.dto.request.TenantUpdateRequest;
 import com.hostelmanagersystem.dto.response.ApiResponse;
-import com.hostelmanagersystem.dto.response.TenantResponse;
-import com.hostelmanagersystem.service.TenantService;
+
 import jakarta.validation.Valid;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 
 @RestController
