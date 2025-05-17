@@ -1,8 +1,8 @@
 package com.hostelmanagersystem.enums;
 
 public enum RoomStatus {
-    AVAILABLE,
-    OCCUPIED,
+        AVAILABLE,
+        OCCUPIED,
     RESERVED,
     MAINTENANCE,
     CLEANING,

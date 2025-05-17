@@ -14,26 +14,28 @@ import com.hostelmanagersystem.mapper.TenantMapper;
 import com.hostelmanagersystem.repository.RoomRepository;
 import com.hostelmanagersystem.repository.TenantRepository;
 import com.hostelmanagersystem.repository.UserRepository;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+
 
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class TenantService {
-    private final RoomRepository roomRepository;
-    private final TenantRepository tenantRepository;
-    private final UserRepository userRepository;
-private final TenantMapper tenantMapper;
+RoomRepository roomRepository;
+    TenantRepository tenantRepository;
+   UserRepository userRepository;
+    TenantMapper tenantMapper;
     public TenantResponse createTenant(TenantRequest request) {
         Room room = roomRepository.findById(request.getRoomId())
                 .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_EXISTED));

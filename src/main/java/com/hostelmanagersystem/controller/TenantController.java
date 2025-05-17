@@ -49,16 +49,16 @@ public class TenantController {
         }
     
 }
-    @PreAuthorize("hasRole('OWNER')")
-    @PostMapping
-    public ApiResponse<TenantResponse> createTenant(@RequestBody @Valid TenantCreationRequest request,
-                                                    @AuthenticationPrincipal UserDetails user) {
-        TenantResponse result = tenantService.createTenant(user.getUsername(), request);
-        return ApiResponse.<TenantResponse>builder()
-                .result(result)
-                .message("Tạo người thuê thành công")
-                .build();
-    }
+//    @PreAuthorize("hasRole('OWNER')")
+//    @PostMapping
+//    public ApiResponse<TenantResponse> createTenant(@RequestBody @Valid TenantCreationRequest request,
+//                                                    @AuthenticationPrincipal UserDetails user) {
+//        TenantResponse result = tenantService.createTenant(user.getUsername(), request);
+//        return ApiResponse.<TenantResponse>builder()
+//                .result(result)
+//                .message("Tạo người thuê thành công")
+//                .build();
+//    }
 
     @PreAuthorize("hasRole('OWNER')")
     @GetMapping
