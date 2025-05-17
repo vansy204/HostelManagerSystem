@@ -45,7 +45,7 @@ public class ApplicationConfiguration {
                         .userName("admin")
                         .password(passwordEncoder.encode("admin"))
                         .role(adminRole)
-                        .isActive(true)
+//                        .isActive(true)
                         .build();
                 userRepository.save(admin);
                 log.info("admin user created with default username password admin");
@@ -55,7 +55,7 @@ public class ApplicationConfiguration {
                         .userName("owner1")
                         .password(passwordEncoder.encode("owner1"))
                         .role(ownerRole)
-                        .isActive(true)
+//                        .isActive(true)
                         .build();
                 userRepository.save(owner);
                 log.info("renter user created with default username password renter1");
@@ -65,7 +65,7 @@ public class ApplicationConfiguration {
                         .userName("renter1")
                         .password(passwordEncoder.encode("renter1"))
                         .role(renterRole)
-                        .isActive(true)
+//                        .isActive(true)
                         .build();
                 userRepository.save(renter);
                 log.info("tenant user created with default username password tenant1");
