@@ -15,3 +15,4 @@ public interface TenantRepository extends MongoRepository<Tenant, String> {
 
 
 
+
