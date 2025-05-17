@@ -1,5 +1,6 @@
 package com.hostelmanagersystem.entity.identity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
@@ -21,5 +22,6 @@ public class Role {
     String name;
     String description;
     @OneToMany(mappedBy = "role")
+    @JsonIgnore
     private List<User> users;
 }

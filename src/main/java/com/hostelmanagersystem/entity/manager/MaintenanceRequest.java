@@ -1,6 +1,6 @@
 package com.hostelmanagersystem.entity.manager;
 
-import com.hostelmanagersystem.enums.MaintenanceStatus;
+import com.hostelmanagersystem.enums.TenantStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -20,6 +20,6 @@ public class MaintenanceRequest {
     String tenantId;
     String roomId;
     String description;
-    MaintenanceStatus status;
+    TenantStatus status;
     LocalDate createAt;
 }
