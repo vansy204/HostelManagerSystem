@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface RoomRepository extends MongoRepository<Room, String>{
 
     Optional<Room> findByRoomNumber(String roomNumber);
-feature/add-admin-service
+
     List<Room> findAllByStatus(RoomStatus status);
 
 }
