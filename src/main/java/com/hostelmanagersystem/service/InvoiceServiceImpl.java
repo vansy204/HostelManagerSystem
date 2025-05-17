@@ -62,7 +62,7 @@ public class InvoiceServiceImpl implements InvoiceService{
         byte[] pdf = pdfGenerator.generatePdf(invoice);
         emailService.sendInvoiceEmail(tenant.getEmail(), pdf, invoice.getMonth());
     }
-
+    @Override
     public InvoiceResponse updatePaymentStatus(UpdatePaymentStatusRequest request) {
         Invoice invoice = invoiceRepository.findById(request.getInvoiceId())
                 .orElseThrow(() -> new RuntimeException("Invoice not found"));
@@ -73,7 +73,7 @@ public class InvoiceServiceImpl implements InvoiceService{
 
         return invoiceMapper.toResponse(invoiceRepository.save(invoice));
     }
-
+    @Override
     public double getMonthlyRevenue(String landlordId, String month) {
         List<Invoice> invoices = invoiceRepository.findByLandlordIdAndMonth(landlordId, month);
         return invoices.stream()
