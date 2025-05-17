@@ -1,5 +1,6 @@
 package com.hostelmanagersystem.entity.manager;
 
+import com.hostelmanagersystem.enums.ContractStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,12 +17,23 @@ import java.time.LocalDate;
 public class Contract {
     @MongoId
     String id;
+
+    String landlordId;
     String tenantId;
     String roomId;
+
     LocalDate startDate;
     LocalDate endDate;
+
     Double deposit;
     Double monthlyPrice;
     String terms;
-    LocalDate createAt;
+
+    ContractStatus status; // ACTIVE, EXPIRING_SOON, ENDED
+
+    String pdfUrl;
+
+    LocalDate createdAt;
+    LocalDate updatedAt;
+
 }
