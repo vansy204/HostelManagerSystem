@@ -18,14 +18,12 @@ import java.time.LocalDate;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Tenant {
-    @MongoId
-    String id;
-
-    String userId;
-    String roomId;
-
-    LocalDate checkInDate;
-    LocalDate checkOutDate;
-    TenantStatus status;
-    LocalDate createAt;
+  @MongoId
+  String id;
+  String userId;
+  String roomId;
+  LocalDate checkInDate;
+  LocalDate checkOutDate;
+  TenantStatus status;
+  LocalDate createAt;
 }
