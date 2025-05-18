@@ -10,6 +10,6 @@ public interface NotificationService {
     List<NotificationResponse> getNotificationsForRecipient(String recipientId);
     List<NotificationResponse> getNotificationsFromSender(String senderId);
     void markAsRead(String notificationId, String userId);
-//    void sendMonthlyRentReminders();
-//    void sendContractExpiryReminders();
+    void sendMonthlyRentReminders();
+    void sendContractExpiryReminders();
 }
