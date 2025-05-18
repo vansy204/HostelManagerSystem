@@ -8,6 +8,7 @@ import com.hostelmanagersystem.entity.manager.Tenant;
 import com.hostelmanagersystem.enums.TenantStatus;
 import com.hostelmanagersystem.exception.AppException;
 import com.hostelmanagersystem.exception.ErrorCode;
+import com.hostelmanagersystem.mapper.TenantMapper;
 import com.hostelmanagersystem.repository.RoomRepository;
 import com.hostelmanagersystem.repository.TenantRepository;
 import com.hostelmanagersystem.repository.UserRepository;
@@ -29,6 +30,7 @@ public class TenantService {
     private final RoomRepository roomRepository;
     private final TenantRepository tenantRepository;
     private final UserRepository userRepository;
+    private final TenantMapper tenantMapper;
 
     public TenantResponse createTenant(TenantRequest request) {
         Room room = roomRepository.findById(request.getRoomId())
@@ -36,6 +38,14 @@ public class TenantService {
 
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        Optional<Tenant> existingRequest = tenantRepository
+                .findByUserIdAndRoomIdAndStatusNot(user.getId(), room.getId(), TenantStatus.CANCELLED);
+
+        if (existingRequest.isPresent()) {
+            throw new AppException(ErrorCode.TENANT_REQUEST_ALREADY_EXISTS);
+        }
+
 
         Tenant tenant = Tenant.builder()
                 .userId(user.getId())
@@ -47,15 +57,14 @@ public class TenantService {
                 .build();
 
         tenant = tenantRepository.save(tenant);
-
-        return toResponse(tenant);
+        return tenantMapper.toResponse(tenant);
     }
 
 
     public List<TenantResponse> getRequestsByUser(String userId) {
         return tenantRepository.findByUserId(userId)
                 .stream()
-                .map(this::toResponse)
+                .map(tenantMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -73,15 +82,4 @@ public class TenantService {
 
     }
 
-
-    private TenantResponse toResponse(Tenant tenant) {
-        return TenantResponse.builder()
-                .id(tenant.getId())
-                .roomId(tenant.getRoomId())
-                .checkInDate(tenant.getCheckInDate())
-                .checkOutDate(tenant.getCheckOutDate())
-                .status(tenant.getStatus())
-                .build();
-
-    }
 }

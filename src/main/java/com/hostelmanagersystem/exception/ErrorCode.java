@@ -38,6 +38,8 @@ public enum ErrorCode {
     ROOM_HAD_BEEN_ACCEPT(1015,"Phòng này đã được chấp nhận đăng", HttpStatus.BAD_REQUEST),
       
     TENANT_NOT_FOUND(1022,"Không tìm thấy khách thuê phòng",HttpStatus.BAD_REQUEST),
+    TENANT_REQUEST_ALREADY_EXISTS(1023, "Bạn đã gửi yêu cầu thuê phòng này rồi.",HttpStatus.BAD_REQUEST)
+
     ;
 
 

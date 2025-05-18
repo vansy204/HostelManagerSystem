@@ -18,17 +18,12 @@ import java.time.LocalDate;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Tenant {
-    @MongoId
-    String id;
-    String fullName;
-    String email;
-    String phoneNumber;
-    String citizenId; // CCCD
-    LocalDate dateOfBirth;
-    String gender;
-    String address;
-    String roomId; // ID của phòng đang thuê
-    String landlordId; // Chủ thuê trọ
-    LocalDate moveInDate;
-    LocalDate moveOutDate;
+  @MongoId
+  String id;
+  String userId;
+  String roomId;
+  LocalDate checkInDate;
+  LocalDate checkOutDate;
+  TenantStatus status;
+  LocalDate createAt;
 }
