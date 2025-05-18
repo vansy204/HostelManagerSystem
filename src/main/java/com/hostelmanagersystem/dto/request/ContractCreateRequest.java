@@ -10,8 +10,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TenantUpdateRequest {
-    String phoneNumber;
-    String address;
-    LocalDate moveOutDate;
+public class ContractCreateRequest {
+    String tenantId;
+    String roomId;
+    LocalDate startDate;
+    LocalDate endDate;
+    Double deposit;
+    Double monthlyPrice;
+    String terms;
 }
