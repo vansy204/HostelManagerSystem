@@ -1,11 +1,19 @@
 package com.hostelmanagersystem.service;
 
-import com.hostelmanagersystem.dto.request.CreateInvoiceRequest;
-import com.hostelmanagersystem.dto.request.UpdatePaymentStatusRequest;
+import com.hostelmanagersystem.dto.request.InvoiceCreateRequest;
 import com.hostelmanagersystem.dto.response.InvoiceResponse;
+import com.hostelmanagersystem.enums.InvoiceStatus;
+
+import java.util.List;
 
 public interface InvoiceService {
-    InvoiceResponse createInvoice(String landlordId, CreateInvoiceRequest request);
-    InvoiceResponse updatePaymentStatus(UpdatePaymentStatusRequest request);
-    double getMonthlyRevenue(String landlordId, String month);
+    InvoiceResponse createInvoice(String landlordId, InvoiceCreateRequest request);
+
+    InvoiceResponse getInvoiceById(String landlordId, String invoiceId);
+
+    List<InvoiceResponse> getInvoicesByLandlordAndMonth(String landlordId, String month);
+
+    List<InvoiceResponse> getInvoicesByTenant(String tenantId);
+
+    InvoiceResponse updatePaymentStatus(String landlordId, String invoiceId, InvoiceStatus status, String paymentMethod);
 }
