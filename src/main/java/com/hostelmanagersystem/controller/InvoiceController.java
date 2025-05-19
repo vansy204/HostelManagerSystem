@@ -89,4 +89,16 @@ public class InvoiceController {
                 .message("Cập nhật trạng thái thanh toán thành công")
                 .build();
     }
+
+    @PreAuthorize("hasRole('OWNER')")
+    @PostMapping("/{invoiceId}/send-email")
+    public ApiResponse<Void> sendInvoiceEmail(
+            @PathVariable String invoiceId,
+            Authentication authentication) {
+        String landlordId = authentication.getName();
+        invoiceService.sendInvoiceEmailToTenant(landlordId, invoiceId);
+        return ApiResponse.<Void>builder()
+                .message("Gửi email hóa đơn thành công")
+                .build();
+    }
 }
