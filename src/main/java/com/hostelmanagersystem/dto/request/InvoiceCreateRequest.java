@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateInvoiceRequest {
+public class InvoiceCreateRequest {
     String tenantId;
     String roomId;
     String month; // "2025-05"
