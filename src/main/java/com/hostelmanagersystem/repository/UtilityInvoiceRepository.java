@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +13,6 @@ import java.util.Optional;
 public interface UtilityInvoiceRepository extends MongoRepository<UtilityInvoice, String> {
     UtilityInvoice save(UtilityInvoice invoice);
     Optional<UtilityInvoice> findById(String id);
-    List<UtilityInvoice> findByLandlordIdAndMonth(String landlordId, String month);
     Optional<UtilityInvoice> findByUsageId(String usageId);
+    List<UtilityInvoice> findByLandlordIdAndCreatedAtBetween(String landlordId, LocalDateTime createdAtAfter, LocalDateTime createdAtBefore);
 }

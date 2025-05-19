@@ -2,7 +2,9 @@ package com.hostelmanagersystem.service;
 
 import com.hostelmanagersystem.dto.request.InvoiceCreateRequest;
 import com.hostelmanagersystem.dto.response.InvoiceResponse;
+import com.hostelmanagersystem.entity.identity.User;
 import com.hostelmanagersystem.entity.manager.Invoice;
+import com.hostelmanagersystem.entity.manager.Tenant;
 import com.hostelmanagersystem.enums.InvoiceStatus;
 import com.hostelmanagersystem.mapper.InvoiceMapper;
 import com.hostelmanagersystem.repository.InvoiceRepository;
@@ -26,6 +28,7 @@ public class InvoiceServiceImpl implements InvoiceService{
     InvoicePdfGenerator pdfGenerator;
     EmailService emailService;
     UserRepository userRepository;
+//    TenantRepository tenantRepository;
 
     @Override
     public InvoiceResponse createInvoice(String landlordId, InvoiceCreateRequest request) {
@@ -75,5 +78,28 @@ public class InvoiceServiceImpl implements InvoiceService{
 
         Invoice saved = invoiceRepository.save(invoice);
         return invoiceMapper.toInvoiceResponse(saved);
+    }
+
+    @Override
+    public void sendInvoiceEmailToTenant(String landlordId, String invoiceId) {
+        Invoice invoice = invoiceRepository.findById(invoiceId)
+                .filter(inv -> inv.getLandlordId().equals(landlordId))
+                .orElseThrow(() -> new RuntimeException("Invoice not found"));
+
+        // Lấy email tenant
+        User tenant = userRepository.findById(invoice.getTenantId())
+                .orElseThrow(() -> new RuntimeException("Tenant not found"));
+
+        String email = tenant.getEmail();
+
+        byte[] pdf = InvoicePdfGenerator.generateInvoicePdf(invoice);
+
+        emailService.sendInvoiceEmail(
+                email,
+                "Hóa đơn phòng trọ tháng " + invoice.getMonth(),
+                "Xin chào, vui lòng xem hóa đơn trong file đính kèm.",
+                pdf,
+                "invoice-" + invoice.getMonth() + ".pdf"
+        );
     }
 }

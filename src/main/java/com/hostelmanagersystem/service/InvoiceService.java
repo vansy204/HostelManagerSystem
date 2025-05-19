@@ -16,4 +16,6 @@ public interface InvoiceService {
     List<InvoiceResponse> getInvoicesByTenant(String tenantId);
 
     InvoiceResponse updatePaymentStatus(String landlordId, String invoiceId, InvoiceStatus status, String paymentMethod);
+
+    void sendInvoiceEmailToTenant(String landlordId, String invoiceId);
 }

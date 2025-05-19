@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 
 @Service
@@ -96,9 +97,19 @@ public class UtilityServiceImpl implements UtilityService{
 
     @Override
     public List<UtilityInvoiceResponse> getUtilityInvoicesByMonth(String landlordId, String month) {
-        List<UtilityInvoice> invoices = utilityInvoiceRepository.findByLandlordIdAndMonth(landlordId, month);
-        return invoices.stream().map(utilityMapper::toUtilityInvoiceResponse).toList();
+        // Chuyển chuỗi "2025-05" thành khoảng thời gian trong tháng 5/2025
+        YearMonth yearMonth = YearMonth.parse(month); // month = "2025-05"
+        LocalDateTime start = yearMonth.atDay(1).atStartOfDay();         // 2025-05-01T00:00
+        LocalDateTime end = yearMonth.atEndOfMonth().atTime(23, 59, 59); // 2025-05-31T23:59:59
+
+        List<UtilityInvoice> invoices = utilityInvoiceRepository
+                .findByLandlordIdAndCreatedAtBetween(landlordId, start, end);
+
+        return invoices.stream()
+                .map(utilityMapper::toUtilityInvoiceResponse)
+                .toList();
     }
+
     @Override
     public UtilityConfigResponse getConfigByLandlordId(String landlordId) {
         UtilityConfig config = utilityConfigRepository.findByLandlordId(landlordId)
