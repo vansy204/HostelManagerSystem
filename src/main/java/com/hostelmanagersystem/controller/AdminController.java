@@ -1,6 +1,7 @@
 package com.hostelmanagersystem.controller;
 
 import com.hostelmanagersystem.dto.response.ApiResponse;
+import com.hostelmanagersystem.dto.response.InvoiceResponse;
 import com.hostelmanagersystem.dto.response.RoomResponse;
 import com.hostelmanagersystem.dto.response.UserResponse;
 import com.hostelmanagersystem.service.AdminService;
@@ -77,6 +78,12 @@ public class AdminController {
                 .result(result)
                 .build();
     }
-
+    @GetMapping("/rooms/invoice")
+    public ApiResponse<List<InvoiceResponse>> getAllInvoice(){
+        var result = adminService.getAllInvoice();
+        return ApiResponse.<List<InvoiceResponse>>builder()
+                .result(result)
+                .build();
+    }
 
 }
