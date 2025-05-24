@@ -4,7 +4,6 @@ import com.hostelmanagersystem.dto.request.InvoiceCreateRequest;
 import com.hostelmanagersystem.dto.response.InvoiceResponse;
 import com.hostelmanagersystem.entity.identity.User;
 import com.hostelmanagersystem.entity.manager.Invoice;
-import com.hostelmanagersystem.entity.manager.Tenant;
 import com.hostelmanagersystem.enums.InvoiceStatus;
 import com.hostelmanagersystem.mapper.InvoiceMapper;
 import com.hostelmanagersystem.repository.InvoiceRepository;
