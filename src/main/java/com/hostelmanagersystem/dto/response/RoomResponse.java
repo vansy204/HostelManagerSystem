@@ -20,6 +20,7 @@ public class RoomResponse {
     List<String> facilities;
     String rentalTime;
     String condition;
+    Integer floor;
     List<String> mediaUrls;
 
     String province;
