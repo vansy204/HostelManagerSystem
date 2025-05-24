@@ -51,8 +51,6 @@ public class RoomService {
     @Value("${spring.mail.username}")
     String ADMIN_EMAIL;
 
-
-
     @PreAuthorize("hasRole('OWNER')")
     public String createRoom(RoomCreationRequest room) {
         var existingRoom = roomRepository.findByRoomNumber(room.getRoomNumber());
@@ -81,6 +79,7 @@ public class RoomService {
         roomRepository.save(roomCreate);
         return "Đã gửi yêu cầu đăng bài đến admin, vui lòng chờ được duyệt";
     }
+
     public Room findRoomById(String id) {
         return roomRepository.findById(id)
                 .orElseThrow(() ->new AppException(ErrorCode.ROOM_NOT_EXISTED));
