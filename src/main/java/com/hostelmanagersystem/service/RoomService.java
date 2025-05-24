@@ -75,8 +75,6 @@ public class RoomService {
                 .ward(room.getWard())
                 .addressText(room.getAddressText())
                 .build();
-
-
         sendRoomApprovalRequestEmail(ADMIN_EMAIL,room);
         roomRepository.save(roomCreate);
         return "Đã gửi yêu cầu đăng bài đến admin, vui lòng chờ được duyệt";
