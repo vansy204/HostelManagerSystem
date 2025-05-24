@@ -25,6 +25,7 @@ public class Room {
     List<String> facilities; // Tiện ích
     Integer leaseTerm; // Thời gian thuê
     String condition;  // Tình trạng phòng
+    Integer floor;
     String description;
     List<String> mediaUrls;
 
