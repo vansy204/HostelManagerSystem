@@ -20,6 +20,7 @@ public class RoomCreationRequest {
     Integer leaseTerm; // Thời gian thuê
     String condition;  // Tình trạng phòng
     String description;
+    Integer floor;
     List<String> mediaUrls;
     String province;
     String district;

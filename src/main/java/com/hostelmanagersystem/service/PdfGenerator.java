@@ -3,7 +3,6 @@ package com.hostelmanagersystem.service;
 import com.hostelmanagersystem.entity.identity.User;
 import com.hostelmanagersystem.entity.manager.Contract;
 import com.hostelmanagersystem.entity.manager.Room;
-import com.hostelmanagersystem.entity.manager.Tenant;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
