@@ -1,5 +1,6 @@
 package com.hostelmanagersystem.controller;
 
+import com.hostelmanagersystem.annotation.LogActivity;
 import com.hostelmanagersystem.dto.response.ApiResponse;
 import com.hostelmanagersystem.dto.response.InvoiceResponse;
 import com.hostelmanagersystem.dto.response.RoomResponse;
@@ -22,6 +23,7 @@ public class AdminController {
     AdminService adminService;
 
     @GetMapping("/users")
+    @LogActivity(action = "GET_ALL_USER", description = "get all users")
     public ApiResponse<List<UserResponse>> getAllUsers() {
         var result = adminService.getAllUsers();
         return ApiResponse.<List<UserResponse>>builder()
