@@ -23,7 +23,7 @@ public class ContractController {
     ContractService contractService;
 
     @PostMapping
-    @PreAuthorize("hasRole('LANDLORD')")
+    @PreAuthorize("hasRole('OWNER')")
     public ApiResponse<ContractResponse> createContract(
             @AuthenticationPrincipal User user,
             @RequestBody @Valid ContractCreateRequest request

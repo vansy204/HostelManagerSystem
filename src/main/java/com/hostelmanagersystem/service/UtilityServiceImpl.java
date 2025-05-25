@@ -131,5 +131,4 @@ public class UtilityServiceImpl implements UtilityService{
         UtilityConfig saved = utilityConfigRepository.save(config);
         return utilityMapper.toUtilityConfigResponse(saved);
     }
-
 }
