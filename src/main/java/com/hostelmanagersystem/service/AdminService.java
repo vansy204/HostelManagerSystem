@@ -1,5 +1,6 @@
 package com.hostelmanagersystem.service;
 
+import com.hostelmanagersystem.dto.response.InvoiceResponse;
 import com.hostelmanagersystem.dto.response.RoomResponse;
 import com.hostelmanagersystem.dto.response.UserResponse;
 import com.hostelmanagersystem.entity.identity.User;
@@ -7,8 +8,10 @@ import com.hostelmanagersystem.entity.manager.Room;
 import com.hostelmanagersystem.enums.RoomStatus;
 import com.hostelmanagersystem.exception.AppException;
 import com.hostelmanagersystem.exception.ErrorCode;
+import com.hostelmanagersystem.mapper.InvoiceMapper;
 import com.hostelmanagersystem.mapper.RoomMapper;
 import com.hostelmanagersystem.mapper.UserMapper;
+import com.hostelmanagersystem.repository.InvoiceRepository;
 import com.hostelmanagersystem.repository.RoomRepository;
 import com.hostelmanagersystem.repository.UserRepository;
 
@@ -44,6 +47,8 @@ public class AdminService {
     JavaMailSender mailSender;
     RoomRepository roomRepository;
     RoomMapper roomMapper;
+    InvoiceRepository invoiceRepository;
+    InvoiceMapper invoiceMapper;
 
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -202,5 +207,12 @@ public class AdminService {
         return roomRepository.findAllByStatus(RoomStatus.PENDING)
                 .stream().map(roomMapper::toRoomResponse)
                 .collect(Collectors.toList());
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<InvoiceResponse> getAllInvoice(){
+        return invoiceRepository.findAll()
+                .stream()
+                .map(invoiceMapper::toInvoiceResponse)
+                .toList();
     }
 }
