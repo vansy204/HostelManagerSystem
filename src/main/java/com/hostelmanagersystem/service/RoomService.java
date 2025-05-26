@@ -89,7 +89,6 @@ public class RoomService {
                 .orElseThrow(() ->new AppException(ErrorCode.ROOM_NOT_EXISTED));
     }
     public List<Room> findAll() {
-
         return roomRepository.findAll();
     }
 

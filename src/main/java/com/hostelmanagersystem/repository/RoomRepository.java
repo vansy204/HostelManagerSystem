@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface RoomRepository extends MongoRepository<Room, String>{
 
     Optional<Room> findByRoomNumber(String roomNumber);
-
+    Optional<List<Room>> findAllByRoomNumberContainingIgnoreCase(String roomNumber);
     List<Room> findAllByStatus(RoomStatus status);
 
 }
