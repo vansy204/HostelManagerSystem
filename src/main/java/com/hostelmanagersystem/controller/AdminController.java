@@ -5,13 +5,21 @@ import com.hostelmanagersystem.dto.response.ApiResponse;
 import com.hostelmanagersystem.dto.response.InvoiceResponse;
 import com.hostelmanagersystem.dto.response.RoomResponse;
 import com.hostelmanagersystem.dto.response.UserResponse;
+import com.hostelmanagersystem.mapper.UserMapper;
 import com.hostelmanagersystem.service.AdminService;
+import com.hostelmanagersystem.service.ExcelExportService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -21,6 +29,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AdminController {
     AdminService adminService;
+    ExcelExportService excelExportService;
+    UserMapper userMapper;
 
     @GetMapping("/users")
     @LogActivity(action = "GET_ALL_USER", description = "get all users")
@@ -86,6 +96,22 @@ public class AdminController {
         return ApiResponse.<List<InvoiceResponse>>builder()
                 .result(result)
                 .build();
+    }
+    @GetMapping("/export/users")
+    public ResponseEntity<byte[]> exportUsers() {
+        try{
+            List<UserResponse> users = adminService.getAllUsers();
+            byte[] excelData = excelExportService.exportUsersToExcel(users);
+
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", "bao-cao-nguoi-dung" + LocalDateTime.now() + ".xlsx");
+
+            return new ResponseEntity<>(excelData, headers, HttpStatus.OK);
+        }catch (IOException e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
