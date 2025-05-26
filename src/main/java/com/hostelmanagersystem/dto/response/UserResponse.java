@@ -6,6 +6,8 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -19,6 +21,6 @@ public class UserResponse {
     String firstName;
     String lastName;
     boolean isActive;
-    Instant createdAt;
+    LocalDateTime createdAt;
     String roleName;
 }
