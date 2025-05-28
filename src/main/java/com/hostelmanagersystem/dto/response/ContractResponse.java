@@ -1,5 +1,6 @@
 package com.hostelmanagersystem.dto.response;
 
+import com.hostelmanagersystem.enums.ContractStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,12 +13,15 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ContractResponse {
     String id;
-    String roomId;
     String tenantId;
+    String roomId;
     LocalDate startDate;
     LocalDate endDate;
     Double deposit;
     Double monthlyPrice;
-    String status;
+    String terms;
+    ContractStatus status;
     String pdfUrl;
+    LocalDate createdAt;
+    LocalDate updatedAt;
 }
