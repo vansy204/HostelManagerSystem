@@ -18,7 +18,7 @@ public class Contract {
     @MongoId
     String id;
 
-    String landlordId;
+    String ownerId;
     String tenantId;
     String roomId;
 

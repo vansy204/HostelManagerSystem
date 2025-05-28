@@ -30,8 +30,8 @@ public class InvoiceServiceImpl implements InvoiceService{
 //    TenantRepository tenantRepository;
 
     @Override
-    public InvoiceResponse createInvoice(String landlordId, InvoiceCreateRequest request) {
-        Invoice invoice = invoiceMapper.toInvoice(request, landlordId);
+    public InvoiceResponse createInvoice(String ownerId, InvoiceCreateRequest request) {
+        Invoice invoice = invoiceMapper.toInvoice(request, ownerId);
         invoice.setTotalAmount(request.getRentAmount() + request.getElectricityAmount() +
                 request.getWaterAmount() + request.getServiceAmount());
         invoice.setStatus(InvoiceStatus.UNPAID);
@@ -42,16 +42,16 @@ public class InvoiceServiceImpl implements InvoiceService{
     }
 
     @Override
-    public InvoiceResponse getInvoiceById(String landlordId, String invoiceId) {
+    public InvoiceResponse getInvoiceById(String ownerId, String invoiceId) {
         Invoice invoice = invoiceRepository.findById(invoiceId)
-                .filter(inv -> inv.getLandlordId().equals(landlordId))
+                .filter(inv -> inv.getOwnerId().equals(ownerId))
                 .orElseThrow(() -> new RuntimeException("Invoice not found or access denied"));
         return invoiceMapper.toInvoiceResponse(invoice);
     }
 
     @Override
-    public List<InvoiceResponse> getInvoicesByLandlordAndMonth(String landlordId, String month) {
-        List<Invoice> invoices = invoiceRepository.findByLandlordIdAndMonth(landlordId, month);
+    public List<InvoiceResponse> getInvoicesByOwnerAndMonth(String ownerId, String month) {
+        List<Invoice> invoices = invoiceRepository.findByOwnerIdAndMonth(ownerId, month);
         return invoices.stream()
                 .map(invoiceMapper::toInvoiceResponse)
                 .toList();
@@ -66,9 +66,9 @@ public class InvoiceServiceImpl implements InvoiceService{
     }
 
     @Override
-    public InvoiceResponse updatePaymentStatus(String landlordId, String invoiceId, InvoiceStatus status, String paymentMethod) {
+    public InvoiceResponse updatePaymentStatus(String ownerId, String invoiceId, InvoiceStatus status, String paymentMethod) {
         Invoice invoice = invoiceRepository.findById(invoiceId)
-                .filter(inv -> inv.getLandlordId().equals(landlordId))
+                .filter(inv -> inv.getOwnerId().equals(ownerId))
                 .orElseThrow(() -> new RuntimeException("Invoice not found or access denied"));
 
         invoice.setStatus(status);
@@ -80,9 +80,9 @@ public class InvoiceServiceImpl implements InvoiceService{
     }
 
     @Override
-    public void sendInvoiceEmailToTenant(String landlordId, String invoiceId) {
+    public void sendInvoiceEmailToTenant(String ownerId, String invoiceId) {
         Invoice invoice = invoiceRepository.findById(invoiceId)
-                .filter(inv -> inv.getLandlordId().equals(landlordId))
+                .filter(inv -> inv.getOwnerId().equals(ownerId))
                 .orElseThrow(() -> new RuntimeException("Invoice not found"));
 
         // Lấy email tenant

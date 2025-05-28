@@ -20,7 +20,7 @@ public class UtilityUsage {
     String id;
 
     String roomId;
-    String landlordId;
+    String ownerId;
     String month; // "2025-05"
 
     Integer oldElectricity;

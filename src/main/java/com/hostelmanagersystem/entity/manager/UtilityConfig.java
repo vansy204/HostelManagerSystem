@@ -20,7 +20,7 @@ public class UtilityConfig {
     @MongoId
     String id;
 
-    String landlordId;
+    String ownerId;
 
     Integer electricityPricePerUnit; // giá điện theo đơn vị
 
