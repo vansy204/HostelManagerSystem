@@ -3,7 +3,6 @@ package com.hostelmanagersystem.repository;
 import com.hostelmanagersystem.entity.manager.Invoice;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 

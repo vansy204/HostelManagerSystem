@@ -1,4 +1,4 @@
-package com.hostelmanagersystem.dto.response;
+package com.hostelmanagersystem.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,8 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthResponse {
-    String userName;
-    String token;
-    boolean authenticated;
+public class RoomChangeRequest {
+    String tenantId;
+    String newRoomId;
 }

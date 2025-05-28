@@ -72,6 +72,7 @@ public class AuthenticationService {
         return AuthResponse.builder()
                 .token(token)
                 .authenticated(true)
+                .userName(user.getUserName())
                 .build();
     }
     private String generateToken(User user) {
