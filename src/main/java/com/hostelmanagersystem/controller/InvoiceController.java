@@ -25,7 +25,6 @@ import java.util.List;
 public class InvoiceController {
     InvoiceService invoiceService;
 
-    @PreAuthorize("hasRole('OWNER')")
     @PostMapping
     public ApiResponse<InvoiceResponse> createInvoice(
             @RequestBody @Valid InvoiceCreateRequest request,
@@ -38,7 +37,6 @@ public class InvoiceController {
                 .build();
     }
 
-    @PreAuthorize("hasRole('OWNER')")
     @GetMapping("/{invoiceId}")
     public ApiResponse<InvoiceResponse> getInvoiceById(
             @PathVariable String invoiceId,
@@ -51,7 +49,6 @@ public class InvoiceController {
                 .build();
     }
 
-    @PreAuthorize("hasRole('OWNER')")
     @GetMapping("/month/{month}")
     public ApiResponse<List<InvoiceResponse>> getInvoicesByMonth(
             @PathVariable String month,
@@ -64,7 +61,6 @@ public class InvoiceController {
                 .build();
     }
 
-    @PreAuthorize("hasRole('RENTER')")
     @GetMapping("/my")
     public ApiResponse<List<InvoiceResponse>> getMyInvoices(Authentication authentication) {
         String tenantId = authentication.getName();
@@ -75,7 +71,6 @@ public class InvoiceController {
                 .build();
     }
 
-    @PreAuthorize("hasRole('OWNER')")
     @PutMapping("/{invoiceId}/payment-status")
     public ApiResponse<InvoiceResponse> updatePaymentStatus(
             @PathVariable String invoiceId,
@@ -90,7 +85,6 @@ public class InvoiceController {
                 .build();
     }
 
-    @PreAuthorize("hasRole('OWNER')")
     @PostMapping("/{invoiceId}/send-email")
     public ApiResponse<Void> sendInvoiceEmail(
             @PathVariable String invoiceId,

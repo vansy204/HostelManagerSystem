@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface UtilityConfigRepository extends MongoRepository<UtilityConfig, String> {
     Optional<UtilityConfig> findByOwnerId(String OwnerId);
+    Optional<UtilityConfig> findByLandlordId(String landlordId);
+    UtilityConfig save(UtilityConfig config);
 }
