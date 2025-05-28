@@ -18,14 +18,21 @@ import org.springframework.stereotype.Service;
 public class EmailService {
     JavaMailSender mailSender;
 
-    public void sendInvoiceEmail(String to, byte[] pdfContent, String month) throws MessagingException {
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(to);
-        helper.setSubject("Hóa đơn tháng " + month);
-        helper.setText("Xin chào, vui lòng xem hóa đơn đính kèm.");
+    public void sendInvoiceEmail(String to, String subject, String body, byte[] pdfBytes, String filename) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        helper.addAttachment("HoaDon_" + month + ".pdf", new ByteArrayResource(pdfContent));
-        mailSender.send(message);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(body);
+
+            ByteArrayResource pdfAttachment = new ByteArrayResource(pdfBytes);
+            helper.addAttachment(filename, pdfAttachment);
+
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send email", e);
+        }
     }
 }

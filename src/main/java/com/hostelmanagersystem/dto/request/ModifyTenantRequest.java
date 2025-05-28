@@ -8,12 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateInvoiceRequest {
+public class ModifyTenantRequest {
     String tenantId;
-    String roomId;
-    String month; // "2025-05"
-    double rentAmount;
-    double electricityAmount;
-    double waterAmount;
-    double serviceAmount;
+    String action;
 }

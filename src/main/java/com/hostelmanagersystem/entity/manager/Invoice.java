@@ -18,11 +18,11 @@ public class Invoice {
     @MongoId
     String id;
 
-    String landlordId;
+    String ownerId;
     String tenantId;
     String roomId;
-
     String month; // "2025-05"
+
     double rentAmount;
     double electricityAmount;
     double waterAmount;
@@ -34,6 +34,4 @@ public class Invoice {
     String paymentMethod; // CASH, BANK_TRANSFER, ONLINE
 
     LocalDateTime createdAt;
-
-//    String electronicCode;
 }

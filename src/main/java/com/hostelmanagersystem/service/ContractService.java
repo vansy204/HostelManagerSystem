@@ -11,9 +11,8 @@ import com.hostelmanagersystem.entity.manager.Contract;
 import java.util.List;
 
 public interface ContractService {
-    ContractResponse createContract(String landlordId, ContractCreateRequest request);
+    ContractResponse createContract(String ownerId, ContractCreateRequest request);
     ContractResponse updateContract(String contractId, ContractUpdateRequest request, String ownerId);
-
     String generatePdfAndStore(Contract contract);
     void updateContractStatus();
 

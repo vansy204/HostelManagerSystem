@@ -1,5 +1,6 @@
 package com.hostelmanagersystem.dto.response;
 
+import com.hostelmanagersystem.enums.RoomStatus;
 import lombok.*; import lombok.experimental.FieldDefaults;
 
 import java.util.List;
@@ -12,16 +13,16 @@ import java.util.List;
 public class RoomResponse {
     String id;
     String roomNumber;
-    String roomSize;
-    Double price;
-    String status;
+    String roomSize;   // Diện tích
+    Double price;      // Giá
+    RoomStatus status; // Trạng thái phòng
+    String roomType;   // Loại phòng
+    List<String> facilities; // Tiện ích
+    Integer leaseTerm; // Thời gian thuê
+    String condition;  // Tình trạng phòng
     String description;
-    String roomType;
-    List<String> facilities;
-    String rentalTime;
-    String condition;
+    Integer floor;
     List<String> mediaUrls;
-
     String province;
     String district;
     String ward;

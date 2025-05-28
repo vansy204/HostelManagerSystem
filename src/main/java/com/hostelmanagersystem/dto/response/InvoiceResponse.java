@@ -13,15 +13,20 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvoiceResponse {
     String id;
+    String ownerId;
     String tenantId;
     String roomId;
     String month;
+
     double rentAmount;
     double electricityAmount;
     double waterAmount;
     double serviceAmount;
     double totalAmount;
+
     InvoiceStatus status;
     LocalDateTime paymentDate;
     String paymentMethod;
+
+    LocalDateTime createdAt;
 }

@@ -1,25 +1,33 @@
 package com.hostelmanagersystem.entity.manager;
 
-import com.hostelmanagersystem.enums.TenantStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-@Document(value = "maintenance_requests")
-@Data
-@Builder
+@Document(collection = "utility_usages")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MaintenanceRequest {
+public class UtilityUsage {
     @MongoId
     String id;
-    String tenantId;
+
     String roomId;
-    String description;
-    TenantStatus status;
-    LocalDate createAt;
+    String ownerId;
+    String month; // "2025-05"
+
+    Integer oldElectricity;
+    Integer newElectricity;
+
+    Integer oldWater;
+    Integer newWater;
+
+    LocalDateTime createdAt = LocalDateTime.now();
 }
