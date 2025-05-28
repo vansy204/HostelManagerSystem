@@ -8,7 +8,7 @@ public enum RoomStatus {
     CLEANING, //Đang dọn dẹp sau khi trả phòng
     PENDING, //Chờ duyệt bài đăng
     UNAVAILABLE, //Tạm ngừng hoạt động
-    ACTIVE,      // đang thuê
-    INACTIVE,    // ngưng thuê
-    MOVED_OUT
+    ACTIVE,     // đang thuê
+    INACTIVE,   // ngưng thuê
+    MOVED_OUT //
     }
