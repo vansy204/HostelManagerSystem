@@ -41,6 +41,7 @@ public enum ErrorCode {
     TENANT_NOT_FOUND(1018,"Không tìm thấy khách thuê", HttpStatus.BAD_REQUEST),
     TENANT_REQUEST_ALREADY_EXISTS(1019, "Bạn đã gửi yêu cầu thuê phòng này rồi.", HttpStatus.BAD_REQUEST),
     ACCESS_DENIED(1020,"Truy cập bị từ chối", HttpStatus.UNAUTHORIZED),
+    INVALID_REQUEST_STATUS(1021,"Trạng thái yêu cầu không hợp lệ", HttpStatus.BAD_REQUEST),
     ;
 
 

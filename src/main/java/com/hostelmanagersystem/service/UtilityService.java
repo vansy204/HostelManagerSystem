@@ -10,16 +10,16 @@ import com.hostelmanagersystem.dto.response.UtilityUsageResponse;
 import java.util.List;
 
 public interface UtilityService {
-    UtilityUsageResponse createUtilityUsage(String landlordId, UtilityUsageCreateRequest request);
-    List<UtilityUsageResponse> getUtilityUsagesByMonth(String landlordId, String month);
+    UtilityUsageResponse createUtilityUsage(String ownerId, UtilityUsageCreateRequest request);
+    List<UtilityUsageResponse> getUtilityUsagesByMonth(String ownerId, String month);
 
     // Tạo hóa đơn tiện ích dựa trên chỉ số đã nhập, tính tiền dựa trên đơn giá config
-    UtilityInvoiceResponse createUtilityInvoice(String landlordId, UtilityInvoiceCreateRequest request);
+    UtilityInvoiceResponse createUtilityInvoice(String ownerId, UtilityInvoiceCreateRequest request);
 
-    // Lấy hóa đơn tiện ích theo landlord và tháng
-    List<UtilityInvoiceResponse> getUtilityInvoicesByMonth(String landlordId, String month);
+    // Lấy hóa đơn tiện ích theo owner và tháng
+    List<UtilityInvoiceResponse> getUtilityInvoicesByMonth(String ownerId, String month);
 
-    UtilityConfigResponse getConfigByLandlordId(String landlordId);
+    UtilityConfigResponse getConfigByOwnerId(String ownerId);
 
-    UtilityConfigResponse updateConfig(String landlordId, UtilityConfigUpdateRequest request);
+    UtilityConfigResponse updateConfig(String ownerId, UtilityConfigUpdateRequest request);
 }

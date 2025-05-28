@@ -7,15 +7,15 @@ import com.hostelmanagersystem.enums.InvoiceStatus;
 import java.util.List;
 
 public interface InvoiceService {
-    InvoiceResponse createInvoice(String landlordId, InvoiceCreateRequest request);
+    InvoiceResponse createInvoice(String ownerId, InvoiceCreateRequest request);
 
-    InvoiceResponse getInvoiceById(String landlordId, String invoiceId);
+    InvoiceResponse getInvoiceById(String ownerId, String invoiceId);
 
-    List<InvoiceResponse> getInvoicesByLandlordAndMonth(String landlordId, String month);
+    List<InvoiceResponse> getInvoicesByOwnerAndMonth(String ownerId, String month);
 
     List<InvoiceResponse> getInvoicesByTenant(String tenantId);
 
-    InvoiceResponse updatePaymentStatus(String landlordId, String invoiceId, InvoiceStatus status, String paymentMethod);
+    InvoiceResponse updatePaymentStatus(String ownerId, String invoiceId, InvoiceStatus status, String paymentMethod);
 
-    void sendInvoiceEmailToTenant(String landlordId, String invoiceId);
+    void sendInvoiceEmailToTenant(String ownerId, String invoiceId);
 }
