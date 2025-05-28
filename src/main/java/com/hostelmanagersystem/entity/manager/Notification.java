@@ -19,7 +19,7 @@ public class Notification {
     String id;
 
     String recipientId; // ID của người nhận (tenant)
-    String senderId;    // ID của người gửi (landlord)
+    String senderId;    // ID của người gửi (owner)
 
     String title;
     String message;

@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface UtilityUsageRepository extends MongoRepository<UtilityUsage, String> {
 
-    List<UtilityUsage> findByLandlordIdAndMonth(String landlordId, String month);
+    List<UtilityUsage> findByOwnerIdAndMonth(String ownerId, String month);
 
     Optional<UtilityUsage> findByRoomIdAndMonth(String roomId, String month);
 }

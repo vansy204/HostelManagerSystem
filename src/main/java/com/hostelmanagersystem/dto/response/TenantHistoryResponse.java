@@ -1,4 +1,4 @@
-package com.hostelmanagersystem.dto.request;
+package com.hostelmanagersystem.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,14 +10,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TenantRequest {
-    String userId;
+public class TenantHistoryResponse {
     String roomId;
-    String fullName;
-    String phoneNumber;
-    String identityNumber;
-    String email;
-    String avatarUrl;
     LocalDate checkInDate;
     LocalDate checkOutDate;
 }

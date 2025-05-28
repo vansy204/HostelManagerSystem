@@ -33,9 +33,9 @@ public class ContractServiceImpl implements ContractService{
     PdfGenerator pdfGenerator; // utility class for PDF
 
     @Override
-    public ContractResponse createContract(String landlordId, ContractCreateRequest request) {
+    public ContractResponse createContract(String ownerId, ContractCreateRequest request) {
         Contract contract = contractMapper.toEntity(request);
-        contract.setLandlordId(landlordId);
+        contract.setOwnerId(ownerId);
         contract.setCreatedAt(LocalDate.now());
         contract.setUpdatedAt(LocalDate.now());
         contract.setStatus(ContractStatus.ACTIVE);
@@ -76,8 +76,8 @@ public class ContractServiceImpl implements ContractService{
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> new AppException(ErrorCode.CONTRACT_NOT_FOUND));
 
-        // Phân quyền: chỉ landlord hoặc tenant của hợp đồng mới xem được
-        if (!contract.getLandlordId().equals(user.getId()) && !contract.getTenantId().equals(user.getId())) {
+        // Phân quyền: chỉ owner hoặc tenant của hợp đồng mới xem được
+        if (!contract.getOwnerId().equals(user.getId()) && !contract.getTenantId().equals(user.getId())) {
             throw new AppException(ErrorCode.ACCESS_DENIED);
         }
 

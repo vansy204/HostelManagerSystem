@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvoiceResponse {
     String id;
-    String landlordId;
+    String ownerId;
     String tenantId;
     String roomId;
     String month;

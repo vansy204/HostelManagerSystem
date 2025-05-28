@@ -79,7 +79,7 @@ public class NotificationServiceImpl implements NotificationService {
 
             Notification notification = new Notification();
             notification.setRecipientId(tenantId);
-            notification.setSenderId(contract.getLandlordId());
+            notification.setSenderId(contract.getOwnerId());
             notification.setTitle("Nhắc thanh toán tiền trọ");
             notification.setMessage("Vui lòng thanh toán tiền trọ cho phòng " + roomName + " trong tháng " + month + ".");
             notification.setType("RENT_REMINDER");
@@ -101,7 +101,7 @@ public class NotificationServiceImpl implements NotificationService {
         for (Contract contract : expiringContracts) {
             Notification notification = new Notification();
             notification.setRecipientId(contract.getTenantId());
-            notification.setSenderId(contract.getLandlordId());
+            notification.setSenderId(contract.getOwnerId());
             notification.setTitle("Hợp đồng sắp hết hạn");
             notification.setMessage("Hợp đồng thuê phòng " + contract.getRoomId() + " sẽ hết hạn vào ngày " +
                     contract.getEndDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + ".");

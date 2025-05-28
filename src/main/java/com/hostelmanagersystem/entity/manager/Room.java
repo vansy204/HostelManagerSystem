@@ -18,6 +18,8 @@ public class Room {
     @MongoId
     String id;
     String roomNumber;
+    String ownerId;
+
     String roomSize;   // Diện tích
     Double price;      // Giá
     RoomStatus status; // Trạng thái phòng

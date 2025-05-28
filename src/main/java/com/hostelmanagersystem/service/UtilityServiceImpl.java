@@ -34,10 +34,10 @@ public class UtilityServiceImpl implements UtilityService{
     UtilityConfigRepository utilityConfigRepository;
 
     @Override
-    public UtilityUsageResponse createUtilityUsage(String landlordId, UtilityUsageCreateRequest request) {
-        // Thêm kiểm tra phân quyền: landlordId phải trùng với chủ phòng
+    public UtilityUsageResponse createUtilityUsage(String ownerId, UtilityUsageCreateRequest request) {
+        // Thêm kiểm tra phân quyền: ownerId phải trùng với chủ phòng
         UtilityUsage usage = utilityMapper.toEntity(request);
-        usage.setLandlordId(landlordId);
+        usage.setOwnerId(ownerId);
 
         // TODO: Có thể kiểm tra dữ liệu đầu vào (chỉ số mới phải >= chỉ số cũ)
 
@@ -46,24 +46,24 @@ public class UtilityServiceImpl implements UtilityService{
     }
 
     @Override
-    public List<UtilityUsageResponse> getUtilityUsagesByMonth(String landlordId, String month) {
-        List<UtilityUsage> list = utilityUsageRepository.findByLandlordIdAndMonth(landlordId, month);
+    public List<UtilityUsageResponse> getUtilityUsagesByMonth(String ownerId, String month) {
+        List<UtilityUsage> list = utilityUsageRepository.findByOwnerIdAndMonth(ownerId, month);
         return list.stream().map(utilityMapper::toResponse).toList();
     }
 
     @Override
-    public UtilityInvoiceResponse createUtilityInvoice(String landlordId, UtilityInvoiceCreateRequest request) {
+    public UtilityInvoiceResponse createUtilityInvoice(String ownerId, UtilityInvoiceCreateRequest request) {
         // 1. Lấy UtilityUsage theo usageId
         UtilityUsage usage = utilityUsageRepository.findById(request.getUsageId())
                 .orElseThrow(() -> new RuntimeException("UtilityUsage không tồn tại"));
 
-        // 2. Kiểm tra landlordId trùng với usage.landlordId
-        if (!usage.getLandlordId().equals(landlordId)) {
-            throw new RuntimeException("Không có quyền tạo hóa đơn cho landlord này");
+        // 2. Kiểm tra ownerId trùng với usage.ownerId
+        if (!usage.getOwnerId().equals(ownerId)) {
+            throw new RuntimeException("Không có quyền tạo hóa đơn cho owner này");
         }
 
-        // 3. Lấy cấu hình đơn giá điện, nước, dịch vụ của landlord
-        UtilityConfig config = utilityConfigRepository.findByLandlordId(landlordId)
+        // 3. Lấy cấu hình đơn giá điện, nước, dịch vụ của owner
+        UtilityConfig config = utilityConfigRepository.findByOwnerId(ownerId)
                 .orElseThrow(() -> new RuntimeException("Chưa cấu hình đơn giá tiện ích"));
 
         // 4. Tính tiền điện, nước
@@ -81,7 +81,7 @@ public class UtilityServiceImpl implements UtilityService{
         invoice.setUsageId(usage.getId());
         invoice.setRoomId(usage.getRoomId());
         invoice.setTenantId(null); // Có thể lấy tenantId qua phòng (cần thêm DB hoặc service lookup)
-        invoice.setLandlordId(landlordId);
+        invoice.setOwnerId(ownerId);
         invoice.setElectricityAmount(electricityAmount);
         invoice.setWaterAmount(waterAmount);
         invoice.setServiceFee(serviceFee);
@@ -96,14 +96,14 @@ public class UtilityServiceImpl implements UtilityService{
     }
 
     @Override
-    public List<UtilityInvoiceResponse> getUtilityInvoicesByMonth(String landlordId, String month) {
+    public List<UtilityInvoiceResponse> getUtilityInvoicesByMonth(String ownerId, String month) {
         // Chuyển chuỗi "2025-05" thành khoảng thời gian trong tháng 5/2025
         YearMonth yearMonth = YearMonth.parse(month); // month = "2025-05"
         LocalDateTime start = yearMonth.atDay(1).atStartOfDay();         // 2025-05-01T00:00
         LocalDateTime end = yearMonth.atEndOfMonth().atTime(23, 59, 59); // 2025-05-31T23:59:59
 
         List<UtilityInvoice> invoices = utilityInvoiceRepository
-                .findByLandlordIdAndCreatedAtBetween(landlordId, start, end);
+                .findByOwnerIdAndCreatedAtBetween(ownerId, start, end);
 
         return invoices.stream()
                 .map(utilityMapper::toUtilityInvoiceResponse)
@@ -111,18 +111,18 @@ public class UtilityServiceImpl implements UtilityService{
     }
 
     @Override
-    public UtilityConfigResponse getConfigByLandlordId(String landlordId) {
-        UtilityConfig config = utilityConfigRepository.findByLandlordId(landlordId)
+    public UtilityConfigResponse getConfigByOwnerId(String ownerId) {
+        UtilityConfig config = utilityConfigRepository.findByOwnerId(ownerId)
                 .orElseThrow(() -> new RuntimeException("Chưa cấu hình đơn giá tiện ích"));
         return utilityMapper.toUtilityConfigResponse(config);
     }
 
     @Override
-    public UtilityConfigResponse updateConfig(String landlordId, UtilityConfigUpdateRequest request) {
-        UtilityConfig config = utilityConfigRepository.findByLandlordId(landlordId)
+    public UtilityConfigResponse updateConfig(String ownerId, UtilityConfigUpdateRequest request) {
+        UtilityConfig config = utilityConfigRepository.findByOwnerId(ownerId)
                 .orElse(new UtilityConfig());
 
-        config.setLandlordId(landlordId);
+        config.setOwnerId(ownerId);
         config.setElectricityPricePerUnit(request.getElectricityPricePerUnit());
         config.setWaterPricePerUnit(request.getWaterPricePerUnit());
         config.setServiceFee(request.getServiceFee());

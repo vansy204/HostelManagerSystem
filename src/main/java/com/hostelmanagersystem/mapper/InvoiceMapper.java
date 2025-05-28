@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface InvoiceMapper {
-    Invoice toInvoice(InvoiceCreateRequest request, String landlordId);
+    Invoice toInvoice(InvoiceCreateRequest request, String ownerId);
 
     InvoiceResponse toInvoiceResponse(Invoice invoice);
 }
