@@ -23,11 +23,11 @@ public class UtilityInvoice {
     String usageId;   // liên kết với UtilityUsage
     String roomId;
     String tenantId;
-    String landlordId;
+    String ownerId;
 
     Integer electricityAmount; // số tiền điện tính được
     Integer waterAmount;       // số tiền nước tính được
-    Integer serviceFee;        // phí dịch vụ nếu có (theo config của landlord)
+    Integer serviceFee;        // phí dịch vụ nếu có (theo config của owner)
 
     Integer totalAmount;       // tổng tiền (điện + nước + dịch vụ)
 

@@ -24,7 +24,7 @@ public class NotificationController {
     NotificationService notificationService;
 
     @PostMapping("/send")
-    @PreAuthorize("hasRole('LANDLORD')")
+    @PreAuthorize("hasRole('OWNER')")
     public ApiResponse<Void> sendNotification(
             @RequestBody NotificationCreateRequest request,
             @AuthenticationPrincipal User userDetails) {
@@ -46,7 +46,7 @@ public class NotificationController {
     }
 
     @GetMapping("/sent")
-    @PreAuthorize("hasRole('LANDLORD')")
+    @PreAuthorize("hasRole('OWNER')")
     public ApiResponse<List<NotificationResponse>> getSentNotifications(
             @AuthenticationPrincipal User userDetails) {
         List<NotificationResponse> result = notificationService.getNotificationsFromSender(userDetails.getId());

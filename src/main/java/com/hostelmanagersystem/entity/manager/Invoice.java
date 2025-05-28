@@ -18,7 +18,7 @@ public class Invoice {
     @MongoId
     String id;
 
-    String landlordId;
+    String ownerId;
     String tenantId;
     String roomId;
     String month; // "2025-05"

@@ -24,13 +24,18 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.attribute.UserPrincipal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -52,8 +57,13 @@ public class RoomService {
     String ADMIN_EMAIL;
 
     @PreAuthorize("hasRole('OWNER')")
-    public String createRoom(RoomCreationRequest room) {
+    public String createRoom(@RequestBody RoomCreationRequest room) {
         var existingRoom = roomRepository.findByRoomNumber(room.getRoomNumber());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        }
         if (existingRoom.isPresent()) {
             throw new AppException(ErrorCode.ROOM_EXISTED);
         }
@@ -76,6 +86,7 @@ public class RoomService {
                 .addressText(room.getAddressText())
                 .build();
         sendRoomApprovalRequestEmail(ADMIN_EMAIL,room);
+        roomCreate.setOwnerId(authentication.getName());
         roomRepository.save(roomCreate);
         return "Đã gửi yêu cầu đăng bài đến admin, vui lòng chờ được duyệt";
     }

@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UtilityConfigResponse {
-    String landlordId;
+    String ownerId;
     Integer electricityPricePerUnit;
     Integer waterPricePerUnit;
     Integer serviceFee;

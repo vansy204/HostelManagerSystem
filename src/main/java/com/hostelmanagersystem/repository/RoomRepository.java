@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RoomRepository extends MongoRepository<Room, String>{
-
     Optional<Room> findByRoomNumber(String roomNumber);
-
     List<Room> findAllByStatus(RoomStatus status);
-
+    Optional<Room> findByIdAndOwnerId(String id, String owner);
 }

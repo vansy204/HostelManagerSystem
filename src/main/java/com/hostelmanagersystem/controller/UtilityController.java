@@ -32,8 +32,8 @@ public class UtilityController {
             @RequestBody @Valid UtilityUsageCreateRequest request,
             Authentication authentication) {
 
-        String landlordId = getLandlordIdFromAuth(authentication);
-        UtilityUsageResponse response = utilityService.createUtilityUsage(landlordId, request);
+        String ownerId = getOwnerIdFromAuth(authentication);
+        UtilityUsageResponse response = utilityService.createUtilityUsage(ownerId, request);
         return ApiResponse.<UtilityUsageResponse>builder()
                 .result(response)
                 .message("Tạo chỉ số tiện ích thành công")
@@ -47,17 +47,17 @@ public class UtilityController {
             @RequestParam String month,
             Authentication authentication) {
 
-        String landlordId = getLandlordIdFromAuth(authentication);
-        List<UtilityUsageResponse> list = utilityService.getUtilityUsagesByMonth(landlordId, month);
+        String ownerId = getOwnerIdFromAuth(authentication);
+        List<UtilityUsageResponse> list = utilityService.getUtilityUsagesByMonth(ownerId, month);
         return ApiResponse.<List<UtilityUsageResponse>>builder()
                 .result(list)
                 .message("Lấy danh sách chỉ số tiện ích thành công")
                 .build();
     }
 
-    private String getLandlordIdFromAuth(Authentication auth) {
-        // TODO: lấy landlordId từ token hoặc UserDetails
-        return auth.getName(); // ví dụ
+    private String getOwnerIdFromAuth(Authentication auth) {
+        // TODO: lấy ownerId từ token hoặc UserDetails
+        return auth.getName();
     }
 
     @PreAuthorize("hasRole('OWNER')")
@@ -66,8 +66,8 @@ public class UtilityController {
             @RequestBody @Valid UtilityInvoiceCreateRequest request,
             Authentication authentication) {
 
-        String landlordId = authentication.getName();
-        UtilityInvoiceResponse response = utilityService.createUtilityInvoice(landlordId, request);
+        String ownerId = authentication.getName();
+        UtilityInvoiceResponse response = utilityService.createUtilityInvoice(ownerId, request);
         return ApiResponse.<UtilityInvoiceResponse>builder()
                 .result(response)
                 .message("Tạo hóa đơn tiện ích thành công")
@@ -80,8 +80,8 @@ public class UtilityController {
             @RequestParam String month,
             Authentication authentication) {
 
-        String landlordId = authentication.getName();
-        List<UtilityInvoiceResponse> invoices = utilityService.getUtilityInvoicesByMonth(landlordId, month);
+        String ownerId = authentication.getName();
+        List<UtilityInvoiceResponse> invoices = utilityService.getUtilityInvoicesByMonth(ownerId, month);
         return ApiResponse.<List<UtilityInvoiceResponse>>builder()
                 .result(invoices)
                 .message("Lấy danh sách hóa đơn tiện ích thành công")
