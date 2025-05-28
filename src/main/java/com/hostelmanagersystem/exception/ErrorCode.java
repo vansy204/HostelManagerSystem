@@ -41,7 +41,11 @@ public enum ErrorCode {
     TENANT_NOT_FOUND(1018,"Không tìm thấy khách thuê", HttpStatus.BAD_REQUEST),
     TENANT_REQUEST_ALREADY_EXISTS(1019, "Bạn đã gửi yêu cầu thuê phòng này rồi.", HttpStatus.BAD_REQUEST),
     ACCESS_DENIED(1020,"Truy cập bị từ chối", HttpStatus.UNAUTHORIZED),
+    INVALID_CHECKIN_DATE(1021,"Thời gian không hợp lệ", HttpStatus.UNAUTHORIZED ),
+    LEASE_TERM_NOT_DEFINED(1022, "Phòng chưa cấu hình thời gian thuê tối thiểu", HttpStatus.UNAUTHORIZED),
+    ROOM_NOT_IN_CLEANING(1023, "Phòng chưa đựoc dọn dẹp", HttpStatus.UNAUTHORIZED);
     ;
+
 
 
     int code;

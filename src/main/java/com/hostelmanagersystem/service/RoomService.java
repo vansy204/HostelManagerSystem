@@ -3,6 +3,7 @@ package com.hostelmanagersystem.service;
 import com.hostelmanagersystem.dto.request.RoomCreationRequest;
 import com.hostelmanagersystem.dto.request.RoomFilterRequest;
 import com.hostelmanagersystem.dto.request.RoomUpdateRequest;
+import com.hostelmanagersystem.dto.response.RoomResponse;
 import com.hostelmanagersystem.entity.manager.Room;
 import com.hostelmanagersystem.enums.RoomStatus;
 import com.hostelmanagersystem.exception.AppException;
@@ -25,6 +26,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 
 import java.io.IOException;
@@ -34,6 +36,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -157,6 +160,13 @@ public class RoomService {
 
         return mongoTemplate.find(query, Room.class);
 
+    }
+
+    @GetMapping("/availableRoom")
+    public List<RoomResponse> getAllAvailableRoom(){
+        return roomRepository.findAllByStatus(RoomStatus.AVAILABLE)
+                .stream().map(roomMapper::toRoomResponse)
+                .collect(Collectors.toList());
     }
 
     @PreAuthorize("hasRole('OWNER')")

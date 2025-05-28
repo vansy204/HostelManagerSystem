@@ -4,8 +4,11 @@ import com.hostelmanagersystem.dto.request.RoomCreationRequest;
 import com.hostelmanagersystem.dto.request.RoomFilterRequest;
 import com.hostelmanagersystem.dto.request.RoomUpdateRequest;
 import com.hostelmanagersystem.dto.response.ApiResponse;
+import com.hostelmanagersystem.dto.response.RoomResponse;
 import com.hostelmanagersystem.entity.manager.Room;
 import com.hostelmanagersystem.enums.RoomStatus;
+import com.hostelmanagersystem.mapper.RoomMapper;
+import com.hostelmanagersystem.repository.RoomRepository;
 import com.hostelmanagersystem.service.RoomService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -30,6 +34,8 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RoomController {
     RoomService roomService;
+    RoomRepository roomRepository;
+    RoomMapper roomMapper;
 
     @PostMapping("/")
     public ApiResponse<String> createRoom(@RequestBody RoomCreationRequest room) {
@@ -52,6 +58,17 @@ public class RoomController {
                 .result(result)
                 .build();
     }
+
+    @GetMapping("/available")
+    public ApiResponse<List<RoomResponse>> getAllPendingRoom(){
+        var result = roomService.getAllAvailableRoom();
+        return ApiResponse.<List<RoomResponse>>builder()
+                .result(result)
+                .build();
+    }
+
+
+
     @GetMapping("/numbers/{roomNumber}")
     public ApiResponse<Room> getRoomByNumber(@PathVariable String roomNumber) {
         return ApiResponse.<Room>builder()
