@@ -215,4 +215,16 @@ public class AdminService {
                 .map(invoiceMapper::toInvoiceResponse)
                 .toList();
     }
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UserResponse> getAllUserByFirstNameContaining(String firstName){
+        List<User> list = userRepository.findAllByFirstNameContainingIgnoreCase(firstName)
+                .orElseThrow(() ->new AppException(ErrorCode.USER_NOT_EXISTED));
+        return list.stream().map(userMapper::toUserResponse).collect(Collectors.toList());
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<RoomResponse> getAllRoomByRoomNumberContaining(String roomNumber){
+        List<Room> list = roomRepository.findAllByRoomNumberContainingIgnoreCase(roomNumber)
+                .orElseThrow(() ->new AppException(ErrorCode.ROOM_NOT_EXISTED));
+        return list.stream().map(roomMapper::toRoomResponse).collect(Collectors.toList());
+    }
 }

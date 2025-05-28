@@ -1,13 +1,23 @@
 package com.hostelmanagersystem.dto.request;
 
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TenantRequest {
-     private String userId;
-     private String roomId;
-     private LocalDate checkInDate;
-     private LocalDate checkOutDate;
+    String userId;
+    String roomId;
+    String fullName;
+    String phoneNumber;
+    String identityNumber;
+    String email;
+    String avatarUrl;
+    LocalDate checkInDate;
+    LocalDate checkOutDate;
 }

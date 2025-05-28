@@ -5,7 +5,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Document(collection = "utility_configs")
@@ -20,7 +19,7 @@ public class UtilityConfig {
     @MongoId
     String id;
 
-    String landlordId;
+    String ownerId;
 
     Integer electricityPricePerUnit; // giá điện theo đơn vị
 

@@ -29,8 +29,8 @@ public class InvoiceController {
     public ApiResponse<InvoiceResponse> createInvoice(
             @RequestBody @Valid InvoiceCreateRequest request,
             Authentication authentication) {
-        String landlordId = authentication.getName();
-        InvoiceResponse response = invoiceService.createInvoice(landlordId, request);
+        String ownerId = authentication.getName();
+        InvoiceResponse response = invoiceService.createInvoice(ownerId, request);
         return ApiResponse.<InvoiceResponse>builder()
                 .result(response)
                 .message("Tạo hóa đơn thành công")
@@ -41,8 +41,8 @@ public class InvoiceController {
     public ApiResponse<InvoiceResponse> getInvoiceById(
             @PathVariable String invoiceId,
             Authentication authentication) {
-        String landlordId = authentication.getName();
-        InvoiceResponse response = invoiceService.getInvoiceById(landlordId, invoiceId);
+        String ownerId = authentication.getName();
+        InvoiceResponse response = invoiceService.getInvoiceById(ownerId, invoiceId);
         return ApiResponse.<InvoiceResponse>builder()
                 .result(response)
                 .message("Lấy hóa đơn thành công")
@@ -53,8 +53,8 @@ public class InvoiceController {
     public ApiResponse<List<InvoiceResponse>> getInvoicesByMonth(
             @PathVariable String month,
             Authentication authentication) {
-        String landlordId = authentication.getName();
-        List<InvoiceResponse> list = invoiceService.getInvoicesByLandlordAndMonth(landlordId, month);
+        String ownerId = authentication.getName();
+        List<InvoiceResponse> list = invoiceService.getInvoicesByOwnerAndMonth(ownerId, month);
         return ApiResponse.<List<InvoiceResponse>>builder()
                 .result(list)
                 .message("Lấy danh sách hóa đơn theo tháng thành công")
@@ -77,8 +77,8 @@ public class InvoiceController {
             @RequestParam InvoiceStatus status,
             @RequestParam String method,
             Authentication authentication) {
-        String landlordId = authentication.getName();
-        InvoiceResponse response = invoiceService.updatePaymentStatus(landlordId, invoiceId, status, method);
+        String ownerId = authentication.getName();
+        InvoiceResponse response = invoiceService.updatePaymentStatus(ownerId, invoiceId, status, method);
         return ApiResponse.<InvoiceResponse>builder()
                 .result(response)
                 .message("Cập nhật trạng thái thanh toán thành công")
@@ -89,8 +89,8 @@ public class InvoiceController {
     public ApiResponse<Void> sendInvoiceEmail(
             @PathVariable String invoiceId,
             Authentication authentication) {
-        String landlordId = authentication.getName();
-        invoiceService.sendInvoiceEmailToTenant(landlordId, invoiceId);
+        String ownerId = authentication.getName();
+        invoiceService.sendInvoiceEmailToTenant(ownerId, invoiceId);
         return ApiResponse.<Void>builder()
                 .message("Gửi email hóa đơn thành công")
                 .build();

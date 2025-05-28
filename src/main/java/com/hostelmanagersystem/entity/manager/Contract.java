@@ -18,7 +18,7 @@ public class Contract {
     @MongoId
     String id;
 
-    String landlordId;
+    String ownerId;
     String tenantId;
     String roomId;
 
@@ -36,4 +36,6 @@ public class Contract {
     LocalDate createdAt;
     LocalDate updatedAt;
 
+    String terminationReason;
+    LocalDate terminationDate;
 }

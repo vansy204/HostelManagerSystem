@@ -6,7 +6,7 @@ import com.hostelmanagersystem.entity.identity.User;
 import com.hostelmanagersystem.entity.manager.Contract;
 
 public interface ContractService {
-    ContractResponse createContract(String landlordId, ContractCreateRequest request);
+    ContractResponse createContract(String ownerId, ContractCreateRequest request);
     String generatePdfAndStore(Contract contract);
     void updateContractStatus();
 
