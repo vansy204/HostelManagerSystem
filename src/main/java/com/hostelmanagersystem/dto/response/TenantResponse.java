@@ -9,9 +9,9 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class TenantResponse {
-     private String id;
-     private String roomId;
-     private LocalDate checkInDate;
-     private LocalDate checkOutDate;
-     private TenantStatus status;
+    private String id;
+    private String roomId;
+    private LocalDate checkInDate;
+    private LocalDate checkOutDate;
+    private TenantStatus status;
 }
