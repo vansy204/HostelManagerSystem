@@ -49,6 +49,7 @@ public class TenantService {
 
         Tenant tenant = Tenant.builder()
                 .userId(user.getId())
+                .ownerId(room.getOwnerId())
                 .roomId(room.getId())
                 .checkInDate(request.getCheckInDate())
                 .checkOutDate(request.getCheckOutDate())

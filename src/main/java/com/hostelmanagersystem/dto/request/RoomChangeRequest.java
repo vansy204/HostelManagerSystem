@@ -9,6 +9,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoomChangeRequest {
-    String tenantId;
+    String _id;
     String newRoomId;
 }

@@ -22,8 +22,10 @@ public class TenantResponse {
     String idCardNumber;
     String phoneNumber;
     String email;
+    String note;
     String avatarUrl;
 
+    LocalDate requestDate;
     LocalDate checkInDate;
     LocalDate checkOutDate;
 

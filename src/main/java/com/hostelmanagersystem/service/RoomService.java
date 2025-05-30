@@ -61,14 +61,14 @@ public class RoomService {
         var existingRoom = roomRepository.findByRoomNumber(room.getRoomNumber());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null && authentication.isAuthenticated()) {
+        if (authentication == null) {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }
         if (existingRoom.isPresent()) {
             throw new AppException(ErrorCode.ROOM_EXISTED);
         }
         Room roomCreate = Room.builder()
-
+                .ownerId(authentication.getName())
                 .roomNumber(room.getRoomNumber())
                 .roomSize(room.getRoomSize())
                 .price(room.getPrice())
@@ -86,7 +86,6 @@ public class RoomService {
                 .addressText(room.getAddressText())
                 .build();
         sendRoomApprovalRequestEmail(ADMIN_EMAIL,room);
-        roomCreate.setOwnerId(authentication.getName());
         roomRepository.save(roomCreate);
         return "Đã gửi yêu cầu đăng bài đến admin, vui lòng chờ được duyệt";
     }

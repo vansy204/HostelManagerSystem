@@ -1,5 +1,6 @@
 package com.hostelmanagersystem.dto.request;
 
+import com.hostelmanagersystem.enums.TenantStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,6 +10,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ModifyTenantRequest {
-    String tenantId;
-    String action;
+    String _id;
+    TenantStatus status;
 }
