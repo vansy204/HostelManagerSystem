@@ -65,7 +65,7 @@ public class RoomService {
         var existingRoom = roomRepository.findByRoomNumber(room.getRoomNumber());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null && authentication.isAuthenticated()) {
+        if (authentication == null) {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }
         if (existingRoom.isPresent()) {
