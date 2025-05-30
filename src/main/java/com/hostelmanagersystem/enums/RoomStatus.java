@@ -11,4 +11,4 @@ public enum RoomStatus {
     ACTIVE,     // đang thuê
     INACTIVE,   // ngưng thuê
     MOVED_OUT //
-    }
+}

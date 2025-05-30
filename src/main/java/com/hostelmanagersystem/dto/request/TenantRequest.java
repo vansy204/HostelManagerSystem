@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TenantRequest {
+    String _id;
     String userId;
     String roomId;
     String fullName;

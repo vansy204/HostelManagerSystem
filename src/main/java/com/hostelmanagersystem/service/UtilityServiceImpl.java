@@ -6,10 +6,14 @@ import com.hostelmanagersystem.dto.request.UtilityUsageCreateRequest;
 import com.hostelmanagersystem.dto.response.UtilityConfigResponse;
 import com.hostelmanagersystem.dto.response.UtilityInvoiceResponse;
 import com.hostelmanagersystem.dto.response.UtilityUsageResponse;
+import com.hostelmanagersystem.entity.manager.Room;
 import com.hostelmanagersystem.entity.manager.UtilityConfig;
 import com.hostelmanagersystem.entity.manager.UtilityInvoice;
 import com.hostelmanagersystem.entity.manager.UtilityUsage;
+import com.hostelmanagersystem.exception.AppException;
+import com.hostelmanagersystem.exception.ErrorCode;
 import com.hostelmanagersystem.mapper.UtilityMapper;
+import com.hostelmanagersystem.repository.RoomRepository;
 import com.hostelmanagersystem.repository.UtilityConfigRepository;
 import com.hostelmanagersystem.repository.UtilityInvoiceRepository;
 import com.hostelmanagersystem.repository.UtilityUsageRepository;
@@ -32,18 +36,36 @@ public class UtilityServiceImpl implements UtilityService{
     UtilityMapper utilityMapper;
     UtilityInvoiceRepository utilityInvoiceRepository;
     UtilityConfigRepository utilityConfigRepository;
+    private final RoomRepository roomRepository;
 
     @Override
     public UtilityUsageResponse createUtilityUsage(String ownerId, UtilityUsageCreateRequest request) {
-        // Thêm kiểm tra phân quyền: ownerId phải trùng với chủ phòng
+        // Kiểm tra phòng có thuộc về chủ trọ hay không
+        Room room = roomRepository.findById(request.getRoomId())
+                .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_EXISTED));
+
+        if (!room.getOwnerId().equals(ownerId)) {
+            throw new AppException(ErrorCode.CAN_NOT_WRITE);
+        }
+
+        // Kiểm tra dữ liệu đầu vào
+        if (request.getNewElectricity() < request.getOldElectricity()) {
+//            throw new BadRequestException("Chỉ số điện mới phải lớn hơn hoặc bằng chỉ số cũ");
+        }
+
+        if (request.getNewWater() < request.getOldWater()) {
+//            throw new BadRequestException("Chỉ số nước mới phải lớn hơn hoặc bằng chỉ số cũ");
+        }
+
+        // Tạo entity và lưu
         UtilityUsage usage = utilityMapper.toEntity(request);
         usage.setOwnerId(ownerId);
-
-        // TODO: Có thể kiểm tra dữ liệu đầu vào (chỉ số mới phải >= chỉ số cũ)
+        usage.setCreatedAt(LocalDateTime.now());
 
         UtilityUsage saved = utilityUsageRepository.save(usage);
         return utilityMapper.toResponse(saved);
     }
+
 
     @Override
     public List<UtilityUsageResponse> getUtilityUsagesByMonth(String ownerId, String month) {

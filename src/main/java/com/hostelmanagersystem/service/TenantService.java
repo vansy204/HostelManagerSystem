@@ -67,6 +67,7 @@ public class TenantService {
         // Tạo yêu cầu thuê
         Tenant tenant = Tenant.builder()
                 .userId(user.getId())
+                .ownerId(room.getOwnerId())
                 .roomId(room.getId())
                 .checkInDate(checkInDate)
                 .checkOutDate(checkOutDate)
