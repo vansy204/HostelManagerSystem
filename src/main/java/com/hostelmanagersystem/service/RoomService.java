@@ -72,7 +72,7 @@ public class RoomService {
             throw new AppException(ErrorCode.ROOM_EXISTED);
         }
         Room roomCreate = Room.builder()
-
+                .ownerId(authentication.getName())
                 .roomNumber(room.getRoomNumber())
                 .roomSize(room.getRoomSize())
                 .price(room.getPrice())

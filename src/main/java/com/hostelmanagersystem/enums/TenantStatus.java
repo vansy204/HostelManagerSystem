@@ -8,8 +8,10 @@ public enum TenantStatus {
     CONTRACT_CONFIRMED,   // Đã ký hợp đồng, đang thuê
     COMPLETED,            // Đã kết thúc hợp đồng
     CANCELLED,            // Người thuê huỷ yêu cầu
-    REJECTED              // Chủ nhà từ chối yêu cầu
-
+    REJECTED,              // Chủ nhà từ chối yêu cầu
+    ACTIVE,     // đang thuê
+    INACTIVE,   // ngưng thuê
+    MOVED_OUT //
     
     
 
