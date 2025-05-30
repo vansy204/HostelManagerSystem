@@ -1,10 +1,8 @@
 package com.hostelmanagersystem.controller;
 
-import com.hostelmanagersystem.dto.request.UtilityConfigUpdateRequest;
 import com.hostelmanagersystem.dto.request.UtilityInvoiceCreateRequest;
 import com.hostelmanagersystem.dto.request.UtilityUsageCreateRequest;
 import com.hostelmanagersystem.dto.response.ApiResponse;
-import com.hostelmanagersystem.dto.response.UtilityConfigResponse;
 import com.hostelmanagersystem.dto.response.UtilityInvoiceResponse;
 import com.hostelmanagersystem.dto.response.UtilityUsageResponse;
 import com.hostelmanagersystem.service.UtilityService;
@@ -59,7 +57,7 @@ public class UtilityController {
 
     private String getOwnerIdFromAuth(Authentication auth) {
         // TODO: lấy ownerId từ token hoặc UserDetails
-        return auth.getName();
+        return auth.getName(); // ví dụ
     }
 
     @PreAuthorize("hasRole('OWNER')")
@@ -90,27 +88,4 @@ public class UtilityController {
                 .build();
     }
 
-    @PreAuthorize("hasRole('OWNER')")
-    @GetMapping
-    public ApiResponse<UtilityConfigResponse> getConfig(Authentication authentication) {
-        String landlordId = authentication.getName();
-        UtilityConfigResponse response = utilityService.getConfigByLandlordId(landlordId);
-        return ApiResponse.<UtilityConfigResponse>builder()
-                .result(response)
-                .message("Lấy cấu hình tiện ích thành công")
-                .build();
-    }
-
-    @PreAuthorize("hasRole('OWNER')")
-    @PostMapping
-    public ApiResponse<UtilityConfigResponse> updateConfig(
-            @RequestBody UtilityConfigUpdateRequest request,
-            Authentication authentication) {
-        String landlordId = authentication.getName();
-        UtilityConfigResponse response = utilityService.updateConfig(landlordId, request);
-        return ApiResponse.<UtilityConfigResponse>builder()
-                .result(response)
-                .message("Cập nhật cấu hình tiện ích thành công")
-                .build();
-    }
 }

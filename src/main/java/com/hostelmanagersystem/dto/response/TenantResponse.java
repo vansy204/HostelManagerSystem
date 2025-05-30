@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TenantResponse {
+
     String id;
 
     String userId;
@@ -31,4 +32,5 @@ public class TenantResponse {
 
     TenantStatus status;
     LocalDate createAt;
+
 }

@@ -16,7 +16,7 @@ public class TenantRequest {
     String roomId;
     String fullName;
     String phoneNumber;
-    String identityNumber;
+    String idCardNumber;
     String email;
     String avatarUrl;
     LocalDate checkInDate;

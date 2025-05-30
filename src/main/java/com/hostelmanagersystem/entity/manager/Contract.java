@@ -36,4 +36,6 @@ public class Contract {
     LocalDate createdAt;
     LocalDate updatedAt;
 
+    String terminationReason;
+    LocalDate terminationDate;
 }

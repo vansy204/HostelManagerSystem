@@ -57,7 +57,7 @@ public class TenantOwnerService {
 
         tenant.setFullName(request.getFullName());
         tenant.setPhoneNumber(request.getPhoneNumber());
-        tenant.setIdCardNumber(request.getIdentityNumber());
+        tenant.setIdCardNumber(request.getIdCardNumber());
         tenant.setEmail(request.getEmail());
         tenant.setAvatarUrl(request.getAvatarUrl());
         tenant.setCheckInDate(request.getCheckInDate());
