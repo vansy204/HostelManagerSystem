@@ -14,3 +14,4 @@ public enum TenantStatus {
     INACTIVE,   // ngưng thuê
     MOVED_OUT //          // Chủ nhà từ chối yêu cầu
 }
+

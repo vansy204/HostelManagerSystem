@@ -88,4 +88,27 @@ public class UtilityController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('OWNER')")
+    @GetMapping
+    public ApiResponse<UtilityConfigResponse> getConfig(Authentication authentication) {
+        String landlordId = authentication.getName();
+        UtilityConfigResponse response = utilityService.getConfigByOwnerId(landlordId);
+        return ApiResponse.<UtilityConfigResponse>builder()
+                .result(response)
+                .message("Lấy cấu hình tiện ích thành công")
+                .build();
+    }
+
+    @PreAuthorize("hasRole('OWNER')")
+    @PostMapping
+    public ApiResponse<UtilityConfigResponse> updateConfig(
+            @RequestBody UtilityConfigUpdateRequest request,
+            Authentication authentication) {
+        String landlordId = authentication.getName();
+        UtilityConfigResponse response = utilityService.updateConfig(landlordId, request);
+        return ApiResponse.<UtilityConfigResponse>builder()
+                .result(response)
+                .message("Cập nhật cấu hình tiện ích thành công")
+                .build();
+    }
 }
