@@ -52,9 +52,7 @@ public enum ErrorCode {
     INVALID_CHECKIN_DATE(1021,"Thời gian không hợp lệ", HttpStatus.UNAUTHORIZED ),
     LEASE_TERM_NOT_DEFINED(1022, "Phòng chưa cấu hình thời gian thuê tối thiểu", HttpStatus.UNAUTHORIZED),
     ROOM_NOT_IN_CLEANING(1023, "Phòng chưa đựoc dọn dẹp", HttpStatus.UNAUTHORIZED),
-
-    INVALID_REQUEST_STATUS(1024,"Trạng thái yêu cầu không hợp lệ", HttpStatus.BAD_REQUEST),
-  ;
+    ;
 
 
     int code;
