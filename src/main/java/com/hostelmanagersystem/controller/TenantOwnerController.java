@@ -6,8 +6,8 @@ import com.hostelmanagersystem.dto.request.TenantRequest;
 import com.hostelmanagersystem.dto.response.ApiResponse;
 import com.hostelmanagersystem.dto.response.TenantHistoryResponse;
 import com.hostelmanagersystem.dto.response.TenantResponse;
+import com.hostelmanagersystem.enums.TenantStatus;
 import com.hostelmanagersystem.service.TenantOwnerService;
-import com.hostelmanagersystem.service.TenantService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -27,16 +27,16 @@ import java.util.List;
 public class TenantOwnerController {
     TenantOwnerService tenantService;
 
-    @GetMapping
-    public ApiResponse<List<TenantResponse>> getActiveTenants(Authentication authentication) {
+    @GetMapping("/pending")
+    public ApiResponse<List<TenantResponse>> getPendingTenants(Authentication authentication) {
         String ownerId = authentication.getName();
-        List<TenantResponse> result = tenantService.getActiveTenantsByOwner(ownerId);
+        List<TenantResponse> tenants = tenantService.getPendingTenantsByOwner(ownerId);
+
         return ApiResponse.<List<TenantResponse>>builder()
-                .result(result)
-                .message("Lấy danh sách người thuê đang hoạt động thành công")
+                .result(tenants)
+                .message("Lấy danh sách người thuê đang chờ duyệt thành công")
                 .build();
     }
-
     @PostMapping("/change-room")
     public ApiResponse<TenantResponse> changeRoom(@RequestBody RoomChangeRequest request,
                                                   Authentication authentication) {
@@ -63,20 +63,41 @@ public class TenantOwnerController {
     public ApiResponse<Void> modifyTenant(@RequestBody ModifyTenantRequest request,
                                           Authentication authentication) {
         String ownerId = authentication.getName();
-        tenantService.modifyTenant(request, ownerId);
+        tenantService.endOrDeleteTenant(request, ownerId);
         return ApiResponse.<Void>builder()
                 .message("Thao tác chỉnh sửa người thuê thành công")
                 .build();
     }
 
-    @GetMapping("/{tenantId}/history")
-    public ApiResponse<List<TenantHistoryResponse>> getTenantHistory(@PathVariable String tenantId,
+    @GetMapping("/{_id}/history")
+    public ApiResponse<List<TenantHistoryResponse>> getTenantHistory(@PathVariable String _id,
                                                                      Authentication authentication) {
         String ownerId = authentication.getName();
-        List<TenantHistoryResponse> history = tenantService.getTenantHistory(tenantId, ownerId);
+        List<TenantHistoryResponse> history = tenantService.getTenantHistory(_id, ownerId);
         return ApiResponse.<List<TenantHistoryResponse>>builder()
                 .result(history)
                 .message("Lấy lịch sử thuê thành công")
                 .build();
     }
+    @PutMapping("/{_id}/status")
+    public ApiResponse<TenantResponse> approveOrRejectTenant(
+            @PathVariable String _id,
+            @RequestParam TenantStatus status,
+            Authentication authentication) {
+
+        String ownerId = authentication.getName();
+        TenantResponse result = tenantService.updateTenantStatusAndRoom(_id, status, ownerId);
+
+        String message = switch (status) {
+            case APPROVED -> "Phê duyệt người thuê thành công";
+            case REJECTED -> "Từ chối người thuê thành công";
+            default -> "Cập nhật trạng thái người thuê thành công";
+        };
+
+        return ApiResponse.<TenantResponse>builder()
+                .result(result)
+                .message(message)
+                .build();
+    }
+
 }

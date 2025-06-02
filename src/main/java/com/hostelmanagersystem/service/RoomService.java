@@ -3,6 +3,7 @@ package com.hostelmanagersystem.service;
 import com.hostelmanagersystem.dto.request.RoomCreationRequest;
 import com.hostelmanagersystem.dto.request.RoomFilterRequest;
 import com.hostelmanagersystem.dto.request.RoomUpdateRequest;
+import com.hostelmanagersystem.dto.response.RoomResponse;
 import com.hostelmanagersystem.entity.manager.Room;
 import com.hostelmanagersystem.enums.RoomStatus;
 import com.hostelmanagersystem.exception.AppException;
@@ -28,6 +29,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -39,6 +42,7 @@ import java.nio.file.attribute.UserPrincipal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -61,14 +65,14 @@ public class RoomService {
         var existingRoom = roomRepository.findByRoomNumber(room.getRoomNumber());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null && authentication.isAuthenticated()) {
+        if (authentication == null) {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }
         if (existingRoom.isPresent()) {
             throw new AppException(ErrorCode.ROOM_EXISTED);
         }
         Room roomCreate = Room.builder()
-
+                .ownerId(authentication.getName())
                 .roomNumber(room.getRoomNumber())
                 .roomSize(room.getRoomSize())
                 .price(room.getPrice())
@@ -86,7 +90,6 @@ public class RoomService {
                 .addressText(room.getAddressText())
                 .build();
         sendRoomApprovalRequestEmail(ADMIN_EMAIL,room);
-        roomCreate.setOwnerId(authentication.getName());
         roomRepository.save(roomCreate);
         return "Đã gửi yêu cầu đăng bài đến admin, vui lòng chờ được duyệt";
     }
@@ -167,6 +170,13 @@ public class RoomService {
 
         return mongoTemplate.find(query, Room.class);
 
+    }
+
+    @GetMapping("/availableRoom")
+    public List<RoomResponse> getAllAvailableRoom(){
+        return roomRepository.findAllByStatus(RoomStatus.AVAILABLE)
+                .stream().map(roomMapper::toRoomResponse)
+                .collect(Collectors.toList());
     }
 
     @PreAuthorize("hasRole('OWNER')")

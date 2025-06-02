@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TenantResponse {
+
     String id;
 
     String userId;
@@ -22,11 +23,14 @@ public class TenantResponse {
     String idCardNumber;
     String phoneNumber;
     String email;
+    String note;
     String avatarUrl;
 
+    LocalDate requestDate;
     LocalDate checkInDate;
     LocalDate checkOutDate;
 
     TenantStatus status;
     LocalDate createAt;
+
 }

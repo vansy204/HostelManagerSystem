@@ -1,5 +1,6 @@
 package com.hostelmanagersystem.repository;
 
+import com.hostelmanagersystem.dto.request.TenantRequest;
 import com.hostelmanagersystem.dto.response.TenantHistoryResponse;
 import com.hostelmanagersystem.entity.manager.Tenant;
 import com.hostelmanagersystem.enums.TenantStatus;
@@ -19,4 +20,5 @@ public interface TenantRepository extends MongoRepository<Tenant, String> {
     List<Tenant> findByOwnerIdAndStatus(String ownerId, TenantStatus status);
     Optional<Tenant> findByIdAndOwnerId(String tenantId, String ownerId);
     List<TenantHistoryResponse> findHistoryByUserId(String userId);
+
 }
