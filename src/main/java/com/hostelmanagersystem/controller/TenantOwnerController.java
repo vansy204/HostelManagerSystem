@@ -1,0 +1,103 @@
+package com.hostelmanagersystem.controller;
+
+import com.hostelmanagersystem.dto.request.ModifyTenantRequest;
+import com.hostelmanagersystem.dto.request.RoomChangeRequest;
+import com.hostelmanagersystem.dto.request.TenantRequest;
+import com.hostelmanagersystem.dto.response.ApiResponse;
+import com.hostelmanagersystem.dto.response.TenantHistoryResponse;
+import com.hostelmanagersystem.dto.response.TenantResponse;
+import com.hostelmanagersystem.enums.TenantStatus;
+import com.hostelmanagersystem.service.TenantOwnerService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/owner/tenants")
+@PreAuthorize("hasRole('OWNER')")
+@RequiredArgsConstructor
+@Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class TenantOwnerController {
+    TenantOwnerService tenantService;
+
+    @GetMapping("/pending")
+    public ApiResponse<List<TenantResponse>> getPendingTenants(Authentication authentication) {
+        String ownerId = authentication.getName();
+        List<TenantResponse> tenants = tenantService.getPendingTenantsByOwner(ownerId);
+
+        return ApiResponse.<List<TenantResponse>>builder()
+                .result(tenants)
+                .message("Lấy danh sách người thuê đang chờ duyệt thành công")
+                .build();
+    }
+    @PostMapping("/change-room")
+    public ApiResponse<TenantResponse> changeRoom(@RequestBody RoomChangeRequest request,
+                                                  Authentication authentication) {
+        String ownerId = authentication.getName();
+        TenantResponse result = tenantService.changeTenantRoom(request, ownerId);
+        return ApiResponse.<TenantResponse>builder()
+                .result(result)
+                .message("Chuyển phòng cho người thuê thành công")
+                .build();
+    }
+
+    @PutMapping
+    public ApiResponse<TenantResponse> updateTenant(@RequestBody TenantRequest request,
+                                                    Authentication authentication) {
+        String ownerId = authentication.getName();
+        TenantResponse result = tenantService.updateTenant(request, ownerId);
+        return ApiResponse.<TenantResponse>builder()
+                .result(result)
+                .message("Cập nhật thông tin người thuê thành công")
+                .build();
+    }
+
+    @PostMapping("/modify")
+    public ApiResponse<Void> modifyTenant(@RequestBody ModifyTenantRequest request,
+                                          Authentication authentication) {
+        String ownerId = authentication.getName();
+        tenantService.endOrDeleteTenant(request, ownerId);
+        return ApiResponse.<Void>builder()
+                .message("Thao tác chỉnh sửa người thuê thành công")
+                .build();
+    }
+
+    @GetMapping("/{_id}/history")
+    public ApiResponse<List<TenantHistoryResponse>> getTenantHistory(@PathVariable String _id,
+                                                                     Authentication authentication) {
+        String ownerId = authentication.getName();
+        List<TenantHistoryResponse> history = tenantService.getTenantHistory(_id, ownerId);
+        return ApiResponse.<List<TenantHistoryResponse>>builder()
+                .result(history)
+                .message("Lấy lịch sử thuê thành công")
+                .build();
+    }
+    @PutMapping("/{_id}/status")
+    public ApiResponse<TenantResponse> approveOrRejectTenant(
+            @PathVariable String _id,
+            @RequestParam TenantStatus status,
+            Authentication authentication) {
+
+        String ownerId = authentication.getName();
+        TenantResponse result = tenantService.updateTenantStatusAndRoom(_id, status, ownerId);
+
+        String message = switch (status) {
+            case APPROVED -> "Phê duyệt người thuê thành công";
+            case REJECTED -> "Từ chối người thuê thành công";
+            default -> "Cập nhật trạng thái người thuê thành công";
+        };
+
+        return ApiResponse.<TenantResponse>builder()
+                .result(result)
+                .message(message)
+                .build();
+    }
+
+}

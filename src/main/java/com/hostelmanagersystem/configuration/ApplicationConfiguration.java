@@ -35,10 +35,10 @@ public class ApplicationConfiguration {
                             .name(String.valueOf(RoleEnum.OWNER))
                             .description("owner Role")
                             .build());
-            Role renterRole = roleRepository.save(
+            Role tenantRole = roleRepository.save(
                     Role.builder()
-                            .name(String.valueOf(RoleEnum.RENTER))
-                            .description("Renter Role")
+                            .name(String.valueOf(RoleEnum.TENANT))
+                            .description("tenant Role")
                             .build());
             if(userRepository.findByUserName("admin").isEmpty()){
                 User admin = User.builder()
@@ -63,19 +63,19 @@ public class ApplicationConfiguration {
                         .isActive(true)
                         .build();
                 userRepository.save(owner);
-                log.info("renter user created with default username password renter1");
+                log.info("tenant user created with default username password tenant");
             }
-            if(userRepository.findByUserName("renter1").isEmpty()){
-                User renter = User.builder()
-                        .userName("renter1")
-                        .password(passwordEncoder.encode("renter1"))
-                        .role(renterRole)
-                        .firstName("renter")
+            if(userRepository.findByUserName("tenant1").isEmpty()){
+                User tenant = User.builder()
+                        .userName("tenant1")
+                        .password(passwordEncoder.encode("tenant1"))
+                        .role(tenantRole)
+                        .firstName("tenant1")
                         .lastName("1")
                         .isActive(true)
                         .build();
-                userRepository.save(renter);
-                log.info("tenant user created with default username password tenant1");
+                userRepository.save(tenant);
+                log.info("tenant user created with default username password tenant");
 
             }
         };

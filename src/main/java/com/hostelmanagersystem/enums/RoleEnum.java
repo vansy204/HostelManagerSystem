@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public enum RoleEnum {
 
-    RENTER("RENTER"),
+    TENANT("TENANT"),
     OWNER("OWNER"),
     ADMIN("ADMIN");
     String roleName;

@@ -1,5 +1,6 @@
 package com.hostelmanagersystem.service;
 
+import com.hostelmanagersystem.dto.response.InvoiceResponse;
 import com.hostelmanagersystem.dto.response.RoomResponse;
 import com.hostelmanagersystem.dto.response.UserResponse;
 import com.hostelmanagersystem.entity.identity.User;
@@ -7,8 +8,10 @@ import com.hostelmanagersystem.entity.manager.Room;
 import com.hostelmanagersystem.enums.RoomStatus;
 import com.hostelmanagersystem.exception.AppException;
 import com.hostelmanagersystem.exception.ErrorCode;
+import com.hostelmanagersystem.mapper.InvoiceMapper;
 import com.hostelmanagersystem.mapper.RoomMapper;
 import com.hostelmanagersystem.mapper.UserMapper;
+import com.hostelmanagersystem.repository.InvoiceRepository;
 import com.hostelmanagersystem.repository.RoomRepository;
 import com.hostelmanagersystem.repository.UserRepository;
 
@@ -44,6 +47,8 @@ public class AdminService {
     JavaMailSender mailSender;
     RoomRepository roomRepository;
     RoomMapper roomMapper;
+    InvoiceRepository invoiceRepository;
+    InvoiceMapper invoiceMapper;
 
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -64,7 +69,6 @@ public class AdminService {
         userRepository.delete(user);
         return "Đã xoá người dùng";
     }
-
     @PreAuthorize("hasRole('ADMIN')")
     public String banUserById(String id){
         User user = userRepository.findById(id)
@@ -74,6 +78,7 @@ public class AdminService {
         userRepository.save(user);
         return "Đã khoá tài khoản người dùng";
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     public String unbanUserById(String id){
         User user = userRepository.findById(id)
@@ -202,5 +207,24 @@ public class AdminService {
         return roomRepository.findAllByStatus(RoomStatus.PENDING)
                 .stream().map(roomMapper::toRoomResponse)
                 .collect(Collectors.toList());
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<InvoiceResponse> getAllInvoice(){
+        return invoiceRepository.findAll()
+                .stream()
+                .map(invoiceMapper::toInvoiceResponse)
+                .toList();
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UserResponse> getAllUserByFirstNameContaining(String firstName){
+        List<User> list = userRepository.findAllByFirstNameContainingIgnoreCase(firstName)
+                .orElseThrow(() ->new AppException(ErrorCode.USER_NOT_EXISTED));
+        return list.stream().map(userMapper::toUserResponse).collect(Collectors.toList());
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<RoomResponse> getAllRoomByRoomNumberContaining(String roomNumber){
+        List<Room> list = roomRepository.findAllByRoomNumberContainingIgnoreCase(roomNumber)
+                .orElseThrow(() ->new AppException(ErrorCode.ROOM_NOT_EXISTED));
+        return list.stream().map(roomMapper::toRoomResponse).collect(Collectors.toList());
     }
 }

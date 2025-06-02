@@ -1,11 +1,13 @@
 package com.hostelmanagersystem.entity.identity;
 
 import com.hostelmanagersystem.enums.RoleEnum;
+import com.hostelmanagersystem.enums.TenantStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity(name = "users")
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -48,7 +50,7 @@ public class User {
     String phone;
 
     @Column(name = "create_at")
-    Instant createAt;
+    LocalDateTime createAt;
 
 
     Boolean isActive;

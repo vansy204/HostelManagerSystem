@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Document(value = "notifications")
 @Data
@@ -16,8 +17,14 @@ import java.time.LocalDate;
 public class Notification {
     @MongoId
     String id;
-    String userId;
+
+    String recipientId; // ID của người nhận (tenant)
+    String senderId;    // ID của người gửi (owner)
+
+    String title;
     String message;
-    Boolean isRead;
-    LocalDate createAt;
+    String type; // Ví dụ: "WARNING", "MAINTENANCE", "EVENT"
+
+    Boolean isRead = false;
+    LocalDateTime createdAt = LocalDateTime.now();
 }

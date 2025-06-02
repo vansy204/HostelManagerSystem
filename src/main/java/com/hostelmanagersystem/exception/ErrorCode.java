@@ -34,8 +34,24 @@ public enum ErrorCode {
     REQUEST_NOT_FOUND(1020,"Không tìm thấy yêu cầu của bạn.",HttpStatus.BAD_REQUEST),
 
     USER_HAD_BANNED(1014,"Tài khoản của bạn đã bị khoá", HttpStatus.BAD_REQUEST),
-    ROOM_HAD_BEEN_ACCEPT(1015,"Phòng này đã được chấp nhận đăng", HttpStatus.BAD_REQUEST)
+    ROOM_HAD_BEEN_ACCEPT(1015,"Phòng này đã được chấp nhận đăng", HttpStatus.BAD_REQUEST),
 
+    ROOM_NOT_FOUND(1016,"Phòng không tồn tại",HttpStatus.BAD_REQUEST),
+    CONTRACT_NOT_FOUND(1017,"Không tìm thấy hợp đồng", HttpStatus.BAD_REQUEST),
+    TENANT_NOT_FOUND(1018,"Không tìm thấy khách thuê", HttpStatus.BAD_REQUEST),
+    TENANT_REQUEST_ALREADY_EXISTS(1019, "Bạn đã gửi yêu cầu thuê phòng này rồi.", HttpStatus.BAD_REQUEST),
+    ACCESS_DENIED(1020,"Truy cập bị từ chối", HttpStatus.UNAUTHORIZED),
+  
+    INVALID_REQUEST_STATUS(1021,"Trạng thái yêu cầu không hợp lệ", HttpStatus.BAD_REQUEST),
+    ROOM_NOT_RESERVED(1022,"Đã có người đặt cọc hoặc giữ chỗ", HttpStatus.BAD_REQUEST),
+    ROOM_NOT_AVAILABLE(1023,"Phòng không có sẵng", HttpStatus.BAD_REQUEST),
+    INVALID_CONTRACT_STATUS(1024,"Trạng thái hợp đồng không hợp lệ", HttpStatus.BAD_REQUEST),
+
+    CAN_NOT_WRITE(1022,"Bạn không có quyền ghi chỉ số cho phòng này",HttpStatus.FORBIDDEN),
+    INVALID_STATUS_CHANGE(1023,"Thay đổi trạng thái không hợp lệ", HttpStatus.BAD_REQUEST),
+    INVALID_CHECKIN_DATE(1021,"Thời gian không hợp lệ", HttpStatus.UNAUTHORIZED ),
+    LEASE_TERM_NOT_DEFINED(1022, "Phòng chưa cấu hình thời gian thuê tối thiểu", HttpStatus.UNAUTHORIZED),
+    ROOM_NOT_IN_CLEANING(1023, "Phòng chưa đựoc dọn dẹp", HttpStatus.UNAUTHORIZED),
     ;
 
 

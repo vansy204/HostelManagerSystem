@@ -1,17 +1,38 @@
 package com.hostelmanagersystem.dto.response;
 
 import com.hostelmanagersystem.enums.TenantStatus;
-import lombok.Builder;
-import lombok.Data;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
 @Data
 @Builder
+
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class TenantResponse {
-    private String id;
-    private String roomId;
-    private LocalDate checkInDate;
-    private LocalDate checkOutDate;
-    private TenantStatus status;
+
+    String id;
+
+    String userId;
+    String ownerId;
+    String roomId;
+
+    String fullName;
+    String idCardNumber;
+    String phoneNumber;
+    String email;
+    String note;
+    String avatarUrl;
+
+    LocalDate requestDate;
+    LocalDate checkInDate;
+    LocalDate checkOutDate;
+
+    TenantStatus status;
+    LocalDate createAt;
+
 }
