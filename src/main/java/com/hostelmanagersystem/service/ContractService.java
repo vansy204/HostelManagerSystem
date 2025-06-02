@@ -1,24 +1,21 @@
 package com.hostelmanagersystem.service;
 
-import com.hostelmanagersystem.dto.request.ContractCreateRequest;
-import com.hostelmanagersystem.dto.request.ContractRenewRequest;
-import com.hostelmanagersystem.dto.request.ContractTerminationRequest;
-import com.hostelmanagersystem.dto.request.ContractUpdateRequest;
+import com.hostelmanagersystem.dto.request.*;
 import com.hostelmanagersystem.dto.response.ContractResponse;
-import com.hostelmanagersystem.entity.identity.User;
-import com.hostelmanagersystem.entity.manager.Contract;
 
 import java.util.List;
 
 public interface ContractService {
-    ContractResponse createContract(String ownerId, ContractCreateRequest request);
-    ContractResponse updateContract(String contractId, ContractUpdateRequest request, String ownerId);
-    String generatePdfAndStore(Contract contract);
-    void updateContractStatus();
-
-    ContractResponse getContractById(String id, User user);
-    ContractResponse renewContract(String contractId, ContractRenewRequest request, String ownerId);
-    ContractResponse terminateContract(String contractId, ContractTerminationRequest request, String ownerId);
-    List<ContractResponse> getContractsBy(String ownerId);
+    ContractResponse createContract(ContractCreateRequest request,String ownerId);
+    ContractResponse updateContract(String contractId, ContractUpdateRequest request, String landlordId);
+    ContractResponse renewContract(String contractId, ContractRenewRequest request, String landlordId);
+    ContractResponse terminateContract(String contractId, ContractTerminationRequest request, String landlordId);
+    ContractResponse getContractById(String contractId, String userId);
+    List<ContractResponse> getContractsByOwner(String ownerId);
     List<ContractResponse> getContractsByTenant(String tenantId);
+    ContractResponse approveContract(String contractId, String ownerId);
+    ContractResponse signContract(String contractId, ContractSignRequest request, String userId);
+    ContractResponse cancelContract(String contractId, String ownerId);
+    List<ContractResponse> getContractHistoryByTenant(String tenantId, String ownerId);
+    List<ContractResponse> searchContracts(ContractFilterRequest request);
 }

@@ -94,7 +94,7 @@ public class UtilityController {
     @GetMapping
     public ApiResponse<UtilityConfigResponse> getConfig(Authentication authentication) {
         String landlordId = authentication.getName();
-        UtilityConfigResponse response = utilityService.getConfigByLandlordId(landlordId);
+        UtilityConfigResponse response = utilityService.getConfigByOwnerId(landlordId);
         return ApiResponse.<UtilityConfigResponse>builder()
                 .result(response)
                 .message("Lấy cấu hình tiện ích thành công")

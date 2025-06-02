@@ -42,6 +42,9 @@ public enum ErrorCode {
     TENANT_REQUEST_ALREADY_EXISTS(1019, "Bạn đã gửi yêu cầu thuê phòng này rồi.", HttpStatus.BAD_REQUEST),
     ACCESS_DENIED(1020,"Truy cập bị từ chối", HttpStatus.UNAUTHORIZED),
     INVALID_REQUEST_STATUS(1021,"Trạng thái yêu cầu không hợp lệ", HttpStatus.BAD_REQUEST),
+    ROOM_NOT_RESERVED(1022,"Đã có người đặt cọc hoặc giữ chỗ", HttpStatus.BAD_REQUEST),
+    ROOM_NOT_AVAILABLE(1023,"Phòng không có sẵng", HttpStatus.BAD_REQUEST),
+    INVALID_CONTRACT_STATUS(1024,"Trạng thái hợp đồng không hợp lệ", HttpStatus.BAD_REQUEST),
     ;
 
 
