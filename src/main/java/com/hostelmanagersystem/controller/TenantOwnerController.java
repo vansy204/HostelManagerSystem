@@ -1,8 +1,6 @@
 package com.hostelmanagersystem.controller;
 
-import com.hostelmanagersystem.dto.request.ModifyTenantRequest;
-import com.hostelmanagersystem.dto.request.RoomChangeRequest;
-import com.hostelmanagersystem.dto.request.TenantRequest;
+import com.hostelmanagersystem.dto.request.*;
 import com.hostelmanagersystem.dto.response.ApiResponse;
 import com.hostelmanagersystem.dto.response.TenantHistoryResponse;
 import com.hostelmanagersystem.dto.response.TenantResponse;
@@ -27,16 +25,19 @@ import java.util.List;
 public class TenantOwnerController {
     TenantOwnerService tenantService;
 
-    @GetMapping("/pending")
-    public ApiResponse<List<TenantResponse>> getPendingTenants(Authentication authentication) {
-        String ownerId = authentication.getName();
-        List<TenantResponse> tenants = tenantService.getPendingTenantsByOwner(ownerId);
+    @GetMapping("/{ownerId}/tenants")
+    public ApiResponse<List<TenantResponse>> getTenantsByStatus(
+            @PathVariable String ownerId,
+            @RequestParam TenantStatus status) {
 
+        List<TenantResponse> tenants = tenantService.getTenantsByStatus(ownerId, status);
         return ApiResponse.<List<TenantResponse>>builder()
                 .result(tenants)
-                .message("Lấy danh sách người thuê đang chờ duyệt thành công")
+                .message("Lấy danh sách người thuê theo trạng thái thành công")
                 .build();
     }
+
+
     @PostMapping("/change-room")
     public ApiResponse<TenantResponse> changeRoom(@RequestBody RoomChangeRequest request,
                                                   Authentication authentication) {
@@ -79,6 +80,7 @@ public class TenantOwnerController {
                 .message("Lấy lịch sử thuê thành công")
                 .build();
     }
+
     @PutMapping("/{_id}/status")
     public ApiResponse<TenantResponse> approveOrRejectTenant(
             @PathVariable String _id,
@@ -99,5 +101,4 @@ public class TenantOwnerController {
                 .message(message)
                 .build();
     }
-
 }

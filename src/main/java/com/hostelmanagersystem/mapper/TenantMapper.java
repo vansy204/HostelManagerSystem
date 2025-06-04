@@ -8,9 +8,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface TenantMapper {
-
     TenantResponse toResponse(Tenant tenant);
     Tenant toEntity(TenantRequest request);
 }
-
-
