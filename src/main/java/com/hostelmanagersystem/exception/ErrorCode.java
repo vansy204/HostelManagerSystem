@@ -43,6 +43,10 @@ public enum ErrorCode {
     ACCESS_DENIED(1020,"Truy cập bị từ chối", HttpStatus.UNAUTHORIZED),
   
     INVALID_REQUEST_STATUS(1021,"Trạng thái yêu cầu không hợp lệ", HttpStatus.BAD_REQUEST),
+    ROOM_NOT_RESERVED(1022,"Đã có người đặt cọc hoặc giữ chỗ", HttpStatus.BAD_REQUEST),
+    ROOM_NOT_AVAILABLE(1023,"Phòng không có sẵng", HttpStatus.BAD_REQUEST),
+    INVALID_CONTRACT_STATUS(1024,"Trạng thái hợp đồng không hợp lệ", HttpStatus.BAD_REQUEST),
+
     CAN_NOT_WRITE(1022,"Bạn không có quyền ghi chỉ số cho phòng này",HttpStatus.FORBIDDEN),
     INVALID_STATUS_CHANGE(1023,"Thay đổi trạng thái không hợp lệ", HttpStatus.BAD_REQUEST),
     INVALID_CHECKIN_DATE(1021,"Thời gian không hợp lệ", HttpStatus.UNAUTHORIZED ),

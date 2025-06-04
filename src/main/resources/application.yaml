@@ -13,6 +13,8 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
+
+    show-sql: true
   data:
     mongodb:
       uri: mongodb://root:root@localhost:27017/HostelManagerSystem?AuthSource=admin

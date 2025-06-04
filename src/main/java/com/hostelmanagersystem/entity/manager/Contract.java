@@ -31,6 +31,11 @@ public class Contract {
 
     ContractStatus status; // ACTIVE, EXPIRING_SOON, ENDED
 
+    Boolean ownerSigned;   // chủ trọ đã ký?
+    Boolean tenantSigned;     // người thuê đã ký?
+
+    LocalDate signedAt;
+
     String pdfUrl;
 
     LocalDate createdAt;
@@ -38,4 +43,5 @@ public class Contract {
 
     String terminationReason;
     LocalDate terminationDate;
+    byte[] pdfFile;
 }

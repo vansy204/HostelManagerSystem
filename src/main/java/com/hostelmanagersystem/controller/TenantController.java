@@ -1,6 +1,7 @@
 package com.hostelmanagersystem.controller;
 
 import com.hostelmanagersystem.dto.request.TenantRequest;
+
 import com.hostelmanagersystem.dto.response.ApiResponse;
 import com.hostelmanagersystem.dto.response.TenantResponse;
 import com.hostelmanagersystem.service.TenantService;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+>>>>>>> 510a4e658c5ed4d4c86482667bda523aaa0c3091
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +32,6 @@ public class TenantController {
 
         return ResponseEntity.ok(tenantService.createTenant(request));
     }
-
 
 
     @GetMapping("/user/{userId}")

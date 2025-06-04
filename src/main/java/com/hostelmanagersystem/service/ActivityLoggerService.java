@@ -70,7 +70,7 @@ public class ActivityLoggerService {
         String url=httpServletRequest.getRequestURL().toString();
         if(url.contains("/v1/admin")) return "ADMIN";
         if(url.contains("/v1/owner/")) return "OWNER";
-        if(url.contains("/v1/renter")) return "RENTER";
+        if(url.contains("/v1/tenant")) return "TENANT";
         return "GUEST";
     }
     private String parseDeviceInfo(){

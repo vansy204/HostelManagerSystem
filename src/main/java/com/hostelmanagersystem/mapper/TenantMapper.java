@@ -1,6 +1,6 @@
 package com.hostelmanagersystem.mapper;
-
 import com.hostelmanagersystem.dto.request.TenantRequest;
+
 import com.hostelmanagersystem.dto.response.TenantResponse;
 import com.hostelmanagersystem.entity.manager.Tenant;
 import org.mapstruct.Mapper;

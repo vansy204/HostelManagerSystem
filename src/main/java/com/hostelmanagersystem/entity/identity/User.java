@@ -1,6 +1,7 @@
 package com.hostelmanagersystem.entity.identity;
 
 import com.hostelmanagersystem.enums.RoleEnum;
+import com.hostelmanagersystem.enums.TenantStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
