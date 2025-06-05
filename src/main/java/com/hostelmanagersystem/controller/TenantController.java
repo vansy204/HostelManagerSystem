@@ -33,18 +33,6 @@ public class TenantController {
         return ResponseEntity.ok(tenantService.createTenant(request));
     }
 
-    @PutMapping("/updateTenant")
-    public ApiResponse<TenantResponse> updateTenant(@RequestBody TenantRequest request,
-                                                    Authentication authentication) {
-        String tenantId = authentication.getName();
-        TenantResponse result = tenantService.updateTenant(request, tenantId);
-        return ApiResponse.<TenantResponse>builder()
-                .result(result)
-                .message("Cập nhật thông tin người thuê thành công")
-                .build();
-    }
-
-
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<TenantResponse>> getRequestsByUser(@PathVariable String userId) {
