@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +30,9 @@ public class TenantOwnerController {
 
     @GetMapping("/pending")
     public ApiResponse<List<TenantResponse>> getPendingTenants(Authentication authentication) {
+
         String ownerId = authentication.getName();
+        log.info("ownerId: {}", ownerId);
         List<TenantResponse> tenants = tenantService.getPendingTenantsByOwner(ownerId);
 
         return ApiResponse.<List<TenantResponse>>builder()

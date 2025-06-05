@@ -6,12 +6,12 @@ import com.hostelmanagersystem.dto.response.ApiResponse;
 import com.hostelmanagersystem.dto.response.TenantResponse;
 import com.hostelmanagersystem.service.TenantService;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
->>>>>>> 510a4e658c5ed4d4c86482667bda523aaa0c3091
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +32,18 @@ public class TenantController {
 
         return ResponseEntity.ok(tenantService.createTenant(request));
     }
+
+    @PutMapping("/updateTenant")
+    public ApiResponse<TenantResponse> updateTenant(@RequestBody TenantRequest request,
+                                                    Authentication authentication) {
+        String tenantId = authentication.getName();
+        TenantResponse result = tenantService.updateTenant(request, tenantId);
+        return ApiResponse.<TenantResponse>builder()
+                .result(result)
+                .message("Cập nhật thông tin người thuê thành công")
+                .build();
+    }
+
 
 
     @GetMapping("/user/{userId}")
