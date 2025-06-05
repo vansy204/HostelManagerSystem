@@ -5,14 +5,16 @@ import com.hostelmanagersystem.dto.response.ContractResponse;
 import com.hostelmanagersystem.entity.identity.User;
 import com.hostelmanagersystem.entity.manager.Contract;
 import com.hostelmanagersystem.entity.manager.Room;
+import com.hostelmanagersystem.entity.manager.Tenant;
 import com.hostelmanagersystem.enums.ContractStatus;
 import com.hostelmanagersystem.enums.RoomStatus;
+import com.hostelmanagersystem.enums.TenantStatus;
 import com.hostelmanagersystem.exception.AppException;
 import com.hostelmanagersystem.exception.ErrorCode;
 import com.hostelmanagersystem.mapper.ContractMapper;
 import com.hostelmanagersystem.repository.ContractRepository;
 import com.hostelmanagersystem.repository.RoomRepository;
-import com.hostelmanagersystem.repository.UserRepository;
+import com.hostelmanagersystem.repository.TenantRepository;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -45,7 +47,7 @@ public class ContractServiceImpl implements ContractService {
     ContractRepository contractRepository;
     ContractMapper contractMapper;
     RoomRepository roomRepository;
-    UserRepository tenantRepository;
+    TenantRepository tenantRepository;
     MongoTemplate mongoTemplate;
 
     static final int EXPIRING_SOON_DAYS = 7;
@@ -55,7 +57,7 @@ public class ContractServiceImpl implements ContractService {
         Room room = roomRepository.findById(request.getRoomId())
                 .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_FOUND));
 
-        User tenant = tenantRepository.findById(request.getTenantId())
+        Tenant tenant = tenantRepository.findById(request.getTenantId())
                 .orElseThrow(() -> new AppException(ErrorCode.TENANT_NOT_FOUND));
 
         // Phòng phải ở trạng thái AVAILABLE mới được tạo hợp đồng
@@ -81,8 +83,8 @@ public class ContractServiceImpl implements ContractService {
         roomRepository.save(room);
 
         // Cập nhật tenant status nếu có (nếu quản lý tenant theo hợp đồng)
-        // tenant.setStatus(TenantStatus.PENDING);
-        // tenantRepository.save(tenant);
+         tenant.setStatus(TenantStatus.PENDING);
+         tenantRepository.save(tenant);
 
         return contractMapper.toResponse(contract);
     }
@@ -111,10 +113,10 @@ public class ContractServiceImpl implements ContractService {
         roomRepository.save(room);
 
         // Cập nhật tenant status nếu có
-        User tenant = tenantRepository.findById(contract.getTenantId())
+        Tenant tenant = tenantRepository.findById(contract.getTenantId())
                 .orElseThrow(() -> new AppException(ErrorCode.TENANT_NOT_FOUND));
-        // tenant.setStatus(TenantStatus.CONTRACT_CONFIRMED);
-        // tenantRepository.save(tenant);
+        tenant.setStatus(TenantStatus.CONTRACT_CONFIRMED);
+        tenantRepository.save(tenant);
 
         contract = contractRepository.save(contract);
         return contractMapper.toResponse(contract);
@@ -177,10 +179,10 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public ContractResponse terminateContract(String contractId, ContractTerminationRequest request, String landlordId) {
+    public ContractResponse terminateContract(String contractId, ContractTerminationRequest request, String ownerId) {
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> new AppException(ErrorCode.CONTRACT_NOT_FOUND));
-        if (!contract.getOwnerId().equals(landlordId)) {
+        if (!contract.getOwnerId().equals(ownerId)) {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }
         contract.setStatus(ContractStatus.TERMINATED);
@@ -196,8 +198,10 @@ public class ContractServiceImpl implements ContractService {
         roomRepository.save(room);
 
         // Cập nhật tenant status nếu có
-        // tenant.setStatus(TenantStatus.COMPLETED);
-        // tenantRepository.save(tenant);
+        Tenant tenant = tenantRepository.findById(contract.getTenantId())
+                .orElseThrow(() -> new AppException(ErrorCode.TENANT_NOT_FOUND));
+         tenant.setStatus(TenantStatus.COMPLETED);
+         tenantRepository.save(tenant);
 
         return contractMapper.toResponse(contract);
     }
