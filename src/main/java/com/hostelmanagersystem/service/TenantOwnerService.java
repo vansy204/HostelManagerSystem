@@ -31,9 +31,15 @@ import java.util.regex.Pattern;
 public class TenantOwnerService {
     TenantOwnerRepository tenantRepository;
     RoomRepository roomRepository;
-    UserRepository userRepository;
     TenantMapper tenantMapper;
-    MongoTemplate mongoTemplate;
+
+    /**
+     * Lấy danh sách tenant của chủ trọ.
+     */
+    public List<TenantResponse> getAllTenantsByOwner(String ownerId) {
+        List<Tenant> tenants = tenantRepository.findByOwnerId(ownerId);
+        return tenantMapper.toTenantResponseList(tenants);
+    }
 
     /**
      * Lấy danh sách tenant theo status cụ thể của chủ trọ.
