@@ -1,7 +1,6 @@
 package com.hostelmanagersystem.enums;
 
 public enum TenantStatus {
-
     PENDING,              // Đã gửi yêu cầu, chờ duyệt
     APPROVED,             // Đã duyệt, chờ đặt cọc
     DEPOSITED,            // Đã đặt cọc, chờ ký hợp đồng

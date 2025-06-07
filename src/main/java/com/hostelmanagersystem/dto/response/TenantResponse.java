@@ -1,6 +1,7 @@
 package com.hostelmanagersystem.dto.response;
 
 import com.hostelmanagersystem.enums.TenantStatus;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 
 @Data
 @Builder
+
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)

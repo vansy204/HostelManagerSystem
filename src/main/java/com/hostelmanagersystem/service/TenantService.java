@@ -10,16 +10,19 @@ import com.hostelmanagersystem.enums.TenantStatus;
 import com.hostelmanagersystem.exception.AppException;
 import com.hostelmanagersystem.exception.ErrorCode;
 import com.hostelmanagersystem.mapper.TenantMapper;
+
 import com.hostelmanagersystem.repository.RoomRepository;
 import com.hostelmanagersystem.repository.TenantRepository;
 import com.hostelmanagersystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+
 import java.util.Optional;
 
 import java.util.stream.Collectors;
@@ -27,12 +30,14 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 
+
 @Slf4j
 public class TenantService {
     private final RoomRepository roomRepository;
     private final TenantRepository tenantRepository;
     private final UserRepository userRepository;
     private final TenantMapper tenantMapper;
+
 
     public TenantResponse createTenant(TenantRequest request) {
         Room room = roomRepository.findById(request.getRoomId())
@@ -101,6 +106,7 @@ public class TenantService {
         return "Bạn đã hủy yêu cầu thuê phòng thành công";
 
     }
+
 
     @PreAuthorize("hasRole('OWNER')")
     public String approveTenant(String tenantId) {
@@ -188,6 +194,7 @@ public class TenantService {
 
         return "Phòng đã sẵn sàng cho thuê lại (AVAILABLE).";
     }
+
 
 
 }
