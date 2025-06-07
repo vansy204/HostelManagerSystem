@@ -25,7 +25,7 @@ public class ContractController {
     MongoTemplate mongoTemplate;
 
     @GetMapping
-    public ApiResponse<List<ContractResponse>>  (Authentication authentication) {
+    public ApiResponse<List<ContractResponse>> getAllContracts (Authentication authentication) {
         String ownerId = authentication.getName();
         List<ContractResponse> contracts = contractService.getAllContractsByOwner(ownerId);
         return ApiResponse.<List<ContractResponse>>builder()
