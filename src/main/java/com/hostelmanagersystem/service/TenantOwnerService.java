@@ -21,8 +21,10 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -36,10 +38,13 @@ public class TenantOwnerService {
     /**
      * Lấy danh sách tenant của chủ trọ.
      */
-    public List<TenantResponse> getAllTenantsByOwner(String ownerId) {
+    public List<TenantResponse> getAllTenantsForOwner(String ownerId) {
         List<Tenant> tenants = tenantRepository.findByOwnerId(ownerId);
-        return tenantMapper.toTenantResponseList(tenants);
+        return tenants.stream()
+                .map(tenantMapper::toResponse)
+                .collect(Collectors.toList());
     }
+
 
     /**
      * Lấy danh sách tenant theo status cụ thể của chủ trọ.
@@ -58,14 +63,37 @@ public class TenantOwnerService {
         Tenant tenant = tenantRepository.findByIdAndOwnerId(request.get_id(), ownerId)
                 .orElseThrow(() -> new AppException(ErrorCode.TENANT_NOT_FOUND));
 
+        Room oldRoom = roomRepository.findByIdAndOwnerId(tenant.getRoomId(), ownerId)
+                .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_FOUND));
+
         Room newRoom = roomRepository.findByIdAndOwnerId(request.getNewRoomId(), ownerId)
                 .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_FOUND));
 
+        // Gán phòng mới cho tenant
         tenant.setRoomId(newRoom.getId());
         tenantRepository.save(tenant);
 
+        // Cập nhật trạng thái phòng
+        oldRoom.setStatus(RoomStatus.AVAILABLE);
+        newRoom.setStatus(RoomStatus.OCCUPIED);
+
+        roomRepository.saveAll(List.of(oldRoom, newRoom));
+
         return tenantMapper.toResponse(tenant);
     }
+
+    public TenantResponse getTenantById(String tenantId, String ownerId) {
+        Tenant tenant = tenantRepository.findById(tenantId)
+                .orElseThrow(() -> new AppException(ErrorCode.TENANT_NOT_FOUND));
+
+        // Kiểm tra phân quyền: chỉ owner của tenant mới được xem
+        if (!tenant.getOwnerId().equals(ownerId)) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        return tenantMapper.toResponse(tenant);
+    }
+
 
     /**
      * Cập nhật thông tin tenant.

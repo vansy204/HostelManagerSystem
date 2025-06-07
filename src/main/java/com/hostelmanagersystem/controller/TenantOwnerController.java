@@ -30,11 +30,25 @@ public class TenantOwnerController {
             Authentication authentication) {
 
         String ownerId = authentication.getName();
-        List<TenantResponse> tenants = tenantService.getAllTenantsByOwner(ownerId);
+        List<TenantResponse> tenants = tenantService.getAllTenantsForOwner(ownerId);
 
         return ApiResponse.<List<TenantResponse>>builder()
                 .result(tenants)
                 .message("Lấy danh sách toàn bộ người thuê thành công")
+                .build();
+    }
+
+    @GetMapping("/tenants/{tenantId}")
+    public ApiResponse<TenantResponse> getTenantById(
+            Authentication authentication,
+            @PathVariable String tenantId) {
+
+        String ownerId = authentication.getName();
+        TenantResponse response = tenantService.getTenantById(tenantId, ownerId);
+
+        return ApiResponse.<TenantResponse>builder()
+                .result(response)
+                .message("Lấy thông tin người thuê thành công")
                 .build();
     }
 
