@@ -24,6 +24,16 @@ public class ContractController {
     ContractService contractService;
     MongoTemplate mongoTemplate;
 
+    @GetMapping
+    public ApiResponse<List<ContractResponse>>  (Authentication authentication) {
+        String ownerId = authentication.getName();
+        List<ContractResponse> contracts = contractService.getAllContractsByOwner(ownerId);
+        return ApiResponse.<List<ContractResponse>>builder()
+                .result(contracts)
+                .message("Lấy danh sách hợp đồng thành công")
+                .build();
+    }
+
     // 1. Tạo hợp đồng mới
     @PreAuthorize("hasRole('OWNER')")
     @PostMapping

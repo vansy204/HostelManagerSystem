@@ -1,8 +1,10 @@
 package com.hostelmanagersystem.controller;
 
+import com.hostelmanagersystem.dto.request.UtilityConfigUpdateRequest;
 import com.hostelmanagersystem.dto.request.UtilityInvoiceCreateRequest;
 import com.hostelmanagersystem.dto.request.UtilityUsageCreateRequest;
 import com.hostelmanagersystem.dto.response.ApiResponse;
+import com.hostelmanagersystem.dto.response.UtilityConfigResponse;
 import com.hostelmanagersystem.dto.response.UtilityInvoiceResponse;
 import com.hostelmanagersystem.dto.response.UtilityUsageResponse;
 import com.hostelmanagersystem.service.UtilityService;

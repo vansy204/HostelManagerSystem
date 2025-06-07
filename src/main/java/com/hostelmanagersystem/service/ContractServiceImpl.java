@@ -52,6 +52,12 @@ public class ContractServiceImpl implements ContractService {
 
     static final int EXPIRING_SOON_DAYS = 7;
 
+    public List<ContractResponse> getAllContractsByOwner(String ownerId) {
+        return contractRepository.findByOwnerId(ownerId).stream()
+                .map(contractMapper::toResponse)
+                .toList();
+    }
+
     @Override
     public ContractResponse createContract(ContractCreateRequest request, String ownerId) {
         Room room = roomRepository.findById(request.getRoomId())
