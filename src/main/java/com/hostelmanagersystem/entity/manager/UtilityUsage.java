@@ -29,5 +29,10 @@ public class UtilityUsage {
     Integer oldWater;
     Integer newWater;
 
-    LocalDateTime createdAt = LocalDateTime.now();
+    Boolean includeWifi = false;
+    Boolean includeGarbage = false;
+    Boolean includeParking = false;
+
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

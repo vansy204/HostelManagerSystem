@@ -10,8 +10,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class InvoiceCreateRequest {
+public class RentInvoiceCreateRequest {
     String tenantId;
-    String utilityUsageId;
+    String roomId;
+    String month; // yyyy-MM
+    Double rentAmount;
     LocalDateTime dueDate;
+    String description;
 }

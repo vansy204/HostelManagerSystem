@@ -11,5 +11,7 @@ import lombok.experimental.FieldDefaults;
 public class UtilityConfigUpdateRequest {
     Integer electricityPricePerUnit;
     Integer waterPricePerUnit;
-    Integer serviceFee;
+    Integer wifiFee;
+    Integer garbageFee;
+    Integer parkingFee;
 }
