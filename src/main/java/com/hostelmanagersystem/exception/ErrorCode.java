@@ -55,6 +55,14 @@ public enum ErrorCode {
 
     STATUS_MUST_BE_PROVIDED(1024,"Trạng thái phải được cung cấp", HttpStatus.BAD_REQUEST),
     INVALID_STATUS(1024,"Trạng thái không hợp lệ", HttpStatus.BAD_REQUEST),
+    UTILITY_USAGE_NOT_FOUND(1025,"Tiện ích sử dụng không tìm thấy", HttpStatus.BAD_REQUEST),
+    UTILITY_INVOICE_NOT_FOUND(1026,"Tiện ích hóa đơn không tìm thấy", HttpStatus.BAD_REQUEST),
+    INVALID_INPUT_ELECTRIC(1027,"Chỉ số điện mới phải lớn hơn hoặc bằng chỉ số cũ", HttpStatus.BAD_REQUEST),
+    INVALID_INPUT_WATER(1027,"Chỉ số nước mới phải lớn hơn hoặc bằng chỉ số cũ", HttpStatus.BAD_REQUEST),
+    INVALID_ELECTRICITY_READING(1028,"Chỉ số điện không hợp lệ", HttpStatus.BAD_REQUEST),
+    INVALID_WATER_READING(1029,"Chỉ số nước không hợp lệ", HttpStatus.BAD_REQUEST),
+    UTILITY_CONFIG_NOT_FOUND(1030,"Chưa cấu hình đơn giá tiện ích", HttpStatus.BAD_REQUEST),
+    INVOICE_NOT_FOUND(1031,"Không tìm thấy hóa đơn", HttpStatus.BAD_REQUEST),
   ;
 
 

@@ -1,22 +1,19 @@
 package com.hostelmanagersystem.service;
 
+import com.hostelmanagersystem.dto.request.InvoiceCreateRequest;
 import com.hostelmanagersystem.dto.request.UtilityConfigUpdateRequest;
-import com.hostelmanagersystem.dto.request.UtilityInvoiceCreateRequest;
 import com.hostelmanagersystem.dto.request.UtilityUsageCreateRequest;
+import com.hostelmanagersystem.dto.request.UtilityUsageUpdateRequest;
+import com.hostelmanagersystem.dto.response.InvoiceResponse;
 import com.hostelmanagersystem.dto.response.UtilityConfigResponse;
-import com.hostelmanagersystem.dto.response.UtilityInvoiceResponse;
 import com.hostelmanagersystem.dto.response.UtilityUsageResponse;
-import com.hostelmanagersystem.entity.manager.Room;
-import com.hostelmanagersystem.entity.manager.UtilityConfig;
-import com.hostelmanagersystem.entity.manager.UtilityInvoice;
-import com.hostelmanagersystem.entity.manager.UtilityUsage;
+import com.hostelmanagersystem.entity.manager.*;
+import com.hostelmanagersystem.enums.InvoiceStatus;
+import com.hostelmanagersystem.enums.InvoiceType;
 import com.hostelmanagersystem.exception.AppException;
 import com.hostelmanagersystem.exception.ErrorCode;
 import com.hostelmanagersystem.mapper.UtilityMapper;
-import com.hostelmanagersystem.repository.RoomRepository;
-import com.hostelmanagersystem.repository.UtilityConfigRepository;
-import com.hostelmanagersystem.repository.UtilityInvoiceRepository;
-import com.hostelmanagersystem.repository.UtilityUsageRepository;
+import com.hostelmanagersystem.repository.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,21 +23,22 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-public class UtilityServiceImpl implements UtilityService{
+public class UtilityServiceImpl implements UtilityService {
     UtilityUsageRepository utilityUsageRepository;
     UtilityMapper utilityMapper;
-    UtilityInvoiceRepository utilityInvoiceRepository;
+    InvoiceRepository invoiceRepository;       // đổi từ UtilityInvoiceRepository thành InvoiceRepository
     UtilityConfigRepository utilityConfigRepository;
-    private final RoomRepository roomRepository;
+    RoomRepository roomRepository;
+    TenantRepository tenantRepository;
 
     @Override
     public UtilityUsageResponse createUtilityUsage(String ownerId, UtilityUsageCreateRequest request) {
-        // Kiểm tra phòng có thuộc về chủ trọ hay không
         Room room = roomRepository.findById(request.getRoomId())
                 .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_EXISTED));
 
@@ -48,24 +46,84 @@ public class UtilityServiceImpl implements UtilityService{
             throw new AppException(ErrorCode.CAN_NOT_WRITE);
         }
 
-        // Kiểm tra dữ liệu đầu vào
-        if (request.getNewElectricity() < request.getOldElectricity()) {
-//            throw new BadRequestException("Chỉ số điện mới phải lớn hơn hoặc bằng chỉ số cũ");
+        // Tìm UtilityUsage gần nhất trước tháng hiện tại để lấy chỉ số cũ
+        Optional<UtilityUsage> previousUsageOpt = utilityUsageRepository
+                .findTopByOwnerIdAndRoomIdOrderByMonthDesc(ownerId, request.getRoomId());
+
+        int oldElectricity = request.getOldElectricity();
+        int oldWater = request.getOldWater();
+
+        if (previousUsageOpt.isPresent()) {
+            UtilityUsage previousUsage = previousUsageOpt.get();
+            if (oldElectricity == 0) {
+                oldElectricity = previousUsage.getNewElectricity();
+            }
+            if (oldWater == 0) {
+                oldWater = previousUsage.getNewWater();
+            }
         }
 
-        if (request.getNewWater() < request.getOldWater()) {
-//            throw new BadRequestException("Chỉ số nước mới phải lớn hơn hoặc bằng chỉ số cũ");
+        if (request.getNewElectricity() < oldElectricity) {
+            throw new AppException(ErrorCode.INVALID_ELECTRICITY_READING);
         }
 
-        // Tạo entity và lưu
+        if (request.getNewWater() < oldWater) {
+            throw new AppException(ErrorCode.INVALID_WATER_READING);
+        }
+
         UtilityUsage usage = utilityMapper.toEntity(request);
         usage.setOwnerId(ownerId);
+        usage.setRoomId(room.getId());
+        usage.setOldElectricity(oldElectricity);
+        usage.setOldWater(oldWater);
         usage.setCreatedAt(LocalDateTime.now());
+        usage.setUpdatedAt(LocalDateTime.now());
 
         UtilityUsage saved = utilityUsageRepository.save(usage);
         return utilityMapper.toResponse(saved);
     }
 
+    @Override
+    public UtilityUsageResponse getUtilityUsageDetail(String ownerId, String usageId) {
+        UtilityUsage usage = utilityUsageRepository.findById(usageId)
+                .orElseThrow(() -> new AppException(ErrorCode.UTILITY_USAGE_NOT_FOUND));
+
+        if (!usage.getOwnerId().equals(ownerId)) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        return utilityMapper.toResponse(usage);
+    }
+
+    @Override
+    public UtilityUsageResponse updateUtilityUsage(String ownerId, String usageId, UtilityUsageUpdateRequest request) {
+        UtilityUsage usage = utilityUsageRepository.findById(usageId)
+                .orElseThrow(() -> new AppException(ErrorCode.UTILITY_USAGE_NOT_FOUND));
+
+        if (!usage.getOwnerId().equals(ownerId)) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        if (request.getNewElectricity() < usage.getNewElectricity()) {
+            throw new AppException(ErrorCode.INVALID_INPUT_ELECTRIC);
+        }
+
+        if (request.getNewWater() < usage.getNewWater()) {
+            throw new AppException(ErrorCode.INVALID_INPUT_WATER);
+        }
+
+        usage.setOldElectricity(usage.getNewElectricity());
+        usage.setNewElectricity(request.getNewElectricity());
+        usage.setOldWater(usage.getNewWater());
+        usage.setNewWater(request.getNewWater());
+        usage.setIncludeWifi(request.getIncludeWifi() != null ? request.getIncludeWifi() : usage.getIncludeWifi());
+        usage.setIncludeGarbage(request.getIncludeGarbage() != null ? request.getIncludeGarbage() : usage.getIncludeGarbage());
+        usage.setIncludeParking(request.getIncludeParking() != null ? request.getIncludeParking() : usage.getIncludeParking());
+        usage.setUpdatedAt(LocalDateTime.now());
+
+        UtilityUsage updated = utilityUsageRepository.save(usage);
+        return utilityMapper.toResponse(updated);
+    }
 
     @Override
     public List<UtilityUsageResponse> getUtilityUsagesByMonth(String ownerId, String month) {
@@ -73,63 +131,18 @@ public class UtilityServiceImpl implements UtilityService{
         return list.stream().map(utilityMapper::toResponse).toList();
     }
 
-    @Override
-    public UtilityInvoiceResponse createUtilityInvoice(String ownerId, UtilityInvoiceCreateRequest request) {
-        // 1. Lấy UtilityUsage theo usageId
-        UtilityUsage usage = utilityUsageRepository.findById(request.getUsageId())
-                .orElseThrow(() -> new RuntimeException("UtilityUsage không tồn tại"));
 
-        // 2. Kiểm tra ownerId trùng với usage.ownerId
+
+    @Override
+    public void deleteUtilityUsage(String ownerId, String usageId) {
+        UtilityUsage usage = utilityUsageRepository.findById(usageId)
+                .orElseThrow(() -> new AppException(ErrorCode.UTILITY_USAGE_NOT_FOUND));
+
         if (!usage.getOwnerId().equals(ownerId)) {
-            throw new RuntimeException("Không có quyền tạo hóa đơn cho owner này");
+            throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
-        // 3. Lấy cấu hình đơn giá điện, nước, dịch vụ của owner
-        UtilityConfig config = utilityConfigRepository.findByOwnerId(ownerId)
-                .orElseThrow(() -> new RuntimeException("Chưa cấu hình đơn giá tiện ích"));
-
-        // 4. Tính tiền điện, nước
-        int electricityUsed = usage.getNewElectricity() - usage.getOldElectricity();
-        int waterUsed = usage.getNewWater() - usage.getOldWater();
-
-        Integer electricityAmount = electricityUsed * config.getElectricityPricePerUnit();
-        Integer waterAmount = waterUsed * config.getWaterPricePerUnit();
-        Integer serviceFee = config.getServiceFee() != 0 ? config.getServiceFee() : 0;
-
-        Integer totalAmount = electricityAmount + waterAmount + serviceFee;
-
-        // 5. Tạo UtilityInvoice entity
-        UtilityInvoice invoice = new UtilityInvoice();
-        invoice.setUsageId(usage.getId());
-        invoice.setRoomId(usage.getRoomId());
-        invoice.setTenantId(null); // Có thể lấy tenantId qua phòng (cần thêm DB hoặc service lookup)
-        invoice.setOwnerId(ownerId);
-        invoice.setElectricityAmount(electricityAmount);
-        invoice.setWaterAmount(waterAmount);
-        invoice.setServiceFee(serviceFee);
-        invoice.setTotalAmount(totalAmount);
-        invoice.setStatus("UNPAID");
-        invoice.setDueDate(request.getDueDate());
-        invoice.setCreatedAt(LocalDateTime.now());
-
-        UtilityInvoice saved = utilityInvoiceRepository.save(invoice);
-
-        return utilityMapper.toUtilityInvoiceResponse(saved);
-    }
-
-    @Override
-    public List<UtilityInvoiceResponse> getUtilityInvoicesByMonth(String ownerId, String month) {
-        // Chuyển chuỗi "2025-05" thành khoảng thời gian trong tháng 5/2025
-        YearMonth yearMonth = YearMonth.parse(month); // month = "2025-05"
-        LocalDateTime start = yearMonth.atDay(1).atStartOfDay();         // 2025-05-01T00:00
-        LocalDateTime end = yearMonth.atEndOfMonth().atTime(23, 59, 59); // 2025-05-31T23:59:59
-
-        List<UtilityInvoice> invoices = utilityInvoiceRepository
-                .findByOwnerIdAndCreatedAtBetween(ownerId, start, end);
-
-        return invoices.stream()
-                .map(utilityMapper::toUtilityInvoiceResponse)
-                .toList();
+        utilityUsageRepository.delete(usage);
     }
 
     @Override
@@ -147,7 +160,9 @@ public class UtilityServiceImpl implements UtilityService{
         config.setOwnerId(ownerId);
         config.setElectricityPricePerUnit(request.getElectricityPricePerUnit());
         config.setWaterPricePerUnit(request.getWaterPricePerUnit());
-        config.setServiceFee(request.getServiceFee());
+        config.setWifiFee(request.getWifiFee());
+        config.setGarbageFee(request.getGarbageFee());
+        config.setParkingFee(request.getParkingFee());
         config.setUpdatedAt(LocalDateTime.now());
 
         UtilityConfig saved = utilityConfigRepository.save(config);

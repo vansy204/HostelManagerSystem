@@ -25,7 +25,9 @@ public class UtilityConfig {
 
     Integer waterPricePerUnit;       // giá nước theo đơn vị
 
-    Integer serviceFee;               // phí dịch vụ cố định (có thể null)
+    Integer wifiFee;
+    Integer garbageFee;
+    Integer parkingFee;
 
     LocalDateTime createdAt = LocalDateTime.now();
 

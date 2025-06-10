@@ -1,6 +1,6 @@
 package com.hostelmanagersystem.service;
 
-import com.hostelmanagersystem.entity.manager.UtilityInvoice;
+import com.hostelmanagersystem.entity.manager.Invoice;
 import com.hostelmanagersystem.entity.manager.UtilityUsage;
 import com.lowagie.text.Document;
 import com.lowagie.text.Paragraph;
@@ -19,7 +19,7 @@ import java.io.ByteArrayOutputStream;
 @Slf4j
 @RequiredArgsConstructor
 public class UtilityInvoicePdfGenerator {
-    public static byte[] generateUtilityInvoicePdf(UtilityInvoice invoice, UtilityUsage utility) {
+    public static byte[] generateUtilityInvoicePdf(Invoice invoice, UtilityUsage utility) {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Document document = new Document();
             PdfWriter.getInstance(document, out);
@@ -31,7 +31,7 @@ public class UtilityInvoicePdfGenerator {
             document.add(new Paragraph("Tenant ID: " + invoice.getTenantId()));
             document.add(new Paragraph("Electricity Usage (kWh): " + utility.getNewElectricity()));
             document.add(new Paragraph("Water Usage (m³): " + utility.getNewWater()));
-            document.add(new Paragraph("Service Fee: " + invoice.getServiceFee()));
+//            document.add(new Paragraph("Service Fee: " + invoice.getServiceFee()));
             document.add(new Paragraph("Electricity Fee: " + invoice.getElectricityAmount()));
             document.add(new Paragraph("Water Fee: " + invoice.getWaterAmount()));
             document.add(new Paragraph("Total Amount: " + invoice.getTotalAmount()));
