@@ -376,16 +376,16 @@ public class InvoiceServiceImpl implements InvoiceService {
             // Tiền điện
             if (invoiceResponse.getElectricityAmount() > 0) {
                 addTableCell(serviceTable, "Tiền điện", normalFont);
-                addTableCell(serviceTable, config.getElectricityPricePerUnit() + " kWh", normalFont);
-                addTableCell(serviceTable, formatCurrency(usage.getNewElectricity()-usage.getOldElectricity()), normalFont);
+                addTableCell(serviceTable, usage.getNewElectricity()-usage.getOldElectricity() + " kWh", normalFont);
+                addTableCell(serviceTable, formatCurrency(config.getElectricityPricePerUnit()), normalFont);
                 addTableCell(serviceTable, formatCurrency(invoiceResponse.getElectricityAmount()), normalFont);
             }
 
             // Tiền nước
             if (invoiceResponse.getWaterAmount() > 0) {
                 addTableCell(serviceTable, "Tiền nước", normalFont);
-                addTableCell(serviceTable, config.getWaterPricePerUnit() + " m³", normalFont);
-                addTableCell(serviceTable, formatCurrency(usage.getNewWater()-usage.getOldWater()), normalFont);
+                addTableCell(serviceTable, usage.getNewWater()-usage.getOldWater() + " m³", normalFont);
+                addTableCell(serviceTable, formatCurrency(config.getWaterPricePerUnit()), normalFont);
                 addTableCell(serviceTable, formatCurrency(invoiceResponse.getWaterAmount()), normalFont);
             }
 
