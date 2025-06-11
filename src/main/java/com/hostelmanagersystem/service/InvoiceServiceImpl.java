@@ -3,6 +3,7 @@ package com.hostelmanagersystem.service;
 import com.hostelmanagersystem.dto.request.InvoiceCreateRequest;
 import com.hostelmanagersystem.dto.response.InvoiceResponse;
 import com.hostelmanagersystem.dto.response.InvoiceStatisticsResponse;
+import com.hostelmanagersystem.entity.identity.User;
 import com.hostelmanagersystem.entity.manager.*;
 import com.hostelmanagersystem.enums.InvoiceStatus;
 import com.hostelmanagersystem.enums.InvoiceType;
@@ -27,7 +28,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
@@ -36,7 +36,9 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -52,10 +54,10 @@ public class InvoiceServiceImpl implements InvoiceService {
     TenantRepository tenantRepository;
     InvoiceMapper invoiceMapper;
     EmailService emailService;
-    MongoTemplate mongoTemplate;
     UtilityUsageRepository utilityUsageRepository;
     UtilityConfigRepository utilityConfigRepository;
     UtilityMapper utilityMapper;
+    UserRepository userRepository;
 
     /**
      * Tạo invoice (hóa đơn) theo cấu trúc mới Invoice:
@@ -268,8 +270,14 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .orElseThrow(() -> new RuntimeException("Usage not found or access denied"));
         UtilityConfig config = utilityConfigRepository.findByOwnerId(ownerId)
                 .orElseThrow(() -> new RuntimeException("Config not found or access denied"));
+        Tenant tenant = tenantRepository.findById(invoice.getTenantId())
+                .orElseThrow(() -> new RuntimeException("Tenant not found or access denied"));
+        User owner = userRepository.findById(ownerId)
+                .orElseThrow(() -> new RuntimeException("User not found or access denied"));
+        Room room = roomRepository.findById(invoice.getRoomId())
+                .orElseThrow(() -> new RuntimeException("Room not found or access denied"));
         InvoiceResponse invoiceResponse = invoiceMapper.toInvoiceResponse(invoice);
-        byte[] pdfBytes = generatePdf(invoiceResponse,usage,config); // Giả sử có method generatePdf trả về byte[]
+        byte[] pdfBytes = generatePdf(invoiceResponse,usage,config,tenant,owner,room); // Giả sử có method generatePdf trả về byte[]
 
         emailService.sendInvoiceEmail(
                 email,
@@ -307,7 +315,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     // Giả sử phương thức generatePdf:
-    private byte[] generatePdf(InvoiceResponse invoiceResponse, UtilityUsage usage, UtilityConfig config) {
+    private byte[] generatePdf(InvoiceResponse invoiceResponse, UtilityUsage usage, UtilityConfig config, Tenant tenant, User owner,Room room) {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Document document = new Document(PageSize.A4, 36, 36, 54, 54);
             PdfWriter writer = PdfWriter.getInstance(document, out);
@@ -318,7 +326,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                     BaseFont.IDENTITY_H,
                     BaseFont.EMBEDDED);
             Font titleFont = new Font(baseFont, 18, Font.BOLD);
-            Font headerFont = new Font(baseFont, 14, Font.BOLD);
+            Font headerFont = new Font(baseFont, 20, Font.BOLD);
             Font normalFont = new Font(baseFont, 12, Font.NORMAL);
             Font boldFont = new Font(baseFont, 12, Font.BOLD);
 
@@ -330,12 +338,12 @@ public class InvoiceServiceImpl implements InvoiceService {
             // Logo và thông tin công ty
             PdfPCell leftCell = new PdfPCell();
             leftCell.setBorder(Rectangle.NO_BORDER);
-            leftCell.addElement(new Paragraph("Công ty Vũ An", headerFont));
-            leftCell.addElement(new Paragraph("trangwebhay.vn", normalFont));
-            leftCell.addElement(new Paragraph("Công nghiệp số Quốc An", normalFont));
-            leftCell.addElement(new Paragraph("Số điện thoại khách hàng: +84 912 345 678", normalFont));
-            leftCell.addElement(new Paragraph("Địa chỉ khách hàng: 194 Quang Trung,", normalFont));
-            leftCell.addElement(new Paragraph("Hà Đông, Hà Nội, Việt Nam", normalFont));
+            leftCell.addElement(new Paragraph("TRỌ MỚI", headerFont));
+            leftCell.addElement(new Paragraph("tromoi.vn", normalFont));
+            leftCell.addElement(new Paragraph("Tên chủ sở hữu: " + owner.getFirstName() + owner.getLastName(), normalFont));
+            leftCell.addElement(new Paragraph("Số điện thoại: " + (owner.getPhone()!=null?owner.getPhone():""), normalFont));
+            leftCell.addElement(new Paragraph("Địa chỉ:" + room.getAddressText(), normalFont));
+            leftCell.addElement(new Paragraph(room.getWard() +","+ room.getDistrict() +","+ room.getProvince(), normalFont));
 
             // Thông tin hóa đơn
             PdfPCell rightCell = new PdfPCell();
@@ -344,6 +352,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             rightCell.addElement(new Paragraph("HÓA ĐƠN", titleFont));
             rightCell.addElement(new Paragraph("Hóa đơn #" + invoiceResponse.getId(), normalFont));
             rightCell.addElement(new Paragraph("Ngày " + formatDate(invoiceResponse.getDueDate()), normalFont));
+            rightCell.addElement(new Paragraph("Trạng thái: " + getStatusText(invoiceResponse.getStatus()), boldFont));
 
             headerTable.addCell(leftCell);
             headerTable.addCell(rightCell);
@@ -410,31 +419,25 @@ public class InvoiceServiceImpl implements InvoiceService {
             paymentInfoCell.setBorder(Rectangle.NO_BORDER);
             paymentInfoCell.addElement(new Paragraph("Thông tin Thanh toán", headerFont));
             paymentInfoCell.addElement(new Paragraph("Ngân hàng VIB", normalFont));
-            paymentInfoCell.addElement(new Paragraph("Tên tài khoản: Công ty Vũ An", normalFont));
+            paymentInfoCell.addElement(new Paragraph("Tên tài khoản: Công ty TRỌ MỚI", normalFont));
             paymentInfoCell.addElement(new Paragraph("Số tài khoản: 123-456-7890", normalFont));
-            paymentInfoCell.addElement(new Paragraph("Ngày thanh toán: " + formatDate(invoiceResponse.getPaymentDate()), normalFont));
+            paymentInfoCell.addElement(new Paragraph("Ngày thanh toán: " + formatDate(LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(), 5, 0, 0)), normalFont));
             paymentInfoCell.addElement(Chunk.NEWLINE);
-            paymentInfoCell.addElement(new Paragraph("xinchao@trangwebhay.vn | 123 Đường ABC,", normalFont));
-            paymentInfoCell.addElement(new Paragraph("Thành phố DEF | +84 912 345 678", normalFont));
+            paymentInfoCell.addElement(new Paragraph("tromoi@newroom.vn | Xa lộ Hà Nội, Phường Tân Phú, Thủ Đức, Hồ Chí Minh, Việt Nam", normalFont));
+            paymentInfoCell.addElement(new Paragraph("Thành phố Thủ Đức | +84 912 345 678", normalFont));
 
             // Tổng tiền bên phải
             PdfPCell totalCell = new PdfPCell();
             totalCell.setBorder(Rectangle.NO_BORDER);
             totalCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
             totalCell.addElement(new Paragraph("Tổng cộng: " + formatCurrency(invoiceResponse.getTotalAmount()), normalFont));
-            totalCell.addElement(new Paragraph("Thuế (0%): 0đ", normalFont));
+            totalCell.addElement(new Paragraph("Thuế (5%): " + formatCurrency(calculateTax(invoiceResponse.getTotalAmount())), normalFont));
             totalCell.addElement(Chunk.NEWLINE);
-            totalCell.addElement(new Paragraph("Tổng tiền: " + formatCurrency(invoiceResponse.getTotalAmount()), titleFont));
+            totalCell.addElement(new Paragraph("Tổng tiền: " + formatCurrency(invoiceResponse.getTotalAmount()-calculateTax(invoiceResponse.getTotalAmount())), titleFont));
 
             totalTable.addCell(paymentInfoCell);
             totalTable.addCell(totalCell);
             document.add(totalTable);
-
-            // Trạng thái thanh toán
-            document.add(Chunk.NEWLINE);
-            Paragraph statusParagraph = new Paragraph("Trạng thái: " + getStatusText(invoiceResponse.getStatus()), boldFont);
-            statusParagraph.setAlignment(Element.ALIGN_CENTER);
-            document.add(statusParagraph);
 
             // Ghi chú
             if (invoiceResponse.getDescription() != null && !invoiceResponse.getDescription().isEmpty()) {
@@ -481,16 +484,19 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private String getStatusText(InvoiceStatus status) {
         switch (status.toString()) {
-            case "paid":
+            case "PAID":
                 return "Đã thanh toán";
-            case "unpaid":
+            case "UNPAID":
                 return "Chưa thanh toán";
-            case "overdue":
+            case "OVERDUE":
                 return "Quá hạn";
-            case "partial":
+            case "PARTIAL":
                 return "Thanh toán một phần";
             default:
                 return status.toString();
         }
+    }
+    private double calculateTax(double amount){
+        return amount * 0.05;
     }
 }

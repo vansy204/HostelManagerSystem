@@ -234,4 +234,17 @@ public class ContractController {
                 .message("Hủy hợp đồng thành công")
                 .build();
     }
+    @PutMapping("/{id}/confirm-deposit")
+    public ApiResponse<ContractResponse> confirmDeposit(
+            @PathVariable String id,
+            Authentication authentication
+    ) {
+        String ownerId = authentication.getName();
+        ContractResponse response = contractService.confirmDepositPayment(id, ownerId);
+
+        return ApiResponse.<ContractResponse>builder()
+                .result(response)
+                .message("Xác nhận thanh toán tiền cọc thành công")
+                .build();
+    }
 }
