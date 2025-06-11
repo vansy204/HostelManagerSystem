@@ -58,7 +58,6 @@ public enum ErrorCode {
     INVALID_STATUS(1031,"Trạng thái không hợp lệ", HttpStatus.BAD_REQUEST),
     INVALID_TENANT_STATUS(1032, "Trạng thái không hợp lệ!",HttpStatus.BAD_REQUEST),
     THIS_ROOM_IS_NOT_YOUR(1033,"Bạn không phải chủ phòng",HttpStatus.BAD_REQUEST),
-    INVALID_STATUS(1034,"Trạng thái không hợp lệ", HttpStatus.BAD_REQUEST),
     UTILITY_USAGE_NOT_FOUND(1035,"Tiện ích sử dụng không tìm thấy", HttpStatus.BAD_REQUEST),
     UTILITY_INVOICE_NOT_FOUND(1036,"Tiện ích hóa đơn không tìm thấy", HttpStatus.BAD_REQUEST),
     INVALID_INPUT_ELECTRIC(1037,"Chỉ số điện mới phải lớn hơn hoặc bằng chỉ số cũ", HttpStatus.BAD_REQUEST),

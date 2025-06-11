@@ -65,16 +65,8 @@ public class InvoiceServiceImpl implements InvoiceService {
     UtilityConfigRepository utilityConfigRepository;
     UtilityMapper utilityMapper;
     UserRepository userRepository;
-  
-    private final RoomRepository roomRepository;
-//    TenantRepository tenantRepository;
 
 
-    @Override
-    public InvoiceResponse createInvoice(String ownerId, InvoiceCreateRequest request) {
-        Invoice invoice = invoiceMapper.toInvoice(request, ownerId);
-        invoice.setTotalAmount(request.getRentAmount() + request.getElectricityAmount() +
-                request.getWaterAmount() + request.getServiceAmount());
 
 
     /**
@@ -209,6 +201,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         invoiceRepository.delete(invoice);
     }
+
     @Override
     public List<InvoiceResponse> getAllInvoicesByOwner(String ownerId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -243,21 +236,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceResponse getInvoiceByTenant(String tenantId) {
-        Invoice invoice = invoiceRepository.findInvoiceByTenantId(tenantId);
-        return invoiceMapper.toInvoiceResponse(invoice);
-    }
-
-    @Override
-    public InvoiceResponse updatePaymentStatus(String ownerId, String invoiceId, InvoiceStatus status, String paymentMethod) {
-        Invoice invoice = invoiceRepository.findById(invoiceId)
-                .filter(inv -> inv.getOwnerId().equals(ownerId))
-                .orElseThrow(() -> new RuntimeException("Invoice not found or access denied"));
-
     public List<InvoiceResponse> searchInvoices(String ownerId, String keyword, int page, int size) {
         PageRequest pageable = PageRequest.of(page, size);
         Page<Invoice> pageInvoices = invoiceRepository.findByOwnerId(ownerId, pageable);
-
 
         List<Invoice> filtered = filterInvoicesByKeyword(pageInvoices.getContent(), keyword);
 
@@ -529,5 +510,10 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
     private double calculateTax(double amount){
         return amount * 0.05;
+    }
+    @Override
+    public InvoiceResponse getInvoiceByTenant(String tenantId) {
+        Invoice invoice = invoiceRepository.findInvoiceByTenantId(tenantId);
+        return invoiceMapper.toInvoiceResponse(invoice);
     }
 }
