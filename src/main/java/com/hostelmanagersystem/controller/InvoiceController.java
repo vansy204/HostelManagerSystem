@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/invoice")
+@RequestMapping("/invoices")
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -117,12 +117,14 @@ public class InvoiceController {
     }
     @PreAuthorize("hasRole('OWNER')")
     @GetMapping("/owner")
-    public ApiResponse<List<InvoiceResponse>> getAllInvoices(
-            @RequestParam int page,
-            @RequestParam int size,
-            Authentication authentication) {
+    public ApiResponse<List<InvoiceResponse>> getAllInvoicesForOwner(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Authentication authentication
+    ) {
         String ownerId = authentication.getName();
         List<InvoiceResponse> invoices = invoiceService.getAllInvoicesByOwner(ownerId, page, size);
+
         return ApiResponse.<List<InvoiceResponse>>builder()
                 .result(invoices)
                 .message("Lấy danh sách hóa đơn thành công")
