@@ -43,4 +43,10 @@ public class UserController {
         var result = userService.updateUser(request);
         return ApiResponse.<UserResponse>builder().result(result).build();
     }
+    @GetMapping("/user/{userId}")
+    public ApiResponse<UserResponse> getUser(@PathVariable String userId) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.getUserById(userId))
+                .build();
+    }
 }

@@ -4,12 +4,17 @@ import com.hostelmanagersystem.dto.request.InvoiceCreateRequest;
 import com.hostelmanagersystem.dto.response.InvoiceResponse;
 import com.hostelmanagersystem.dto.response.InvoiceStatisticsResponse;
 import com.hostelmanagersystem.entity.identity.User;
+import com.hostelmanagersystem.entity.manager.Invoice;
+import com.hostelmanagersystem.entity.manager.Room;
 import com.hostelmanagersystem.entity.manager.*;
 import com.hostelmanagersystem.enums.InvoiceStatus;
 import com.hostelmanagersystem.enums.InvoiceType;
 import com.hostelmanagersystem.exception.AppException;
 import com.hostelmanagersystem.exception.ErrorCode;
 import com.hostelmanagersystem.mapper.InvoiceMapper;
+import com.hostelmanagersystem.repository.InvoiceRepository;
+import com.hostelmanagersystem.repository.RoomRepository;
+import com.hostelmanagersystem.repository.UserRepository;
 import com.hostelmanagersystem.mapper.UtilityMapper;
 import com.hostelmanagersystem.repository.*;
 import com.lowagie.text.*;
@@ -24,6 +29,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -58,6 +65,17 @@ public class InvoiceServiceImpl implements InvoiceService {
     UtilityConfigRepository utilityConfigRepository;
     UtilityMapper utilityMapper;
     UserRepository userRepository;
+  
+    private final RoomRepository roomRepository;
+//    TenantRepository tenantRepository;
+
+
+    @Override
+    public InvoiceResponse createInvoice(String ownerId, InvoiceCreateRequest request) {
+        Invoice invoice = invoiceMapper.toInvoice(request, ownerId);
+        invoice.setTotalAmount(request.getRentAmount() + request.getElectricityAmount() +
+                request.getWaterAmount() + request.getServiceAmount());
+
 
     /**
      * Tạo invoice (hóa đơn) theo cấu trúc mới Invoice:
@@ -115,6 +133,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setParkingFee(parkingFee);
         invoice.setServiceAmount(serviceAmount);
         invoice.setTotalAmount(totalAmount);
+
 
         invoice.setStatus(InvoiceStatus.UNPAID);
         invoice.setType(InvoiceType.UTILITY);
@@ -224,9 +243,21 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    public InvoiceResponse getInvoiceByTenant(String tenantId) {
+        Invoice invoice = invoiceRepository.findInvoiceByTenantId(tenantId);
+        return invoiceMapper.toInvoiceResponse(invoice);
+    }
+
+    @Override
+    public InvoiceResponse updatePaymentStatus(String ownerId, String invoiceId, InvoiceStatus status, String paymentMethod) {
+        Invoice invoice = invoiceRepository.findById(invoiceId)
+                .filter(inv -> inv.getOwnerId().equals(ownerId))
+                .orElseThrow(() -> new RuntimeException("Invoice not found or access denied"));
+
     public List<InvoiceResponse> searchInvoices(String ownerId, String keyword, int page, int size) {
         PageRequest pageable = PageRequest.of(page, size);
         Page<Invoice> pageInvoices = invoiceRepository.findByOwnerId(ownerId, pageable);
+
 
         List<Invoice> filtered = filterInvoicesByKeyword(pageInvoices.getContent(), keyword);
 

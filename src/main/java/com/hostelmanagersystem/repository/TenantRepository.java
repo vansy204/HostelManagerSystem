@@ -13,5 +13,7 @@ import java.util.Optional;
 public interface TenantRepository extends MongoRepository<Tenant, String> {
     List<Tenant> findByUserId(String userId);
     Optional<Tenant> findByUserIdAndRoomIdAndStatusNot(String userId, String roomId, TenantStatus excludedStatus);
+    Tenant findTenantByUserId(String userId);
+    Optional<Tenant> findByUserIdAndRoomId(String userId, String roomId);
     Optional<Tenant> findActiveTenantByRoomId(String roomId);
 }

@@ -12,6 +12,7 @@ import com.hostelmanagersystem.enums.TenantStatus;
 import com.hostelmanagersystem.exception.AppException;
 import com.hostelmanagersystem.exception.ErrorCode;
 import com.hostelmanagersystem.mapper.ContractMapper;
+import com.hostelmanagersystem.mapper.RoomMapper;
 import com.hostelmanagersystem.repository.ContractRepository;
 import com.hostelmanagersystem.repository.RoomRepository;
 import com.hostelmanagersystem.repository.TenantRepository;
@@ -27,6 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -51,6 +54,7 @@ public class ContractServiceImpl implements ContractService {
     MongoTemplate mongoTemplate;
 
     static final int EXPIRING_SOON_DAYS = 7;
+    private final RoomMapper roomMapper;
 
     public List<ContractResponse> getAllContractsByOwner(String ownerId) {
         return contractRepository.findByOwnerId(ownerId).stream()
@@ -67,7 +71,7 @@ public class ContractServiceImpl implements ContractService {
                 .orElseThrow(() -> new AppException(ErrorCode.TENANT_NOT_FOUND));
 
         // Phòng phải ở trạng thái AVAILABLE mới được tạo hợp đồng
-        if (room.getStatus() != RoomStatus.AVAILABLE) {
+        if (room.getStatus() != RoomStatus.RESERVED) {
             throw new AppException(ErrorCode.ROOM_NOT_AVAILABLE);
         }
 
@@ -88,9 +92,7 @@ public class ContractServiceImpl implements ContractService {
         room.setStatus(RoomStatus.RESERVED);
         roomRepository.save(room);
 
-        // Cập nhật tenant status nếu có (nếu quản lý tenant theo hợp đồng)
-         tenant.setStatus(TenantStatus.PENDING);
-         tenantRepository.save(tenant);
+
 
         return contractMapper.toResponse(contract);
     }
@@ -280,30 +282,51 @@ public class ContractServiceImpl implements ContractService {
                 .collect(Collectors.toList());
     }
 
+
+
     @Override
-    public ContractResponse signContract(String contractId, ContractSignRequest request, String userId) {
+    public ContractResponse signContract(String contractId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> new AppException(ErrorCode.CONTRACT_NOT_FOUND));
 
-        if (!(userId.equals(contract.getOwnerId()) || userId.equals(contract.getTenantId()))) {
-            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        if (!userId.equals(contract.getOwnerId()) && userId.equals(contract.getTenantId())) {
+            throw new AppException(ErrorCode.THIS_ROOM_IS_NOT_YOUR);
+        }
+        if (userId.equals(contract.getOwnerId()) && !userId.equals(contract.getTenantId())) {
+            throw new AppException(ErrorCode.THIS_ROOM_IS_NOT_YOUR);
         }
 
-        if (userId.equals(contract.getOwnerId()) && request.isOwnerSignature()) {
-            contract.setOwnerSigned(true);
-        }
-        if (userId.equals(contract.getTenantId()) && request.isTenantSignature()) {
-            contract.setTenantSigned(true);
-        }
 
-        if (Boolean.TRUE.equals(contract.getOwnerSigned()) && Boolean.TRUE.equals(contract.getTenantSigned())) {
-            // Ký xong, hợp đồng chuyển sang trạng thái PENDING (chờ duyệt)
-            contract.setStatus(ContractStatus.PENDING);
-            contract.setSignedAt(LocalDate.now());
-        }
+//        if (userId.equals(contract.getOwnerId()) && request.isOwnerSignature()) {
+//            contract.setOwnerSigned(true);
+//        }
+//        if (userId.equals(contract.getTenantId()) && request.isTenantSignature()) {
+//            contract.setTenantSigned(true);
+//        }
+//
 
+//
+        Room room = roomRepository.findById(contract.getRoomId())
+                .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_FOUND));
+        Tenant tenant = tenantRepository.findById(contract.getTenantId())
+                .orElseThrow(()-> new AppException(ErrorCode.TENANT_NOT_FOUND));
         contract.setUpdatedAt(LocalDate.now());
+
+
+        if (!(Boolean.TRUE.equals(contract.getOwnerSigned()) && Boolean.TRUE.equals(contract.getTenantSigned()))) {
+            throw new RuntimeException("Hop dong chua duoc ky");
+        }
+        // Ký xong, hợp đồng chuyển sang trạng thái PENDING (chờ duyệt)
+        contract.setStatus(ContractStatus.ACTIVE);
+        contract.setSignedAt(LocalDate.now());
+        room.setStatus(RoomStatus.OCCUPIED);
+        tenant.setStatus(TenantStatus.CONTRACT_CONFIRMED);
+        tenantRepository.save(tenant);
+        roomRepository.save(room);
         contract = contractRepository.save(contract);
+
         return contractMapper.toResponse(contract);
     }
 
