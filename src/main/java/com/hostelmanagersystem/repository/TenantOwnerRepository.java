@@ -12,7 +12,9 @@ import java.util.Optional;
 @Repository
 public interface TenantOwnerRepository extends MongoRepository<Tenant, String> {
     List<Tenant> findByRoomId(String roomId);
+    List<Tenant> findByOwnerId(String ownerId);
     List<Tenant> findByOwnerIdAndStatus(String ownerId, TenantStatus status);
     Optional<Tenant> findByIdAndOwnerId(String tenantId, String ownerId);
     List<TenantHistoryResponse> findHistoryByUserId(String userId);
+    Optional<Tenant> findById(String id);
 }

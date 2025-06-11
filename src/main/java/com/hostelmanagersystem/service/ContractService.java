@@ -18,4 +18,6 @@ public interface ContractService {
     ContractResponse cancelContract(String contractId, String ownerId);
     List<ContractResponse> getContractHistoryByTenant(String tenantId, String ownerId);
     List<ContractResponse> searchContracts(ContractFilterRequest request);
+    List<ContractResponse> getAllContractsByOwner(String ownerId);
+    ContractResponse confirmDepositPayment(String contractId, String ownerId);
 }

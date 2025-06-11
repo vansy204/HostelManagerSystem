@@ -25,6 +25,34 @@ import java.util.List;
 public class TenantOwnerController {
     TenantOwnerService tenantService;
 
+    @GetMapping
+    public ApiResponse<List<TenantResponse>> getAllTenants(
+            Authentication authentication) {
+
+        String ownerId = authentication.getName();
+        List<TenantResponse> tenants = tenantService.getAllTenantsForOwner(ownerId);
+
+        return ApiResponse.<List<TenantResponse>>builder()
+                .result(tenants)
+                .message("Lấy danh sách toàn bộ người thuê thành công")
+                .build();
+    }
+
+    @GetMapping("/{tenantId}")
+    public ApiResponse<TenantResponse> getTenantById(
+            Authentication authentication,
+            @PathVariable String tenantId) {
+
+        String ownerId = authentication.getName();
+        TenantResponse response = tenantService.getTenantById(tenantId, ownerId);
+
+        return ApiResponse.<TenantResponse>builder()
+                .result(response)
+                .message("Lấy thông tin người thuê thành công")
+                .build();
+    }
+
+
     @GetMapping("/{ownerId}/tenants")
     public ApiResponse<List<TenantResponse>> getTenantsByStatus(
             @PathVariable String ownerId,

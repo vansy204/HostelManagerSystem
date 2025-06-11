@@ -3,6 +3,8 @@ package com.hostelmanagersystem.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -10,10 +12,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvoiceCreateRequest {
     String tenantId;
-    String roomId;
-    String month; // "2025-05"
-    double rentAmount;
-    double electricityAmount;
-    double waterAmount;
-    double serviceAmount;
+    String utilityUsageId;
+    LocalDateTime dueDate;
 }

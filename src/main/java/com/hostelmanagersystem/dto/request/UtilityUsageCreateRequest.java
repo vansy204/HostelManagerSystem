@@ -3,6 +3,8 @@ package com.hostelmanagersystem.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.YearMonth;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -10,9 +12,16 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UtilityUsageCreateRequest {
     String roomId;
-    String month; // "2025-05"
-    Integer oldElectricity;
+
+    Integer oldElectricity; // optional
     Integer newElectricity;
-    Integer oldWater;
+
+    Integer oldWater;       // optional
     Integer newWater;
+
+    Boolean includeWifi;
+    Boolean includeGarbage;
+    Boolean includeParking;
+
+    String month;
 }

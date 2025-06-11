@@ -24,6 +24,16 @@ public class ContractController {
     ContractService contractService;
     MongoTemplate mongoTemplate;
 
+    @GetMapping
+    public ApiResponse<List<ContractResponse>> getAllContracts (Authentication authentication) {
+        String ownerId = authentication.getName();
+        List<ContractResponse> contracts = contractService.getAllContractsByOwner(ownerId);
+        return ApiResponse.<List<ContractResponse>>builder()
+                .result(contracts)
+                .message("Lấy danh sách hợp đồng thành công")
+                .build();
+    }
+
     // 1. Tạo hợp đồng mới
     @PreAuthorize("hasRole('OWNER')")
     @PostMapping
@@ -216,6 +226,19 @@ public class ContractController {
         return ApiResponse.<ContractResponse>builder()
                 .result(response)
                 .message("Hủy hợp đồng thành công")
+                .build();
+    }
+    @PutMapping("/{id}/confirm-deposit")
+    public ApiResponse<ContractResponse> confirmDeposit(
+            @PathVariable String id,
+            Authentication authentication
+    ) {
+        String ownerId = authentication.getName();
+        ContractResponse response = contractService.confirmDepositPayment(id, ownerId);
+
+        return ApiResponse.<ContractResponse>builder()
+                .result(response)
+                .message("Xác nhận thanh toán tiền cọc thành công")
                 .build();
     }
 }

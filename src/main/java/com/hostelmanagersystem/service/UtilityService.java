@@ -1,25 +1,33 @@
 package com.hostelmanagersystem.service;
 
+import com.hostelmanagersystem.dto.request.InvoiceCreateRequest;
 import com.hostelmanagersystem.dto.request.UtilityConfigUpdateRequest;
-import com.hostelmanagersystem.dto.request.UtilityInvoiceCreateRequest;
 import com.hostelmanagersystem.dto.request.UtilityUsageCreateRequest;
+import com.hostelmanagersystem.dto.request.UtilityUsageUpdateRequest;
+import com.hostelmanagersystem.dto.response.InvoiceResponse;
 import com.hostelmanagersystem.dto.response.UtilityConfigResponse;
-import com.hostelmanagersystem.dto.response.UtilityInvoiceResponse;
 import com.hostelmanagersystem.dto.response.UtilityUsageResponse;
+import com.hostelmanagersystem.enums.InvoiceStatus;
 
 import java.util.List;
 
 public interface UtilityService {
+
+    // ===== UTILITY USAGE =====
     UtilityUsageResponse createUtilityUsage(String ownerId, UtilityUsageCreateRequest request);
-    List<UtilityUsageResponse> getUtilityUsagesByMonth(String ownerId, String month);
 
-    // Tạo hóa đơn tiện ích dựa trên chỉ số đã nhập, tính tiền dựa trên đơn giá config
-    UtilityInvoiceResponse createUtilityInvoice(String ownerId, UtilityInvoiceCreateRequest request);
+    UtilityUsageResponse getUtilityUsageDetail(String ownerId, String usageId);
 
-    // Lấy hóa đơn tiện ích theo owner và tháng
-    List<UtilityInvoiceResponse> getUtilityInvoicesByMonth(String ownerId, String month);
+    List<UtilityUsageResponse> getUtilityUsagesByMonth(String ownerId, String month); // format: yyyy-MM
 
+    UtilityUsageResponse updateUtilityUsage(String ownerId, String usageId, UtilityUsageUpdateRequest request);
+
+    void deleteUtilityUsage(String ownerId, String usageId);
+
+
+    // ===== UTILITY CONFIG =====
     UtilityConfigResponse getConfigByOwnerId(String ownerId);
 
     UtilityConfigResponse updateConfig(String ownerId, UtilityConfigUpdateRequest request);
 }
+

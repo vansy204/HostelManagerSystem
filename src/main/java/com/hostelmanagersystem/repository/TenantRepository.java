@@ -15,4 +15,5 @@ public interface TenantRepository extends MongoRepository<Tenant, String> {
     Optional<Tenant> findByUserIdAndRoomIdAndStatusNot(String userId, String roomId, TenantStatus excludedStatus);
     Tenant findTenantByUserId(String userId);
     Optional<Tenant> findByUserIdAndRoomId(String userId, String roomId);
+    Optional<Tenant> findActiveTenantByRoomId(String roomId);
 }

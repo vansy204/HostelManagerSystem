@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 
 @Data
 @Builder
@@ -12,11 +13,20 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UtilityUsageResponse {
     String id;
+    String ownerId;
     String roomId;
-    String month;
+
     Integer oldElectricity;
     Integer newElectricity;
+
     Integer oldWater;
     Integer newWater;
+
+    Boolean includeWifi;
+    Boolean includeGarbage;
+    Boolean includeParking;
+
+    String month;
     LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

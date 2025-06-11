@@ -3,6 +3,7 @@ package com.hostelmanagersystem.dto.response;
 import com.hostelmanagersystem.enums.InvoiceStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.time.LocalDateTime;
 
@@ -13,20 +14,25 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvoiceResponse {
     String id;
-    String ownerId;
     String tenantId;
     String roomId;
     String month;
 
-    double rentAmount;
-    double electricityAmount;
-    double waterAmount;
-    double serviceAmount;
-    double totalAmount;
+    Double rentAmount;
+    Double electricityAmount;
+    Double waterAmount;
+    Double wifiFee;
+    Double garbageFee;
+    Double parkingFee;
+    Double totalAmount;
 
     InvoiceStatus status;
+    String type;
+    String description;
     LocalDateTime paymentDate;
     String paymentMethod;
 
+    LocalDateTime dueDate;
     LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }
