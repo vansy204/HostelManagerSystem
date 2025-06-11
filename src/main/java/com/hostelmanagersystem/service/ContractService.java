@@ -19,4 +19,5 @@ public interface ContractService {
     List<ContractResponse> getContractHistoryByTenant(String tenantId, String ownerId);
     List<ContractResponse> searchContracts(ContractFilterRequest request);
     List<ContractResponse> getAllContractsByOwner(String ownerId);
+    ContractResponse confirmDepositPayment(String contractId, String ownerId);
 }

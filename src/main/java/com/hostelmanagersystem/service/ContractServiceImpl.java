@@ -437,4 +437,35 @@ public class ContractServiceImpl implements ContractService {
                 .map(contractMapper::toResponse)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public ContractResponse confirmDepositPayment(String contractId, String ownerId) {
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new AppException(ErrorCode.CONTRACT_NOT_FOUND));
+
+        // Kiểm tra trạng thái hợp đồng phù hợp để xác nhận
+        if (contract.getStatus() != ContractStatus.PENDING) {
+            throw new AppException(ErrorCode.INVALID_CONTRACT_STATUS);
+        }
+
+        // Đánh dấu đã xác nhận tiền cọc
+        contract.setOwnerSigned(true);
+        contract.setUpdatedAt(LocalDate.now());
+        contractRepository.save(contract);
+
+        // Cập nhật trạng thái người thuê
+        Tenant tenant = tenantRepository.findById(contract.getTenantId())
+                .orElseThrow(() -> new AppException(ErrorCode.TENANT_NOT_FOUND));
+        tenant.setStatus(TenantStatus.DEPOSITED);
+        tenantRepository.save(tenant);
+
+        // Cập nhật trạng thái phòng
+        Room room = roomRepository.findById(contract.getRoomId())
+                .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_FOUND));
+        room.setStatus(RoomStatus.RESERVED);
+        roomRepository.save(room);
+
+        return contractMapper.toResponse(contract);
+    }
+
 }

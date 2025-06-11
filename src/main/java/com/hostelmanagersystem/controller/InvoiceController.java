@@ -1,13 +1,10 @@
 package com.hostelmanagersystem.controller;
 
 import com.hostelmanagersystem.dto.request.InvoiceCreateRequest;
-import com.hostelmanagersystem.dto.request.RentInvoiceCreateRequest;
 import com.hostelmanagersystem.dto.response.ApiResponse;
 import com.hostelmanagersystem.dto.response.InvoiceResponse;
 import com.hostelmanagersystem.dto.response.InvoiceStatisticsResponse;
 import com.hostelmanagersystem.enums.InvoiceStatus;
-import com.hostelmanagersystem.service.EmailService;
-import com.hostelmanagersystem.service.InvoicePdfGenerator;
 import com.hostelmanagersystem.service.InvoiceService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -28,8 +25,6 @@ import java.util.List;
 @PreAuthorize("hasRole('OWNER')")
 public class InvoiceController {
     InvoiceService invoiceService;
-    InvoicePdfGenerator pdfGenerator;
-    EmailService emailService;
 
     @PreAuthorize("hasRole('OWNER')")
     @PostMapping()
