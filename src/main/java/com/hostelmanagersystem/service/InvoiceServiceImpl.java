@@ -4,14 +4,18 @@ import com.hostelmanagersystem.dto.request.InvoiceCreateRequest;
 import com.hostelmanagersystem.dto.response.InvoiceResponse;
 import com.hostelmanagersystem.entity.identity.User;
 import com.hostelmanagersystem.entity.manager.Invoice;
+import com.hostelmanagersystem.entity.manager.Room;
 import com.hostelmanagersystem.enums.InvoiceStatus;
 import com.hostelmanagersystem.mapper.InvoiceMapper;
 import com.hostelmanagersystem.repository.InvoiceRepository;
+import com.hostelmanagersystem.repository.RoomRepository;
 import com.hostelmanagersystem.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,7 +31,9 @@ public class InvoiceServiceImpl implements InvoiceService{
     InvoicePdfGenerator pdfGenerator;
     EmailService emailService;
     UserRepository userRepository;
+    private final RoomRepository roomRepository;
 //    TenantRepository tenantRepository;
+
 
     @Override
     public InvoiceResponse createInvoice(String ownerId, InvoiceCreateRequest request) {
@@ -63,6 +69,12 @@ public class InvoiceServiceImpl implements InvoiceService{
         return invoices.stream()
                 .map(invoiceMapper::toInvoiceResponse)
                 .toList();
+    }
+
+    @Override
+    public InvoiceResponse getInvoiceByTenant(String tenantId) {
+        Invoice invoice = invoiceRepository.findInvoiceByTenantId(tenantId);
+        return invoiceMapper.toInvoiceResponse(invoice);
     }
 
     @Override

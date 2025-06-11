@@ -44,7 +44,7 @@ public enum ErrorCode {
   
     INVALID_REQUEST_STATUS(1021,"Trạng thái yêu cầu không hợp lệ", HttpStatus.BAD_REQUEST),
     ROOM_NOT_RESERVED(1022,"Đã có người đặt cọc hoặc giữ chỗ", HttpStatus.BAD_REQUEST),
-    ROOM_NOT_AVAILABLE(1023,"Phòng không có sẵng", HttpStatus.BAD_REQUEST),
+    ROOM_NOT_AVAILABLE(1023,"Phòng không có sẵn", HttpStatus.BAD_REQUEST),
     INVALID_CONTRACT_STATUS(1024,"Trạng thái hợp đồng không hợp lệ", HttpStatus.BAD_REQUEST),
 
     CAN_NOT_WRITE(1022,"Bạn không có quyền ghi chỉ số cho phòng này",HttpStatus.FORBIDDEN),
@@ -53,7 +53,10 @@ public enum ErrorCode {
     LEASE_TERM_NOT_DEFINED(1022, "Phòng chưa cấu hình thời gian thuê tối thiểu", HttpStatus.UNAUTHORIZED),
     ROOM_NOT_IN_CLEANING(1023, "Phòng chưa đựoc dọn dẹp", HttpStatus.UNAUTHORIZED),
     STATUS_MUST_BE_PROVIDED(1024,"Trạng thái phải được cung cấp", HttpStatus.BAD_REQUEST),
-    INVALID_STATUS(1024,"Trạng thái không hợp lệ", HttpStatus.BAD_REQUEST),
+    INVALID_STATUS(1025,"Trạng thái không hợp lệ", HttpStatus.BAD_REQUEST),
+
+    INVALID_TENANT_STATUS(1026, "Trạng thái không hợp lệ!",HttpStatus.BAD_REQUEST),
+    THIS_ROOM_IS_NOT_YOUR(1027,"Bạn không phải chủ phòng",HttpStatus.BAD_REQUEST),
   ;
 
 

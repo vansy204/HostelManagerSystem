@@ -1,61 +1,84 @@
 package com.hostelmanagersystem.controller;
 
 import com.hostelmanagersystem.dto.request.TenantRequest;
-
 import com.hostelmanagersystem.dto.response.ApiResponse;
+import com.hostelmanagersystem.dto.response.InvoiceResponse;
 import com.hostelmanagersystem.dto.response.TenantResponse;
+import com.hostelmanagersystem.entity.manager.Contract;
+import com.hostelmanagersystem.entity.manager.Room;
+import com.hostelmanagersystem.entity.manager.Tenant;
+import com.hostelmanagersystem.service.ContractService;
+import com.hostelmanagersystem.service.InvoiceService;
 import com.hostelmanagersystem.service.TenantService;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.jwt.Jwt;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
->>>>>>> 510a4e658c5ed4d4c86482667bda523aaa0c3091
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/tenants")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class TenantController {
-    private final TenantService tenantService;
+    TenantService tenantService;
+    ContractService contractService;
+    private final InvoiceService invoiceService;
 
     @PostMapping
-    public ResponseEntity<TenantResponse> createTenant(
+    public ApiResponse<TenantResponse> createTenant(
             @RequestBody TenantRequest request,
             @AuthenticationPrincipal Jwt jwt) {
 
-        String userId = jwt.getSubject(); // Lấy userId từ token
-        request.setUserId(userId);        // Gắn vào request
+        String userId = jwt.getSubject();
+        request.setUserId(userId);
 
-        return ResponseEntity.ok(tenantService.createTenant(request));
+        return ApiResponse.<TenantResponse>builder()
+                .result(tenantService.createTenant(request))
+                .build();
     }
 
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<TenantResponse>> getRequestsByUser(@PathVariable String userId) {
-        return ResponseEntity.ok(tenantService.getRequestsByUser(userId));
+    @GetMapping("/room")
+    public ApiResponse<Room> getMyRoom() {
+        return ApiResponse.<Room>builder()
+                .result(tenantService.getRoomByTenantId())
+                .build();
     }
 
-    @DeleteMapping("/{tenantId}")
-    public ResponseEntity<String> cancelTenant(@PathVariable String tenantId) {
-        String message = tenantService.cancelTenant(tenantId);
-
-        if (message.equals("Bạn đã hủy yêu cầu thuê phòng thành công")) {
-            return ResponseEntity.ok(message);
-        } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
-        }
-    }
-
-    //  Duyệt yêu cầu thuê
-    @PreAuthorize("hasRole('OWNER')")
-    @PostMapping("/{tenantId}/approve")
-    public ApiResponse<String> approveTenant(@PathVariable String tenantId) {
+    @PutMapping("/sign-contract/{contractId}")
+    public ApiResponse<String> signContract(@PathVariable String contractId) {
+        String message = tenantService.signContract(contractId);
         return ApiResponse.<String>builder()
-                .result(tenantService.approveTenant(tenantId))
+                .message(message)
+                .result("Contract signed successfully")
+                .build();
+    }
+
+
+    @GetMapping("/contract/{roomId}")
+    public ApiResponse<Contract> getContractByRoomId(@PathVariable String roomId) {
+        return ApiResponse.<Contract>builder()
+                .result(tenantService.getByRoomId(roomId))
+                .build();
+    }
+    @GetMapping("/getRequest")
+    public ApiResponse<TenantResponse> getRequestsByUser() {
+        return ApiResponse.<TenantResponse>builder()
+                .result(tenantService.getRequestsByUser())
+                .build();
+    }
+
+
+    @DeleteMapping("/cancel")
+    public ApiResponse<String> cancelTenant() {
+        String message = tenantService.cancelTenant();
+
+        return ApiResponse.<String>builder()
+                .message(message)
                 .build();
     }
 
@@ -68,14 +91,7 @@ public class TenantController {
                 .build();
     }
 
-    //  Ký hợp đồng
-    @PreAuthorize("hasRole('OWNER')")
-    @PostMapping("/{tenantId}/confirm-contract")
-    public ApiResponse<String> confirmContract(@PathVariable String tenantId) {
-        return ApiResponse.<String>builder()
-                .result(tenantService.confirmContract(tenantId))
-                .build();
-    }
+
 
     //  Trả phòng
     @PostMapping("/{tenantId}/return")
@@ -91,6 +107,13 @@ public class TenantController {
     public ApiResponse<String> finishCleaning(@PathVariable String roomId) {
         return ApiResponse.<String>builder()
                 .result(tenantService.finishCleaning(roomId))
+                .build();
+    }
+    @PreAuthorize("hasRole('TENANT')")
+    @GetMapping("/invoice/{tenantId}")
+    public ApiResponse<InvoiceResponse> getInvoiceByTenantId(@PathVariable String tenantId) {
+        return ApiResponse.<InvoiceResponse>builder()
+                .result(invoiceService.getInvoiceByTenant(tenantId))
                 .build();
     }
 

@@ -14,7 +14,7 @@ public interface InvoiceService {
     List<InvoiceResponse> getInvoicesByOwnerAndMonth(String ownerId, String month);
 
     List<InvoiceResponse> getInvoicesByTenant(String tenantId);
-
+    InvoiceResponse getInvoiceByTenant(String tenantId);
     InvoiceResponse updatePaymentStatus(String ownerId, String invoiceId, InvoiceStatus status, String paymentMethod);
 
     void sendInvoiceEmailToTenant(String ownerId, String invoiceId);
