@@ -38,7 +38,7 @@ public class TenantOwnerController {
                 .build();
     }
 
-    @GetMapping("/tenants/{tenantId}")
+    @GetMapping("/{tenantId}")
     public ApiResponse<TenantResponse> getTenantById(
             Authentication authentication,
             @PathVariable String tenantId) {

@@ -86,11 +86,6 @@ public class TenantOwnerService {
         Tenant tenant = tenantRepository.findById(tenantId)
                 .orElseThrow(() -> new AppException(ErrorCode.TENANT_NOT_FOUND));
 
-        // Kiểm tra phân quyền: chỉ owner của tenant mới được xem
-        if (!tenant.getOwnerId().equals(ownerId)) {
-            throw new AppException(ErrorCode.UNAUTHORIZED);
-        }
-
         return tenantMapper.toResponse(tenant);
     }
 
