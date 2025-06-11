@@ -162,7 +162,7 @@ public class TenantOwnerService {
             Room room = roomRepository.findByIdAndOwnerId(tenant.getRoomId(), ownerId)
                     .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_FOUND));
 
-            room.setStatus(RoomStatus.RESERVED); // Có thể là ACTIVE nếu tenant check-in ngay
+            room.setStatus(RoomStatus.RESERVED);
             roomRepository.save(room);
         }
 
