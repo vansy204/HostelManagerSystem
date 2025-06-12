@@ -5,8 +5,10 @@ import com.hostelmanagersystem.dto.response.ApiResponse;
 import com.hostelmanagersystem.dto.response.TenantHistoryResponse;
 import com.hostelmanagersystem.dto.response.TenantResponse;
 import com.hostelmanagersystem.entity.RenewRequest;
+import com.hostelmanagersystem.entity.manager.EndRequest;
 import com.hostelmanagersystem.enums.RequestStatus;
 import com.hostelmanagersystem.enums.TenantStatus;
+import com.hostelmanagersystem.service.EndRequestService;
 import com.hostelmanagersystem.service.RenewRequestService;
 import com.hostelmanagersystem.service.TenantOwnerService;
 import lombok.AccessLevel;
@@ -28,6 +30,8 @@ import java.util.List;
 public class TenantOwnerController {
     TenantOwnerService tenantService;
     RenewRequestService renewRequestService;
+    EndRequestService endRequestService;
+
 
     @GetMapping
     public ApiResponse<List<TenantResponse>> getAllTenants(
@@ -166,6 +170,27 @@ public class TenantOwnerController {
                 .result(list)
                 .build();
     }
+
+    //lấy danh sách yêu cầu hủy hợp đồng sowsm
+    @PreAuthorize("hasRole('OWNER')")
+    @GetMapping("/end-requests")
+    public ApiResponse<List<EndRequest>> getPendingEndRequests() {
+        return ApiResponse.<List<EndRequest>>builder()
+                .result(endRequestService.getAllPendingRequests())
+                .message("Danh sách yêu cầu kết thúc hợp đồng đang chờ duyệt")
+                .build();
+    }
+
+    //xác nhận yêu cầu kết thúc hợp đồng sớm
+    @PreAuthorize("hasRole('OWNER')") // hoặc ADMIN nếu bạn muốn
+    @PostMapping("/confirm-end-request")
+    public ApiResponse<String> confirmEndRequest(@RequestParam String requestId) {
+        endRequestService.confirmRequest(requestId); // xử lý bên service
+        return ApiResponse.<String>builder()
+                .message("Hợp đồng đã được kết thúc thành công.")
+                .build();
+    }
+
 
 
 
