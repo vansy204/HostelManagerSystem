@@ -9,7 +9,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UtilityUsageUpdateRequest {
+    Integer oldElectricity;
     Integer newElectricity;
+    Integer oldWater;
     Integer newWater;
     Boolean includeWifi;
     Boolean includeGarbage;

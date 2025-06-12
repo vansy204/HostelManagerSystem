@@ -4,6 +4,7 @@ import com.hostelmanagersystem.dto.request.RoomCreationRequest;
 import com.hostelmanagersystem.dto.request.RoomFilterRequest;
 import com.hostelmanagersystem.dto.request.RoomUpdateRequest;
 import com.hostelmanagersystem.dto.response.RoomResponse;
+import com.hostelmanagersystem.dto.response.TenantResponse;
 import com.hostelmanagersystem.entity.manager.Room;
 import com.hostelmanagersystem.enums.RoomStatus;
 import com.hostelmanagersystem.exception.AppException;
@@ -185,7 +186,6 @@ public class RoomService {
         roomMapper.updateRoom(oldRoom,roomUpdateRequest);
         return roomRepository.save(oldRoom);
     }
-
 
     @PreAuthorize("hasRole('OWNER')")
     public String deleteRoom(String roomId) {
