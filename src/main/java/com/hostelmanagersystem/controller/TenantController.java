@@ -1,15 +1,14 @@
 package com.hostelmanagersystem.controller;
 
+import com.hostelmanagersystem.dto.request.EndContractRequest;
+import com.hostelmanagersystem.dto.request.RenewContractRequest;
 import com.hostelmanagersystem.dto.request.TenantRequest;
 import com.hostelmanagersystem.dto.response.ApiResponse;
 import com.hostelmanagersystem.dto.response.InvoiceResponse;
 import com.hostelmanagersystem.dto.response.TenantResponse;
 import com.hostelmanagersystem.entity.manager.Contract;
 import com.hostelmanagersystem.entity.manager.Room;
-import com.hostelmanagersystem.entity.manager.Tenant;
-import com.hostelmanagersystem.service.ContractService;
-import com.hostelmanagersystem.service.InvoiceService;
-import com.hostelmanagersystem.service.TenantService;
+import com.hostelmanagersystem.service.*;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,6 +25,8 @@ import java.util.List;
 public class TenantController {
     TenantService tenantService;
     ContractService contractService;
+    RenewRequestService  renewRequestService;
+    EndRequestService  endRequestService;
     private final InvoiceService invoiceService;
 
     @PostMapping
@@ -110,10 +111,44 @@ public class TenantController {
     }
     @PreAuthorize("hasRole('TENANT')")
     @GetMapping("/invoice/{tenantId}")
-    public ApiResponse<InvoiceResponse> getInvoiceByTenantId(@PathVariable String tenantId) {
-        return ApiResponse.<InvoiceResponse>builder()
+    public ApiResponse<List<InvoiceResponse>> getInvoiceByTenantId(@PathVariable String tenantId) {
+        return ApiResponse.<List<InvoiceResponse>>builder()
                 .result(invoiceService.getInvoiceByTenant(tenantId))
                 .build();
     }
+    @PreAuthorize("hasRole('TENANT')")
+    @PostMapping("/invoice/pay/{invoiceId}")
+    public ApiResponse<String> payInvoice(@PathVariable String invoiceId) {
+        invoiceService.payInvoice(invoiceId);
+        return ApiResponse.<String>builder()
+                .message("Thanh toán thành công")
+                .build();
+    }
+
+
+    @PostMapping("/renew")
+    @PreAuthorize("hasRole('TENANT')")
+    public ApiResponse<String> sendRenewRequest(@RequestBody RenewContractRequest renewContractRequest) {
+        renewRequestService.createRequest(renewContractRequest);
+        return ApiResponse.<String>builder()
+                .message("Đã gửi yêu cầu gia hạn. Vui lòng chờ quản lý duyệt.")
+                .build();
+    }
+
+    @PreAuthorize("hasRole('TENANT')")
+    @PostMapping("/request-end")
+    public ApiResponse<String> requestEndContract(@RequestBody EndContractRequest request) {
+        endRequestService.createEndRequest(
+                request.getTenantId(),
+                request.getContractId(),
+                request.getReason()
+        );
+
+        return ApiResponse.<String>builder()
+                .message("Yêu cầu kết thúc hợp đồng đã được gửi. Vui lòng chờ duyệt.")
+                .build();
+    }
+
+
 
 }

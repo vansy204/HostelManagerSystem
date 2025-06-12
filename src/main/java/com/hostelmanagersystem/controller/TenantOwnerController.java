@@ -4,7 +4,12 @@ import com.hostelmanagersystem.dto.request.*;
 import com.hostelmanagersystem.dto.response.ApiResponse;
 import com.hostelmanagersystem.dto.response.TenantHistoryResponse;
 import com.hostelmanagersystem.dto.response.TenantResponse;
+import com.hostelmanagersystem.entity.RenewRequest;
+import com.hostelmanagersystem.entity.manager.EndRequest;
+import com.hostelmanagersystem.enums.RequestStatus;
 import com.hostelmanagersystem.enums.TenantStatus;
+import com.hostelmanagersystem.service.EndRequestService;
+import com.hostelmanagersystem.service.RenewRequestService;
 import com.hostelmanagersystem.service.TenantOwnerService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +29,9 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TenantOwnerController {
     TenantOwnerService tenantService;
+    RenewRequestService renewRequestService;
+    EndRequestService endRequestService;
+
 
     @GetMapping
     public ApiResponse<List<TenantResponse>> getAllTenants(
@@ -129,4 +137,68 @@ public class TenantOwnerController {
                 .message(message)
                 .build();
     }
+    @GetMapping("/room/{roomId}")
+    public ApiResponse<TenantResponse> getTenantByRoomId(
+            @PathVariable("roomId") String roomId) {
+        TenantResponse response = tenantService.getTenantByRoomId(roomId);
+        return ApiResponse.<TenantResponse>builder()
+                .result(response)
+                .message("Lấy thông tin người thuê theo phòng thành công")
+                .build();
+    }
+    //Đồng ý gia hạn
+    @PreAuthorize("hasRole('OWNER')")
+    @PostMapping("/renew/{requestId}/approve")
+    public ApiResponse<String> approveRenewRequest(@PathVariable String requestId) {
+        renewRequestService
+                .approveRequest(requestId);
+        return ApiResponse.<String>builder()
+                .message("Đã duyệt gia hạn hợp đồng thành công.")
+                .build();
+    }
+    //Từ chối gia hạn
+    @PreAuthorize("hasRole('OWNER')")
+    @PostMapping("/renew/{requestId}/reject")
+    public ApiResponse<String> rejectRenewRequest(@PathVariable String requestId) {
+        renewRequestService.rejectRequest(requestId);
+        return ApiResponse.<String>builder()
+                .message("Đã từ chối yêu cầu gia hạn.")
+                .build();
+    }
+
+    @PreAuthorize("hasRole('OWNER')")
+    @GetMapping("/renew/requests")
+    public ApiResponse<List<RenewRequest>> getAllRenewRequests(
+            @RequestParam(required = false) RequestStatus status) {
+
+        List<RenewRequest> list = (status != null)
+                ? renewRequestService.getRequestsByStatus(status)
+                : renewRequestService.getAllRequests();
+
+        return ApiResponse.<List<RenewRequest>>builder()
+                .result(list)
+                .build();
+    }
+
+
+    //lấy danh sách yêu cầu hủy hợp đồng sowsm
+    @PreAuthorize("hasRole('OWNER')")
+    @GetMapping("/end-requests")
+    public ApiResponse<List<EndRequest>> getPendingEndRequests() {
+        return ApiResponse.<List<EndRequest>>builder()
+                .result(endRequestService.getAllPendingRequests())
+                .message("Danh sách yêu cầu kết thúc hợp đồng đang chờ duyệt")
+                .build();
+    }
+
+    //xác nhận yêu cầu kết thúc hợp đồng sớm
+    @PreAuthorize("hasRole('OWNER')") // hoặc ADMIN nếu bạn muốn
+    @PostMapping("/confirm-end-request")
+    public ApiResponse<String> confirmEndRequest(@RequestParam String requestId) {
+        endRequestService.confirmRequest(requestId); // xử lý bên service
+        return ApiResponse.<String>builder()
+                .message("Hợp đồng đã được kết thúc thành công.")
+                .build();
+    }
+
 }
