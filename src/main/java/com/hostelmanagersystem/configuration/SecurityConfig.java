@@ -27,7 +27,8 @@ public class SecurityConfig {
             "/auth/refresh",
             "/auth/forgot-password",
             "/auth/reset-password/**",
-            "/room/**"
+            "/room/**",
+            "/room/availableRoom"
     };
 
     private final CustomJwtDecoder customJwtDecoder;

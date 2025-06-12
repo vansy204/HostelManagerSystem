@@ -173,12 +173,6 @@ public class RoomService {
 
     }
 
-    @GetMapping("/availableRoom")
-    public List<RoomResponse> getAllAvailableRoom(){
-        return roomRepository.findAllByStatus(RoomStatus.AVAILABLE)
-                .stream().map(roomMapper::toRoomResponse)
-                .collect(Collectors.toList());
-    }
 
     @PreAuthorize("hasRole('OWNER')")
     public Room updateRoom(String roomId, RoomUpdateRequest roomUpdateRequest) {

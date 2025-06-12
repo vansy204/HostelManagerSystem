@@ -4,11 +4,13 @@ import com.hostelmanagersystem.dto.request.RenewContractRequest;
 
 import com.hostelmanagersystem.entity.RenewRequest;
 import com.hostelmanagersystem.entity.manager.Contract;
+import com.hostelmanagersystem.entity.manager.Tenant;
 import com.hostelmanagersystem.enums.RequestStatus;
 import com.hostelmanagersystem.exception.AppException;
 import com.hostelmanagersystem.exception.ErrorCode;
 import com.hostelmanagersystem.repository.ContractRepository;
 import com.hostelmanagersystem.repository.RenewRequestRepository;
+import com.hostelmanagersystem.repository.TenantRepository;
 import com.hostelmanagersystem.service.RenewRequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class RenewRequestServiceImpl implements RenewRequestService {
 
     private final RenewRequestRepository renewRequestRepository;
     private final ContractRepository contractRepository;
+    private final TenantRepository tenantRepository;
 
     @Override
     public void createRequest(RenewContractRequest dto) {
