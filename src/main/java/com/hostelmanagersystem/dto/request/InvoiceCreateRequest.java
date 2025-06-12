@@ -3,6 +3,7 @@ package com.hostelmanagersystem.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,5 +14,5 @@ import java.time.LocalDateTime;
 public class InvoiceCreateRequest {
     String tenantId;
     String utilityUsageId;
-    LocalDateTime dueDate;
+    LocalDate dueDate;
 }

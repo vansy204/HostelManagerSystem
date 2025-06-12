@@ -43,7 +43,7 @@ public class Invoice {
     LocalDateTime paymentDate;
     String paymentMethod; // CASH, BANK_TRANSFER, ONLINE
 
-    LocalDateTime dueDate;
+    LocalDate dueDate;
 
     String usageId; // liên kết với chỉ số tiện ích
 

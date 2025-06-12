@@ -412,7 +412,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 addTableCell(serviceTable, "Tiền điện", normalFont);
                 addTableCell(serviceTable, usage.getNewElectricity()-usage.getOldElectricity() + " kWh", normalFont);
                 addTableCell(serviceTable, formatCurrency(config.getElectricityPricePerUnit()), normalFont);
-                addTableCell(serviceTable, formatCurrency(invoiceResponse.getElectricityAmount()), normalFont);
+                addTableCell(serviceTable, formatCurrency((usage.getNewElectricity()-usage.getOldElectricity())*config.getElectricityPricePerUnit()), normalFont);
             }
 
             // Tiền nước
@@ -420,7 +420,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 addTableCell(serviceTable, "Tiền nước", normalFont);
                 addTableCell(serviceTable, usage.getNewWater()-usage.getOldWater() + " m³", normalFont);
                 addTableCell(serviceTable, formatCurrency(config.getWaterPricePerUnit()), normalFont);
-                addTableCell(serviceTable, formatCurrency(invoiceResponse.getWaterAmount()), normalFont);
+                addTableCell(serviceTable, formatCurrency((usage.getNewWater()-usage.getOldWater())*config.getWaterPricePerUnit()), normalFont);
             }
 
             // Dịch vụ khác
