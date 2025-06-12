@@ -35,9 +35,7 @@ public class UserController {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getCurrentUser())
                 .build();
-
     }
-
     @PutMapping("/update")
     public ApiResponse<UserResponse> updateUser(@RequestBody UpdateUserRequest request) {
         var result = userService.updateUser(request);

@@ -61,14 +61,6 @@ public class RoomController {
                 .build();
     }
 
-    @GetMapping("/available")
-    public ApiResponse<List<RoomResponse>> getAllPendingRoom(){
-        var result = roomService.getAllAvailableRoom();
-        return ApiResponse.<List<RoomResponse>>builder()
-                .result(result)
-                .build();
-    }
-
 
 
     @GetMapping("/numbers/{roomNumber}")
@@ -99,4 +91,11 @@ public class RoomController {
                 .result(result)
                 .build();
     }
+    @GetMapping("/availableRoom")
+    public List<RoomResponse> getAllAvailableRoom(){
+        return roomRepository.findAllByStatus(RoomStatus.AVAILABLE)
+                .stream().map(roomMapper::toRoomResponse)
+                .collect(Collectors.toList());
+    }
+
 }
