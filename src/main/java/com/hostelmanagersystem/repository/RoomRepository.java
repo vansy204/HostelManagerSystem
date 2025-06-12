@@ -1,5 +1,6 @@
 package com.hostelmanagersystem.repository;
 
+import com.hostelmanagersystem.dto.response.TenantResponse;
 import com.hostelmanagersystem.entity.manager.Room;
 import com.hostelmanagersystem.enums.RoomStatus;
 import org.springframework.data.mongodb.repository.MongoRepository;

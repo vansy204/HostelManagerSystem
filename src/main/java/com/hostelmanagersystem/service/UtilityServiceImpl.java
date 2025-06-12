@@ -112,9 +112,9 @@ public class UtilityServiceImpl implements UtilityService {
             throw new AppException(ErrorCode.INVALID_INPUT_WATER);
         }
 
-        usage.setOldElectricity(usage.getNewElectricity());
+        usage.setOldElectricity(request.getOldWater());
         usage.setNewElectricity(request.getNewElectricity());
-        usage.setOldWater(usage.getNewWater());
+        usage.setOldWater(request.getOldWater());
         usage.setNewWater(request.getNewWater());
         usage.setIncludeWifi(request.getIncludeWifi() != null ? request.getIncludeWifi() : usage.getIncludeWifi());
         usage.setIncludeGarbage(request.getIncludeGarbage() != null ? request.getIncludeGarbage() : usage.getIncludeGarbage());
