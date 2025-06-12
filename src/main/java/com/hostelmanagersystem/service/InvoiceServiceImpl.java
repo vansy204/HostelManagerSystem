@@ -201,6 +201,19 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         invoiceRepository.delete(invoice);
     }
+    @Override
+    public void payInvoice(String invoiceId) {
+        Invoice invoice = invoiceRepository.findById(invoiceId)
+                .orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_FOUND));
+
+        if (invoice.getStatus() == InvoiceStatus.PAID) {
+            throw new AppException(ErrorCode.INVOICE_ALREADY_PAID);
+        }
+
+        invoice.setStatus(InvoiceStatus.PAID);
+        invoice.setPaymentDate(LocalDateTime.now());
+        invoiceRepository.save(invoice);
+    }
 
     @Override
     public List<InvoiceResponse> getAllInvoicesByOwner(String ownerId, int page, int size) {
@@ -511,9 +524,30 @@ public class InvoiceServiceImpl implements InvoiceService {
     private double calculateTax(double amount){
         return amount * 0.05;
     }
+
     @Override
-    public InvoiceResponse getInvoiceByTenant(String tenantId) {
-        Invoice invoice = invoiceRepository.findInvoiceByTenantId(tenantId);
-        return invoiceMapper.toInvoiceResponse(invoice);
+    public List<InvoiceResponse> getInvoiceByTenant(String tenantId) {
+        List<Invoice> invoices = invoiceRepository.findAllByTenantId(tenantId);
+
+        for (Invoice invoice : invoices) {
+            // ✅ Chỉ chuyển sang OVERDUE nếu status hiện tại là UNPAID
+            if (
+                    invoice.getStatus() == InvoiceStatus.UNPAID &&
+                            invoice.getPaymentDate() != null &&
+                            LocalDateTime.now().isAfter(invoice.getPaymentDate())
+            ) {
+                invoice.setStatus(InvoiceStatus.OVERDUE);
+                invoiceRepository.save(invoice);
+            }
+        }
+
+        return invoices.stream()
+                .map(invoiceMapper::toInvoiceResponse)
+                .collect(Collectors.toList());
     }
+
+
+
+
+
 }

@@ -66,6 +66,8 @@ public enum ErrorCode {
     INVALID_WATER_READING(1040,"Chỉ số nước không hợp lệ", HttpStatus.BAD_REQUEST),
     UTILITY_CONFIG_NOT_FOUND(1042,"Chưa cấu hình đơn giá tiện ích", HttpStatus.BAD_REQUEST),
     INVOICE_NOT_FOUND(1043,"Không tìm thấy hóa đơn", HttpStatus.BAD_REQUEST),
+    INVOICE_ALREADY_PAID(1045, "Hóa đơn đã được thanh toán ", HttpStatus.BAD_REQUEST),
+    CONTRACT_CANNOT_BE_RENEWED(1046, "Hợp đồng không thể gia hạn", HttpStatus.BAD_REQUEST),
   ;
 
 

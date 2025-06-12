@@ -20,4 +20,6 @@ public interface ContractService {
     List<ContractResponse> searchContracts(ContractFilterRequest request);
     List<ContractResponse> getAllContractsByOwner(String ownerId);
     ContractResponse confirmDepositPayment(String contractId, String ownerId);
+    void renewContract(String contractId, int additionalMonths);
+
 }

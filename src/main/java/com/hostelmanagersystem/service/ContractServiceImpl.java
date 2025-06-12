@@ -56,6 +56,20 @@ public class ContractServiceImpl implements ContractService {
     static final int EXPIRING_SOON_DAYS = 7;
     private final RoomMapper roomMapper;
 
+    @Override
+    public void renewContract(String contractId, int additionalMonths) {
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new AppException(ErrorCode.CONTRACT_NOT_FOUND));
+
+        if (contract.getStatus() != ContractStatus.ACTIVE) {
+            throw new AppException(ErrorCode.CONTRACT_CANNOT_BE_RENEWED);
+        }
+
+        contract.setEndDate(contract.getEndDate().plusMonths(additionalMonths));
+        contractRepository.save(contract);
+    }
+
+
     public List<ContractResponse> getAllContractsByOwner(String ownerId) {
         return contractRepository.findByOwnerId(ownerId).stream()
                 .map(contractMapper::toResponse)

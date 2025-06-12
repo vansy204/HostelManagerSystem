@@ -4,7 +4,10 @@ import com.hostelmanagersystem.dto.request.*;
 import com.hostelmanagersystem.dto.response.ApiResponse;
 import com.hostelmanagersystem.dto.response.TenantHistoryResponse;
 import com.hostelmanagersystem.dto.response.TenantResponse;
+import com.hostelmanagersystem.entity.RenewRequest;
+import com.hostelmanagersystem.enums.RequestStatus;
 import com.hostelmanagersystem.enums.TenantStatus;
+import com.hostelmanagersystem.service.RenewRequestService;
 import com.hostelmanagersystem.service.TenantOwnerService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +27,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TenantOwnerController {
     TenantOwnerService tenantService;
+    RenewRequestService renewRequestService;
 
     @GetMapping
     public ApiResponse<List<TenantResponse>> getAllTenants(
@@ -129,4 +133,40 @@ public class TenantOwnerController {
                 .message(message)
                 .build();
     }
+    //Đồng ý gia hạn
+    @PreAuthorize("hasRole('OWNER')")
+    @PostMapping("/renew/{requestId}/approve")
+    public ApiResponse<String> approveRenewRequest(@PathVariable String requestId) {
+        renewRequestService
+                .approveRequest(requestId);
+        return ApiResponse.<String>builder()
+                .message("Đã duyệt gia hạn hợp đồng thành công.")
+                .build();
+    }
+    //Từ chối gia hạn
+    @PreAuthorize("hasRole('OWNER')")
+    @PostMapping("/renew/{requestId}/reject")
+    public ApiResponse<String> rejectRenewRequest(@PathVariable String requestId) {
+        renewRequestService.rejectRequest(requestId);
+        return ApiResponse.<String>builder()
+                .message("Đã từ chối yêu cầu gia hạn.")
+                .build();
+    }
+
+    @PreAuthorize("hasRole('OWNER')")
+    @GetMapping("/renew/requests")
+    public ApiResponse<List<RenewRequest>> getAllRenewRequests(
+            @RequestParam(required = false) RequestStatus status) {
+
+        List<RenewRequest> list = (status != null)
+                ? renewRequestService.getRequestsByStatus(status)
+                : renewRequestService.getAllRequests();
+
+        return ApiResponse.<List<RenewRequest>>builder()
+                .result(list)
+                .build();
+    }
+
+
+
 }
