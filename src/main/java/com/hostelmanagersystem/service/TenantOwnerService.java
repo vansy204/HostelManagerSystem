@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -89,6 +90,11 @@ public class TenantOwnerService {
         return tenantMapper.toResponse(tenant);
     }
 
+    public TenantResponse getTenantByRoomId(String roomId) {
+        Tenant tenant = tenantRepository.findTenantByRoomId(roomId)
+                .orElseThrow(() -> new AppException(ErrorCode.TENANT_NOT_FOUND));
+        return tenantMapper.toResponse(tenant);
+    }
 
     /**
      * Cập nhật thông tin tenant.
@@ -171,4 +177,6 @@ public class TenantOwnerService {
 
         return tenantMapper.toResponse(tenant);
     }
+
+
 }

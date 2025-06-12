@@ -77,6 +77,7 @@ public class TenantService {
                 .checkInDate(checkInDate)
                 .checkOutDate(checkOutDate)
                 .status(TenantStatus.PENDING)
+                .requestDate(LocalDate.now())
                 .createAt(LocalDate.now())
                 .build();
 

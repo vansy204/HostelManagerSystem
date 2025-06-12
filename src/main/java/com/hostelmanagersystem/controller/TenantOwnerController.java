@@ -129,4 +129,14 @@ public class TenantOwnerController {
                 .message(message)
                 .build();
     }
+
+    @GetMapping("/room/{roomId}")
+    public ApiResponse<TenantResponse> getTenantByRoomId(
+            @PathVariable("roomId") String roomId) {
+        TenantResponse response = tenantService.getTenantByRoomId(roomId);
+        return ApiResponse.<TenantResponse>builder()
+                .result(response)
+                .message("Lấy thông tin người thuê theo phòng thành công")
+                .build();
+    }
 }
