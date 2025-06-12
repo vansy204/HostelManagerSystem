@@ -203,15 +203,9 @@ public class ContractController {
     }
 
     // 12. Ký hợp đồng (TENANT ký)
-    @PreAuthorize("hasRole('TENANT')")
     @PostMapping("/{id}/sign")
-    public ApiResponse<ContractResponse> signContract(
-            @PathVariable String id,
-            @RequestBody ContractSignRequest request,
-            Authentication authentication) {
-
-        String tenantId = authentication.getName();
-        ContractResponse response = contractService.signContract(id, request, tenantId);
+    public ApiResponse<ContractResponse> signContract(@PathVariable String id) {
+        ContractResponse response = contractService.signContract(id);
 
         return ApiResponse.<ContractResponse>builder()
                 .result(response)

@@ -14,10 +14,12 @@ public interface ContractService {
     List<ContractResponse> getContractsByOwner(String ownerId);
     List<ContractResponse> getContractsByTenant(String tenantId);
     ContractResponse approveContract(String contractId, String ownerId);
-    ContractResponse signContract(String contractId, ContractSignRequest request, String userId);
+    ContractResponse signContract(String contractId);
     ContractResponse cancelContract(String contractId, String ownerId);
     List<ContractResponse> getContractHistoryByTenant(String tenantId, String ownerId);
     List<ContractResponse> searchContracts(ContractFilterRequest request);
     List<ContractResponse> getAllContractsByOwner(String ownerId);
     ContractResponse confirmDepositPayment(String contractId, String ownerId);
+    void renewContract(String contractId, int additionalMonths);
+
 }

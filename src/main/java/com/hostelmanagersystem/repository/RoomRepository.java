@@ -13,4 +13,5 @@ public interface RoomRepository extends MongoRepository<Room, String>{
     Optional<List<Room>> findAllByRoomNumberContainingIgnoreCase(String roomNumber);
     List<Room> findAllByStatus(RoomStatus status);
     Optional<Room> findByIdAndOwnerId(String id, String owner);
+    Optional<Room> findRoomById(String id);
 }

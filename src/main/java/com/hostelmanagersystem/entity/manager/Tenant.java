@@ -32,7 +32,7 @@ public class Tenant {
     String note;
     String avatarUrl;
 
-    LocalDate requestDate;
+
     LocalDate checkInDate;
     LocalDate checkOutDate;
 

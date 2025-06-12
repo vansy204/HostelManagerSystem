@@ -1,7 +1,6 @@
 package com.hostelmanagersystem.service;
 
 import com.hostelmanagersystem.dto.request.InvoiceCreateRequest;
-import com.hostelmanagersystem.dto.request.RentInvoiceCreateRequest;
 import com.hostelmanagersystem.dto.response.InvoiceResponse;
 import com.hostelmanagersystem.dto.response.InvoiceStatisticsResponse;
 import com.hostelmanagersystem.enums.InvoiceStatus;
@@ -9,6 +8,7 @@ import com.hostelmanagersystem.enums.InvoiceStatus;
 import java.util.List;
 
 public interface InvoiceService {
+// ===== UTILITY INVOICE (type = UTILITY) =====
 // ===== UTILITY INVOICE (type = UTILITY) =====
 
     // Tạo hóa đơn tiền phòng cho 1 phòng, tháng cụ thể
@@ -25,6 +25,7 @@ public interface InvoiceService {
 
     // Lấy danh sách hóa đơn tiền phòng theo tháng (format: yyyy-MM)
     List<InvoiceResponse> getRentInvoicesByMonth(String ownerId, String month);
+    void payInvoice(String invoiceId);
 
     // Xóa hóa đơn tiền phòng
     void deleteRentInvoice(String ownerId, String invoiceId);
@@ -48,7 +49,7 @@ public interface InvoiceService {
 
     // Đánh dấu hóa đơn là đã thanh toán
     InvoiceResponse markInvoiceAsPaid(String ownerId, String invoiceId);
-
+    List<InvoiceResponse> getInvoiceByTenant(String tenantId);
     // Hủy hóa đơn (ví dụ khi hợp đồng kết thúc hoặc có lỗi)
     InvoiceResponse cancelInvoice(String ownerId, String invoiceId);
 }

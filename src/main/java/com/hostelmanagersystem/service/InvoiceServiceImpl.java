@@ -4,12 +4,17 @@ import com.hostelmanagersystem.dto.request.InvoiceCreateRequest;
 import com.hostelmanagersystem.dto.response.InvoiceResponse;
 import com.hostelmanagersystem.dto.response.InvoiceStatisticsResponse;
 import com.hostelmanagersystem.entity.identity.User;
+import com.hostelmanagersystem.entity.manager.Invoice;
+import com.hostelmanagersystem.entity.manager.Room;
 import com.hostelmanagersystem.entity.manager.*;
 import com.hostelmanagersystem.enums.InvoiceStatus;
 import com.hostelmanagersystem.enums.InvoiceType;
 import com.hostelmanagersystem.exception.AppException;
 import com.hostelmanagersystem.exception.ErrorCode;
 import com.hostelmanagersystem.mapper.InvoiceMapper;
+import com.hostelmanagersystem.repository.InvoiceRepository;
+import com.hostelmanagersystem.repository.RoomRepository;
+import com.hostelmanagersystem.repository.UserRepository;
 import com.hostelmanagersystem.mapper.UtilityMapper;
 import com.hostelmanagersystem.repository.*;
 import com.lowagie.text.*;
@@ -24,6 +29,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -58,6 +65,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     UtilityConfigRepository utilityConfigRepository;
     UtilityMapper utilityMapper;
     UserRepository userRepository;
+
+
+
 
     /**
      * Tạo invoice (hóa đơn) theo cấu trúc mới Invoice:
@@ -115,6 +125,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setParkingFee(parkingFee);
         invoice.setServiceAmount(serviceAmount);
         invoice.setTotalAmount(totalAmount);
+
 
         invoice.setStatus(InvoiceStatus.UNPAID);
         invoice.setType(InvoiceType.UTILITY);
@@ -190,6 +201,20 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         invoiceRepository.delete(invoice);
     }
+    @Override
+    public void payInvoice(String invoiceId) {
+        Invoice invoice = invoiceRepository.findById(invoiceId)
+                .orElseThrow(() -> new AppException(ErrorCode.INVOICE_NOT_FOUND));
+
+        if (invoice.getStatus() == InvoiceStatus.PAID) {
+            throw new AppException(ErrorCode.INVOICE_ALREADY_PAID);
+        }
+
+        invoice.setStatus(InvoiceStatus.PAID);
+        invoice.setPaymentDate(LocalDateTime.now());
+        invoiceRepository.save(invoice);
+    }
+
     @Override
     public List<InvoiceResponse> getAllInvoicesByOwner(String ownerId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -499,4 +524,30 @@ public class InvoiceServiceImpl implements InvoiceService {
     private double calculateTax(double amount){
         return amount * 0.05;
     }
+
+    @Override
+    public List<InvoiceResponse> getInvoiceByTenant(String tenantId) {
+        List<Invoice> invoices = invoiceRepository.findAllByTenantId(tenantId);
+
+        for (Invoice invoice : invoices) {
+            // ✅ Chỉ chuyển sang OVERDUE nếu status hiện tại là UNPAID
+            if (
+                    invoice.getStatus() == InvoiceStatus.UNPAID &&
+                            invoice.getPaymentDate() != null &&
+                            LocalDateTime.now().isAfter(invoice.getPaymentDate())
+            ) {
+                invoice.setStatus(InvoiceStatus.OVERDUE);
+                invoiceRepository.save(invoice);
+            }
+        }
+
+        return invoices.stream()
+                .map(invoiceMapper::toInvoiceResponse)
+                .collect(Collectors.toList());
+    }
+
+
+
+
+
 }
