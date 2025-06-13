@@ -85,7 +85,7 @@ public class ContractServiceImpl implements ContractService {
                 .orElseThrow(() -> new AppException(ErrorCode.TENANT_NOT_FOUND));
 
         // Phòng phải ở trạng thái AVAILABLE mới được tạo hợp đồng
-        if (room.getStatus() != RoomStatus.RESERVED) {
+        if (room.getStatus() != RoomStatus.AVAILABLE) {
             throw new AppException(ErrorCode.ROOM_NOT_AVAILABLE);
         }
 

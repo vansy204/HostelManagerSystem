@@ -19,6 +19,8 @@ public interface ContractRepository extends MongoRepository<Contract, String> {
     Optional<Contract> findByRoomId(String roomId);
     List<Contract> findByEndDate(LocalDate endDate);
     List<Contract> findByTenantIdAndOwnerId(String tenantId, String ownerId);
+    Optional<Contract> findByTenantIdAndStatus(String tenantId, ContractStatus status);
+
 
 
 }
