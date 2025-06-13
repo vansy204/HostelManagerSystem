@@ -137,6 +137,15 @@ public class TenantOwnerController {
                 .message(message)
                 .build();
     }
+    @GetMapping("/room/{roomId}")
+    public ApiResponse<TenantResponse> getTenantByRoomId(
+            @PathVariable("roomId") String roomId) {
+        TenantResponse response = tenantService.getTenantByRoomId(roomId);
+        return ApiResponse.<TenantResponse>builder()
+                .result(response)
+                .message("Lấy thông tin người thuê theo phòng thành công")
+                .build();
+    }
     //Đồng ý gia hạn
     @PreAuthorize("hasRole('OWNER')")
     @PostMapping("/renew/{requestId}/approve")
@@ -171,6 +180,7 @@ public class TenantOwnerController {
                 .build();
     }
 
+
     //lấy danh sách yêu cầu hủy hợp đồng sowsm
     @PreAuthorize("hasRole('OWNER')")
     @GetMapping("/end-requests")
@@ -190,8 +200,5 @@ public class TenantOwnerController {
                 .message("Hợp đồng đã được kết thúc thành công.")
                 .build();
     }
-
-
-
 
 }
