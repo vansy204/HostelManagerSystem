@@ -29,5 +29,7 @@ public interface UtilityService {
     UtilityConfigResponse getConfigByOwnerId(String ownerId);
 
     UtilityConfigResponse updateConfig(String ownerId, UtilityConfigUpdateRequest request);
+
+    List<UtilityUsageResponse> getAllUtilityUsages(String ownerId);
 }
 

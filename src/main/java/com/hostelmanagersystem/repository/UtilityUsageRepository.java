@@ -18,4 +18,6 @@ public interface UtilityUsageRepository extends MongoRepository<UtilityUsage, St
     Optional<UtilityUsage> findTopByOwnerIdAndRoomIdOrderByMonthDesc(String ownerId, String roomId);
 
     Optional<UtilityUsage> findByOwnerIdAndRoomIdAndMonth(String ownerId,String roomId,String previousMonthStr);
+
+    List<UtilityUsage> findByOwnerId(String ownerId);
 }

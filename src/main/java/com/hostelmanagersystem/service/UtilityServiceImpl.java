@@ -38,6 +38,15 @@ public class UtilityServiceImpl implements UtilityService {
     TenantRepository tenantRepository;
 
     @Override
+    public List<UtilityUsageResponse> getAllUtilityUsages(String ownerId) {
+        List<UtilityUsage> list = utilityUsageRepository.findByOwnerId(ownerId);
+        return list.stream()
+                .map(utilityMapper::toResponse)
+                .toList();
+    }
+
+
+    @Override
     public UtilityUsageResponse createUtilityUsage(String ownerId, UtilityUsageCreateRequest request) {
         Room room = roomRepository.findById(request.getRoomId())
                 .orElseThrow(() -> new AppException(ErrorCode.ROOM_NOT_EXISTED));

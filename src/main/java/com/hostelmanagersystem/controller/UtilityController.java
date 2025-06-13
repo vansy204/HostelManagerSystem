@@ -13,7 +13,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +30,18 @@ public class UtilityController {
     UtilityService utilityService;
     UtilityUsageRepository utilityUsageRepository;
     UtilityMapper utilityMapper;
+
+    @PreAuthorize("hasRole('OWNER')")
+    @GetMapping("/usages/all")
+    public ApiResponse<List<UtilityUsageResponse>> getAllUsages(Authentication authentication) {
+        String ownerId = authentication.getName();
+        List<UtilityUsageResponse> list = utilityService.getAllUtilityUsages(ownerId);
+        return ApiResponse.<List<UtilityUsageResponse>>builder()
+                .result(list)
+                .message("Lấy danh sách toàn bộ chỉ số tiện ích thành công")
+                .build();
+    }
+
 
     @PreAuthorize("hasRole('OWNER')")
     @PostMapping("/usage")
