@@ -69,7 +69,7 @@ public enum ErrorCode {
     INVOICE_ALREADY_PAID(1045, "Hóa đơn đã được thanh toán ", HttpStatus.BAD_REQUEST),
     CONTRACT_CANNOT_BE_RENEWED(1046, "Hợp đồng không thể gia hạn", HttpStatus.BAD_REQUEST),
     REQUEST_ALREADY_PROCESSED(1047,"Yêu cầu đã được xử lý trước đó",HttpStatus.BAD_REQUEST),
-
+    ALREADY_HAS_ACTIVE_CONTRACT(1048,"Bạn đang có hợp đồng thuê đang hoạt động",HttpStatus.BAD_REQUEST),
     ;
 
 

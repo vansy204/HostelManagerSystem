@@ -6,6 +6,7 @@ import com.hostelmanagersystem.entity.identity.User;
 import com.hostelmanagersystem.entity.manager.Contract;
 import com.hostelmanagersystem.entity.manager.Room;
 import com.hostelmanagersystem.entity.manager.Tenant;
+import com.hostelmanagersystem.enums.ContractStatus;
 import com.hostelmanagersystem.enums.RoomStatus;
 import com.hostelmanagersystem.enums.TenantStatus;
 import com.hostelmanagersystem.exception.AppException;
@@ -54,6 +55,7 @@ public class TenantService {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
+
         // Validate ngày thuê
         LocalDate checkInDate = request.getCheckInDate();
         if (checkInDate == null || checkInDate.isBefore(LocalDate.now())) {
@@ -76,6 +78,15 @@ public class TenantService {
         if (existingRequest.isPresent()) {
             throw new AppException(ErrorCode.TENANT_REQUEST_ALREADY_EXISTS);
         }
+
+        Optional<Contract> existingContract = contractRepository
+                .findByTenantIdAndStatus(user.getId(), ContractStatus.ACTIVE);
+
+
+        if (existingContract.isPresent()) {
+            throw new AppException(ErrorCode.ALREADY_HAS_ACTIVE_CONTRACT);
+        }
+
 
         // Tạo yêu cầu thuê
         Tenant tenant = Tenant.builder()
